@@ -44,16 +44,6 @@ $ npm run test
 $ npm run lint
 ```
 
-### Run your end-to-end tests
-```bash
-$ npm run test:e2e
-```
-
-### Run your unit tests
-```bash
-$ npm run test:unit
-```
-
 ### Reset
 ```bash
 $ npm run reset
