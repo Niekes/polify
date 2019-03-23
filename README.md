@@ -22,9 +22,11 @@ $ echo -e "VUE_APP_TITLE=Template\nVUE_APP_BASE=/\nVUE_APP_URL=http://localhost:
 
 ### Compiles for development
 ```bash
-$ npm start
+$ npm run serve
+```
+OR
 
-
+```bash
 $ npm run serve
 ```
 
