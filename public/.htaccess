@@ -1,4 +1,4 @@
-# if your app is an sub-path e.g. /app/
+# if your app is deployed at a sub-path e.g. /app/
 # replace 'RewriteBase /' with 'RewriteBase /app'
 # replace 'RewriteRule ^index\.html$ - [L]' with 'RewriteRule ^app/index\.html$ - [L]'
 # replace 'RewriteRule . /index.html [L]' with 'RewriteRule . /app/index.html [L]'
