@@ -22,7 +22,7 @@ $ echo -e "VUE_APP_TITLE=Template\nVUE_APP_BASE=/\nVUE_APP_URL=http://localhost:
 
 ### Compiles for development
 ```bash
-$ npm run serve
+$ npm start
 ```
 OR
 
@@ -53,6 +53,11 @@ $ npm run test:e2e
 ### Run your unit tests
 ```bash
 $ npm run test:unit
+```
+
+### Reset
+```bash
+$ npm run reset
 ```
 
 ### Customize configuration
