@@ -10,11 +10,11 @@ module.exports = {
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'indent': ['error', 4],
+        indent: ['error', 4],
         // don't require .vue extension when importing
         'import/extensions': ['error', 'always', {
             js: 'never',
-            vue: 'never'
+            vue: 'never',
         }],
     },
     parserOptions: {

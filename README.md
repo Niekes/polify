@@ -6,13 +6,12 @@ Configured with:
 * [Vuex](https://vuex.vuejs.org/)
 * [Vue I18n](https://kazupon.github.io/vue-i18n/)
 * Vue api router (See: `src/api`)
-* PWA
+* Progressive Web App (PWA) Support
 * [Axios](https://github.com/axios/axios)
 * [SVG Sprite](https://github.com/sam3d/vue-svg)
 * [Scss](https://sass-lang.com/)
 * [Normalize CSS](https://necolas.github.io/normalize.css/)
-* E2E Tests
-* Unit Tests
+* [Unit Tests](https://vue-test-utils.vuejs.org/)
 
 ## Project setup
 ```bash
