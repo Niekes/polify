@@ -11,7 +11,7 @@ Configured with:
 * [SVG Sprite](https://github.com/sam3d/vue-svg)
 * [Scss](https://sass-lang.com/)
 * [Normalize CSS](https://necolas.github.io/normalize.css/)
-* [Unit Tests](https://vue-test-utils.vuejs.org/)
+* [Unit Tests](https://vue-test-utils.vuejs.org/) (JEST)
 
 ## Project setup
 ```bash
