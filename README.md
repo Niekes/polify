@@ -5,6 +5,8 @@ Configured with:
 * [Vue router](https://router.vuejs.org/)
 * [Vuex](https://vuex.vuejs.org/)
 * [Vue I18n](https://kazupon.github.io/vue-i18n/)
+* [Eslint](https://eslint.org/) (AirBnB Config)
+* [Stylelint](https://github.com/stylelint/stylelint)
 * Vue api router (See: `src/api`)
 * Progressive Web App (PWA) Support
 * [Axios](https://github.com/axios/axios)
