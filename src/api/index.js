@@ -26,10 +26,7 @@ axios.interceptors.response.use(response => response, handleError);
     import { getUsers } from '$api';
 
     async fetchUsers() {
-        const response = await getUsers();
-
-        this.users = response.data;
-
+        this.users = (await getUsers()).data;
         ...
     }
 */
