@@ -1,5 +1,5 @@
 import axios from 'axios';
-import router from '$api/router/index';
+import router from '$api/router';
 import config from '$config';
 
 export function getUsers(id = null) {

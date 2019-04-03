@@ -1,5 +1,11 @@
-import r from '$api/router/router';
+import Router from 'vue-router';
+import config from '$config';
+import users from '$api/routes/users';
 
-const router = r();
-
-export default router;
+export default new Router({
+    base: config.api.base,
+    mode: 'history',
+    routes: [
+        ...users,
+    ],
+});
