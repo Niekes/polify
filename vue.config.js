@@ -33,4 +33,9 @@ module.exports = {
     devServer: {
         hot: false,
     },
+    pwa: {
+        name: process.env.VUE_APP_TITLE,
+        appleMobileWebAppCapable: 'yes',
+        appleMobileWebAppStatusBarStyle: 'black',
+    },
 };
