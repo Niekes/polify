@@ -1,23 +1,25 @@
 <template>
     <div>
-        <h1>{{ $t('create.title') }}</h1>
+        <h1 v-text="$t('create.title')" />
 
         <input
-            @change="encodeImageFileAsURL"
             type="file"
-            accept="image/*" />
+            accept="image/*"
+            @change="encodeImageFileAsURL"
+        >
 
         <div
             class="low-poly-container"
             :style="{
-                'max-width': `${this.maxWidth}px`,
                 'height': `${height}px`,
                 'width': `${width}px`,
-            }">
+            }"
+        >
             <canvas
+                id="canvas"
                 :width="width"
                 :height="height"
-                id="canvas"></canvas>
+            />
         </div>
     </div>
 </template>
@@ -37,6 +39,18 @@ export default {
         };
     },
 
+    computed: {
+
+        height() {
+            return this.$store.getters['canvas/height'];
+        },
+
+        width() {
+            return this.$store.getters['canvas/width'];
+        },
+
+    },
+
     mounted() {
         this.ctx = select('#canvas').node().getContext('2d');
     },
@@ -52,10 +66,9 @@ export default {
                     const srcData = fileLoadedEvent.target.result;
                     const newImage = document.createElement('img');
 
-                    newImage.onload = () => {
-                        const aspectRatio = newImage.width / newImage.height;
 
-                        this.maxWidth = aspectRatio * 500;
+                    newImage.onload = () => {
+                        console.log(newImage.width, newImage.height);
 
                         this.$store.commit('canvas/setCtx', this.ctx);
                         this.$store.commit('canvas/setWidth', newImage.width);
@@ -72,26 +85,13 @@ export default {
         },
     },
 
-    computed: {
-
-        height() {
-            return this.$store.getters['canvas/height'];
-        },
-
-        width() {
-            return this.$store.getters['canvas/width'];
-        },
-
-    },
-
 };
 </script>
 
 <style lang="scss" scoped>
 .low-poly-container {
+    border: 1px solid red;
     margin: auto;
-    max-height: 500px;
-    min-height: 500px;
     position: relative;
 }
 

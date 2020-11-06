@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Navigation from '@/components/Navigation';
 import VueRouter from 'vue-router';
+import Navigation from '@/components/Navigation';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);

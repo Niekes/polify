@@ -1,35 +1,40 @@
 <template>
     <div>
-        <h1>{{ $t('adjust.title') }}</h1>
+        <h1 v-text="$t('adjust.title')" />
 
-        <button @click="randomize">random</button>
+        <button @click="randomize">
+            random
+        </button>
 
         <input
-            @change="update"
             v-model="amount"
             type="range"
-            min="10" max="2500"
+            min="10"
+            max="5000"
             step="1"
-            class="amount">
+            class="amount"
+            @change="update"
+        >
 
-        <label>amount of points: {{amount}}</label>
+        <label>amount of points: {{ amount }}</label>
 
         <div
             id="container"
             :style="{
                 height: `${height}px`,
                 width: `${width}px`,
-            }">
+            }"
+        >
             <canvas
+                id="canvas"
                 :width="width"
                 :height="height"
-                id="canvas"></canvas>
+            />
 
             <svg
                 id="svg"
                 :viewbox="`0 0 ${width} ${height}`"
-            >
-                </svg>
+            />
         </div>
     </div>
 </template>
@@ -54,6 +59,22 @@ export default {
             amount: 200,
             colorTimeout: null,
         };
+    },
+
+    computed: {
+
+        ctx() {
+            return this.$store.getters['canvas/ctx'];
+        },
+
+        height() {
+            return this.$store.getters['canvas/height'];
+        },
+
+        width() {
+            return this.$store.getters['canvas/width'];
+        },
+
     },
 
     mounted() {
@@ -151,22 +172,6 @@ export default {
 
         randomize() {
             this.update();
-        },
-
-    },
-
-    computed: {
-
-        ctx() {
-            return this.$store.getters['canvas/ctx'];
-        },
-
-        height() {
-            return this.$store.getters['canvas/height'];
-        },
-
-        width() {
-            return this.$store.getters['canvas/width'];
         },
 
     },

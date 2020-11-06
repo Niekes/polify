@@ -4,7 +4,7 @@ module.exports = {
         node: true,
     },
     extends: [
-        'plugin:vue/essential',
+        'plugin:vue/recommended',
         '@vue/airbnb',
     ],
     rules: {
@@ -16,6 +16,7 @@ module.exports = {
             js: 'never',
             vue: 'never',
         }],
+        'vue/html-indent': ['error', 4],
     },
     parserOptions: {
         parser: 'babel-eslint',

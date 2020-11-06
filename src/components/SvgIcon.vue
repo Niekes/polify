@@ -1,5 +1,5 @@
 <template>
-    <svg><use :xlink:href="xlink"></use></svg>
+    <svg><use :xlink:href="xlink" /></svg>
 </template>
 
 <script>
@@ -7,7 +7,10 @@ export default {
     name: 'SvgIcon',
 
     props: {
-        xlink: String,
+        xlink: {
+            type: String,
+            required: true,
+        },
     },
 };
 </script>
