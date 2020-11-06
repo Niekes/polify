@@ -1,5 +1,5 @@
 import axios from 'axios';
-import handleError from '$helper/error-helper';
+import handleError from '@/helper/error-helper';
 
 /*
     Add a bearer token to every request
@@ -23,11 +23,11 @@ axios.interceptors.response.use(response => response, handleError);
 /*
     Export all functions from /dao and use it like so:
 
-    import { getUsers } from '$api';
+    import { getUsers } from '@/api';
 
     async fetchUsers() {
         this.users = (await getUsers()).data;
         ...
     }
 */
-export * from '$api/dao/users';
+export * from '@/api/dao/users';

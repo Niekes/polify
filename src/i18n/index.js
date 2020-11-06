@@ -1,10 +1,13 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import messages from './messages';
+import en from '@/i18n/languages/en';
 
 Vue.use(VueI18n);
 
 export default new VueI18n({
     fallbackLocale: 'en',
-    messages,
+    locale: 'en',
+    messages: {
+        en,
+    },
 });

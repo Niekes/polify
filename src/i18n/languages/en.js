@@ -1,12 +1,12 @@
 export default {
-    home: {
-        title: 'Home',
+    create: {
+        title: 'create',
     },
-    about: {
-        title: 'About',
+    adjust: {
+        title: 'adjust',
     },
     navigation: {
-        home: 'Home',
-        about: 'About',
+        create: 'create',
+        adjust: 'adjust',
     },
 };

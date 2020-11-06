@@ -1,5 +1,5 @@
 {
-  "name": "Vue-app-template",
+  "name": "low-poly-bg",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,11 +7,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "reset": "rm -rf node_modules/ && npm install && npm dedupe && npm start",
+    "reset": "rm package-lock.json && rm -rf node_modules/ && npm install && npm dedupe && npm start",
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "d3": "^5.12.0",
+    "d3-delaunay": "^5.1.6",
     "normalize.css": "^8.0.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.6",

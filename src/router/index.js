@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '$views/Home';
-import config from '$config';
+import Create from '@/views/Create';
+import config from '@/config';
 
 Vue.use(Router);
 
@@ -11,16 +11,16 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: Home,
+            name: 'Create',
+            component: Create,
         },
         {
-            path: '/about',
-            name: 'about',
+            path: '/adjust',
+            name: 'Adjust',
             // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
+            // this generates a separate chunk (adjust.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ '$views/About'),
+            component: () => import(/* webpackChunkName: "adjust" */ '$views/Adjust'),
         },
     ],
 });

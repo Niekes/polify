@@ -1,7 +1,7 @@
 <template>
     <div>
-        <router-link to="/">{{ $t('navigation.home') }}</router-link> |
-        <router-link to="/about">{{ $t('navigation.about') }}</router-link>
+        <router-link to="/">{{ $t('navigation.create') }}</router-link> |
+        <router-link to="/adjust">{{ $t('navigation.adjust') }}</router-link>
     </div>
 </template>
 

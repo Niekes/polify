@@ -1,6 +1,6 @@
 import axios from 'axios';
-import router from '$api/router';
-import config from '$config';
+import router from '@/api/router';
+import config from '@/config';
 
 export function getUsers(id = null) {
     return new Promise((resolve) => {
