@@ -2,9 +2,10 @@
     <div>
         <h1 v-text="$t('adjust.title')" />
 
-        <button @click="randomize">
-            random
-        </button>
+        <button
+            @click="randomize"
+            v-text="'randomize'"
+        />
 
         <input
             v-model="amount"
