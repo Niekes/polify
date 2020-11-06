@@ -7,6 +7,11 @@
             v-text="'randomize'"
         />
 
+        <button
+            @click="download"
+            v-text="'donwload'"
+        />
+
         <input
             v-model="amount"
             type="range"
@@ -34,6 +39,8 @@
 
             <svg
                 id="svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns="http://www.w3.org/2000/svg"
                 :viewbox="`0 0 ${width} ${height}`"
             />
         </div>
@@ -173,6 +180,28 @@ export default {
 
         randomize() {
             this.update();
+        },
+
+        download() {
+            let source = new XMLSerializer().serializeToString(select('#svg').node());
+
+            source = `<?xml version="1.0" standalone="no"?>${source}`;
+
+            const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
+
+            const a = document.createElement('a');
+
+            a.style.display = 'none';
+
+            a.href = url;
+
+            a.setAttribute('download', 'download');
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
         },
 
     },
