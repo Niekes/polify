@@ -19,11 +19,14 @@ module.exports = {
         },
     },
     devServer: {
-        hot: false,
+        hot: true,
     },
     pwa: {
         name: process.env.VUE_APP_TITLE,
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
+        workboxOptions: {
+            skipWaiting: true,
+        },
     },
 };
