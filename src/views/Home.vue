@@ -1,41 +1,37 @@
 <template>
-    <div>
-        <button
-            @click="randomize"
-            v-text="'randomize'"
-        />
+    <div class="home">
+        <div class="control">
+            <button
+                @click="randomize"
+                v-text="'randomize'"
+            />
 
-        <button
-            @click="download"
-            v-text="'donwload'"
-        />
+            <input
+                v-model="amount"
+                type="range"
+                min="10"
+                max="10000"
+                step="1"
+                class="amount"
+                @change="update"
+            >
 
-        <input
-            v-model="amount"
-            type="range"
-            min="10"
-            max="10000"
-            step="1"
-            class="amount"
-            @change="update"
-        >
+            <label>amount of points: {{ amount }}</label>
 
-        <label>amount of points: {{ amount }}</label>
+            <button
+                @click="download"
+                v-text="'donwload'"
+            />
 
-        <input
-            type="file"
-            accept="image/*"
-            @change="encodeImageFileAsURL"
-        >
-
-        <canvas
-            id="canvas"
-            :width="width"
-            :height="height"
-        />
+            <input
+                type="file"
+                accept="image/*"
+                @change="encodeImageFileAsURL"
+            >
+        </div>
 
         <div
-            id="container"
+            class="context"
         >
             <svg
                 id="svg"
@@ -46,6 +42,12 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
             />
         </div>
+
+        <canvas
+            id="canvas"
+            :width="width"
+            :height="height"
+        />
     </div>
 </template>
 
@@ -225,7 +227,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#container {
+.home {
+    display: grid;
+    gap: $margin-y 0;
+    grid-template-areas: "control" "context";
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+}
+
+.control {
+    grid-area: control;
+}
+
+.context {
+    grid-area: context;
     height: 100%;
     margin: 0 auto;
     width: 100%;
