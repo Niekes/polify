@@ -1,7 +1,5 @@
 <template>
     <div>
-        <h1 v-text="$t('adjust.title')" />
-
         <button
             @click="randomize"
             v-text="'randomize'"
@@ -16,7 +14,7 @@
             v-model="amount"
             type="range"
             min="10"
-            max="5000"
+            max="10000"
             step="1"
             class="amount"
             @change="update"
@@ -24,24 +22,28 @@
 
         <label>amount of points: {{ amount }}</label>
 
+        <input
+            type="file"
+            accept="image/*"
+            @change="encodeImageFileAsURL"
+        >
+
+        <canvas
+            id="canvas"
+            :width="width"
+            :height="height"
+        />
+
         <div
             id="container"
-            :style="{
-                height: `${height}px`,
-                width: `${width}px`,
-            }"
         >
-            <canvas
-                id="canvas"
-                :width="width"
-                :height="height"
-            />
-
             <svg
                 id="svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
+                :viewBox="viewBox"
+                preserveAspectRatio="none"
+                version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
-                :viewbox="`0 0 ${width} ${height}`"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
             />
         </div>
     </div>
@@ -53,26 +55,25 @@ import { Delaunay } from 'd3-delaunay';
 import {
     range,
     select,
-    randomUniform,
+    randomInt,
     polygonCentroid,
 } from 'd3';
 
 export default {
-    name: 'Adjust',
+    name: 'Home',
 
     data() {
         return {
-            radius: 0,
-            delaunay: null,
+            ctx: null,
             amount: 200,
-            colorTimeout: null,
         };
     },
 
     computed: {
 
-        ctx() {
-            return this.$store.getters['canvas/ctx'];
+        scopeId() {
+            // eslint-disable-next-line no-underscore-dangle
+            return this.$options._scopeId;
         },
 
         height() {
@@ -83,23 +84,21 @@ export default {
             return this.$store.getters['canvas/width'];
         },
 
+        viewBox() {
+            return `0 0 ${this.width} ${this.height}`;
+        },
+
     },
 
     mounted() {
-        this.init();
+        this.ctx = select('#canvas').node().getContext('2d');
     },
 
     methods: {
-        init() {
-            if (this.ctx) {
-                this.update();
-            }
-        },
-
         update() {
             const circles = range(this.amount).map(() => {
-                const x = Number.parseInt(randomUniform(0, this.width)(), 10);
-                const y = Number.parseInt(randomUniform(0, this.height)(), 10);
+                const x = randomInt(0, this.width)();
+                const y = randomInt(0, this.height)();
 
                 return {
                     x,
@@ -108,10 +107,22 @@ export default {
             });
 
             circles.push(
-                { x: 0, y: 0 },
-                { x: 0, y: this.height },
-                { x: this.width, y: this.height },
-                { x: this.width, y: 0 },
+                {
+                    x: 0,
+                    y: 0,
+                },
+                {
+                    x: 0,
+                    y: this.height,
+                },
+                {
+                    x: this.width,
+                    y: this.height,
+                },
+                {
+                    x: this.width,
+                    y: 0,
+                },
             );
 
             this.delaunay = Delaunay.from(circles, d => d.x, d => d.y);
@@ -128,7 +139,7 @@ export default {
                 });
             }
 
-            const tri = select(this.$el).select('svg').selectAll('path.triangles').data(t);
+            const tri = select(this.$el).select('#svg').selectAll('path.triangles').data(t);
 
             tri
                 .enter()
@@ -147,29 +158,6 @@ export default {
                 .remove();
         },
 
-        /*  for later use
-        createGradient() {
-            const gradient = this.ctx.createLinearGradient(0, 0, 960, 500);
-
-            // Add three color stops
-            gradient.addColorStop(0, select(this.$el).select('#color1').property('value'));
-            gradient.addColorStop(0.5, 'cyan');
-            gradient.addColorStop(1, select(this.$el).select('#color1').property('value'));
-
-            // Set the fill style and draw a rectangle
-            this.ctx.fillStyle = gradient;
-            this.ctx.fillRect(0, 0, 960, 500);
-        },
-
-        changeColor() {
-            window.clearTimeout(this.colorTimeout);
-            this.colorTimeout = window.setTimeout(() => {
-                this.update();
-            }, 1000);
-        },
-
-        */
-
         setColor(d, i) {
             const [x, y] = polygonCentroid(this.delaunay.trianglePolygon(i));
 
@@ -182,10 +170,37 @@ export default {
             this.update();
         },
 
+        encodeImageFileAsURL(e) {
+            const filesSelected = e.target.files;
+            if (filesSelected.length) {
+                const fileToLoad = filesSelected[0];
+                const fileReader = new FileReader();
+
+                fileReader.onload = (fileLoadedEvent) => {
+                    const srcData = fileLoadedEvent.target.result;
+                    const newImage = document.createElement('img');
+
+                    newImage.onload = () => {
+                        this.$store.commit('canvas/setWidth', newImage.width);
+                        this.$store.commit('canvas/setHeight', newImage.height);
+
+                        this.$nextTick(() => {
+                            this.ctx.drawImage(newImage, 0, 0);
+                            this.update();
+                        });
+                    };
+
+                    newImage.src = srcData;
+                };
+
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        },
+
         download() {
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
-            source = `<?xml version="1.0" standalone="no"?>${source}`;
+            source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
 
             const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
 
@@ -211,23 +226,19 @@ export default {
 
 <style lang="scss" scoped>
 #container {
-    margin: auto;
-    position: relative;
+    height: 100%;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#svg {
+    display: block;
+    height: 100%;
+    margin: 0 auto;
+    width: 75%;
 }
 
 #canvas {
     display: none;
-}
-
-#canvas,
-#svg {
-    bottom: 0;
-    height: 100%;
-    left: 0;
-    margin: auto;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%;
 }
 </style>

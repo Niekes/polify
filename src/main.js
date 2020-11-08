@@ -10,8 +10,7 @@ import './registerServiceWorker';
 */
 
 /* eslint-disable import/extensions */
-import '@/assets/img/home.svg?sprite';
-import '@/assets/img/warning.svg?sprite';
+import '@/assets/svg/logo.svg?sprite';
 
 Vue.config.productionTip = false;
 
