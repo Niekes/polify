@@ -13,7 +13,14 @@
                         @change="update"
                     >
 
-                    <label>amount of points: {{ amount }}</label>
+                    <label>amount of points:</label>
+                    <input
+                        v-model="amount"
+                        type="number"
+                        min="10"
+                        max="10000"
+                        @change="update"
+                    >
                 </div>
 
                 <div class="range-control">
@@ -27,7 +34,14 @@
                         @change="changeColor"
                     >
 
-                    <label>hue: {{ hue }}</label>
+                    <label>hue:</label>
+                    <input
+                        v-model="hue"
+                        type="number"
+                        min="0"
+                        max="360"
+                        @change="changeColor"
+                    >
                 </div>
 
                 <div class="range-control">
@@ -41,7 +55,14 @@
                         @change="changeColor"
                     >
 
-                    <label>saturation: {{ saturation }}</label>
+                    <label>saturation:</label>
+                    <input
+                        v-model="saturation"
+                        type="number"
+                        min="0"
+                        max="100"
+                        @change="changeColor"
+                    >
                 </div>
 
                 <div class="range-control">
@@ -55,7 +76,14 @@
                         @change="changeColor"
                     >
 
-                    <label>lightness: {{ lightness }}</label>
+                    <label>lightness:</label>
+                    <input
+                        v-model="lightness"
+                        type="number"
+                        min="0"
+                        max="100"
+                        @change="changeColor"
+                    >
                 </div>
 
                 <div class="range-control">
@@ -69,7 +97,14 @@
                         @change="changeColor"
                     >
 
-                    <label>opacity: {{ opacity }}</label>
+                    <label>opacity:</label>
+                    <input
+                        v-model="opacity"
+                        type="number"
+                        min="0"
+                        max="100"
+                        @change="changeColor"
+                    >
                 </div>
                 <button
                     @click="randomize"
@@ -78,11 +113,6 @@
             </div>
 
             <div class="control__handle-image">
-                <button
-                    @click="download"
-                    v-text="'donwload'"
-                />
-
                 <input
                     type="file"
                     accept="image/x-png,image/jpeg"
@@ -114,6 +144,12 @@
             id="default-img"
             :src="defaultImg"
         >
+
+        <button
+            id="download-btn"
+            @click="download"
+            v-text="'DONWLOAD'"
+        />
     </div>
 </template>
 
@@ -310,7 +346,7 @@ export default {
 
             a.href = url;
 
-            a.setAttribute('download', 'download');
+            a.setAttribute('download', 'polyfy');
 
             document.body.appendChild(a);
 
@@ -350,11 +386,15 @@ export default {
 }
 
 .range-control {
-    align-items: flex-start;
+    align-items: center;
     display: flex;
 
-    input {
+    input[type="range"] {
         width: 15rem;
+    }
+
+    input[type="number"] {
+        width: 5rem;
     }
 }
 
@@ -381,12 +421,9 @@ export default {
     user-select: none;
 }
 
-/* stylelint-disable */
-// https://codepen.io/ainalem/pen/NyVmwm
-
 button {
-    background: $black-25;
-    border: none;
+    background: skyblue;
+    border: 2px solid $black-25;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
     color: $white;
@@ -396,15 +433,28 @@ button {
     text-shadow: $text-shadow;
 
     &:hover {
-        filter: contrast(1.1);
-    }
-
-    &:active:hover {
         filter: contrast(1.2);
     }
 
     &:focus {
         outline: none;
     }
+
+    &:active:hover {
+        filter: contrast(1.2);
+    }
+}
+
+#download-btn {
+    $h: 3rem;
+    $w: 8rem;
+
+    bottom: $margin-y;
+    height: $h;
+    left: 50%;
+    margin-left: -($w / 2);
+    margin-top: -($h / 2);
+    position: fixed;
+    width: $w;
 }
 </style>
