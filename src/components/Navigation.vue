@@ -30,7 +30,7 @@ export default {
 
 .logo {
     border-radius: 10%;
-    box-shadow: 0 0 10px 2px $black-30;
+    box-shadow: $box-shadow;
     grid-area: logo;
     height: 6rem;
     user-select: none;

@@ -1,33 +1,94 @@
 <template>
     <div class="home">
         <div class="control">
-            <button
-                @click="randomize"
-                v-text="'randomize'"
-            />
+            <div class="control__parameters">
+                <div class="range-control">
+                    <input
+                        v-model="amount"
+                        type="range"
+                        min="10"
+                        max="10000"
+                        step="1"
+                        class="amount"
+                        @change="update"
+                    >
 
-            <input
-                v-model="amount"
-                type="range"
-                min="10"
-                max="10000"
-                step="1"
-                class="amount"
-                @change="update"
-            >
+                    <label>amount of points: {{ amount }}</label>
+                </div>
 
-            <label>amount of points: {{ amount }}</label>
+                <div class="range-control">
+                    <input
+                        v-model="hue"
+                        type="range"
+                        min="0"
+                        max="360"
+                        step="0.01"
+                        class="hue"
+                        @change="changeColor"
+                    >
 
-            <button
-                @click="download"
-                v-text="'donwload'"
-            />
+                    <label>hue: {{ hue }}</label>
+                </div>
 
-            <input
-                type="file"
-                accept="image/*"
-                @change="encodeImageFileAsURL"
-            >
+                <div class="range-control">
+                    <input
+                        v-model="saturation"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        class="saturation"
+                        @change="changeColor"
+                    >
+
+                    <label>saturation: {{ saturation }}</label>
+                </div>
+
+                <div class="range-control">
+                    <input
+                        v-model="lightness"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        class="lightness"
+                        @change="changeColor"
+                    >
+
+                    <label>lightness: {{ lightness }}</label>
+                </div>
+
+                <div class="range-control">
+                    <input
+                        v-model="opacity"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        class="opacity"
+                        @change="changeColor"
+                    >
+
+                    <label>opacity: {{ opacity }}</label>
+                </div>
+                <button
+                    @click="randomize"
+                    v-text="'randomize'"
+                />
+            </div>
+
+            <div class="control__handle-image">
+                <button
+                    @click="download"
+                    v-text="'donwload'"
+                />
+
+                <input
+                    type="file"
+                    accept="image/x-png,image/jpeg"
+                    @change="encodeImageFileAsURL"
+                >
+            </div>
         </div>
 
         <div
@@ -48,6 +109,11 @@
             :width="width"
             :height="height"
         />
+
+        <img
+            id="default-img"
+            :src="defaultImg"
+        >
     </div>
 </template>
 
@@ -58,6 +124,8 @@ import {
     range,
     select,
     randomInt,
+    color,
+    hsl,
     polygonCentroid,
 } from 'd3';
 
@@ -67,15 +135,19 @@ export default {
     data() {
         return {
             ctx: null,
-            amount: 200,
+            amount: 10,
+            hue: 0,
+            saturation: 100,
+            lightness: 100,
+            opacity: 100,
         };
     },
 
     computed: {
 
-        scopeId() {
-            // eslint-disable-next-line no-underscore-dangle
-            return this.$options._scopeId;
+        defaultImg() {
+            // eslint-disable-next-line global-require
+            return require('@/assets/img/default.jpg');
         },
 
         height() {
@@ -94,6 +166,17 @@ export default {
 
     mounted() {
         this.ctx = select('#canvas').node().getContext('2d');
+        const img = select('#default-img');
+
+        img.on('load', () => {
+            this.$store.commit('canvas/setWidth', img.node().width);
+            this.$store.commit('canvas/setHeight', img.node().height);
+
+            this.$nextTick(() => {
+                this.ctx.drawImage(img.node(), 0, 0);
+                this.update();
+            });
+        });
     },
 
     methods: {
@@ -129,10 +212,10 @@ export default {
 
             this.delaunay = Delaunay.from(circles, d => d.x, d => d.y);
 
-            const t = [];
+            const data = [];
 
             for (let i = 0; i < this.delaunay.triangles.length; i += 3) {
-                t.push({
+                data.push({
                     data: [
                         this.delaunay.triangles[i],
                         this.delaunay.triangles[i + 1],
@@ -141,7 +224,11 @@ export default {
                 });
             }
 
-            const tri = select(this.$el).select('#svg').selectAll('path.triangles').data(t);
+            this.updateTriangles(data);
+        },
+
+        updateTriangles(data) {
+            const tri = select(this.$el).select('#svg').selectAll('path.triangles').data(data);
 
             tri
                 .enter()
@@ -160,12 +247,23 @@ export default {
                 .remove();
         },
 
+        changeColor() {
+            this.updateTriangles(select(this.$el).select('#svg').selectAll('path.triangles').data());
+        },
+
         setColor(d, i) {
             const [x, y] = polygonCentroid(this.delaunay.trianglePolygon(i));
 
             const { data: colors } = this.ctx.getImageData(x, y, 1, 1);
 
-            return `rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`;
+            const colorHsl = hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
+
+            colorHsl.h += Number(this.hue);
+            colorHsl.s *= (Number(this.saturation) / 100);
+            colorHsl.l *= (Number(this.lightness) / 100);
+            colorHsl.opacity = (Number(this.opacity) / 100);
+
+            return colorHsl.formatRgb();
         },
 
         randomize() {
@@ -229,14 +327,35 @@ export default {
 <style lang="scss" scoped>
 .home {
     display: grid;
-    gap: $margin-y 0;
+    gap: $margin-y * 2 0;
     grid-template-areas: "control" "context";
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
 }
 
 .control {
+    display: grid;
     grid-area: control;
+    grid-template-areas: "parmeters handle-image";
+    grid-template-columns: 1fr min-content;
+    grid-template-rows: min-content;
+}
+
+.control__parameters {
+    grid-area: parmeters;
+}
+
+.control__handle-image {
+    grid-area: handle-image;
+}
+
+.range-control {
+    align-items: flex-start;
+    display: flex;
+
+    input {
+        width: 15rem;
+    }
 }
 
 .context {
@@ -250,10 +369,42 @@ export default {
     display: block;
     height: 100%;
     margin: 0 auto;
+    pointer-events: none;
+    user-select: none;
     width: 75%;
 }
 
+#default-img,
 #canvas {
     display: none;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* stylelint-disable */
+// https://codepen.io/ainalem/pen/NyVmwm
+
+button {
+    background: $black-25;
+    border: none;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    color: $white;
+    cursor: pointer;
+    filter: contrast(1);
+    padding: $padding-y $padding-x * 2;
+    text-shadow: $text-shadow;
+
+    &:hover {
+        filter: contrast(1.1);
+    }
+
+    &:active:hover {
+        filter: contrast(1.2);
+    }
+
+    &:focus {
+        outline: none;
+    }
 }
 </style>
