@@ -106,6 +106,28 @@
                         @change="changeColor"
                     >
                 </div>
+
+                <div class="range-control">
+                    <input
+                        v-model="contrast"
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="0.01"
+                        class="contrast"
+                        @change="changeColor"
+                    >
+
+                    <label>contrast:</label>
+                    <input
+                        v-model="contrast"
+                        type="number"
+                        min="-100"
+                        max="100"
+                        @change="changeColor"
+                    >
+                </div>
+
                 <button
                     @click="randomize"
                     v-text="'randomize'"
@@ -173,6 +195,7 @@ export default {
             ctx: null,
             amount: 10,
             hue: 0,
+            contrast: 0,
             saturation: 100,
             lightness: 100,
             opacity: 100,
@@ -294,12 +317,21 @@ export default {
 
             const colorHsl = hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
 
+            const c = (Number(this.contrast) / 100) + 1;
+            const intercept = 128 * (1 - c);
+
             colorHsl.h += Number(this.hue);
             colorHsl.s *= (Number(this.saturation) / 100);
             colorHsl.l *= (Number(this.lightness) / 100);
             colorHsl.opacity = (Number(this.opacity) / 100);
 
-            return colorHsl.formatRgb();
+            const rgb = colorHsl.rgb();
+
+            rgb.r = rgb.r * c + intercept;
+            rgb.g = rgb.g * c + intercept;
+            rgb.b = rgb.b * c + intercept;
+
+            return rgb;
         },
 
         randomize() {
