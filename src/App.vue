@@ -1,20 +1,13 @@
 <template>
     <div id="app">
-        <Navigation />
         <router-view />
     </div>
 </template>
 
 <script>
-import Navigation from '@/components/Navigation';
 
 export default {
     name: 'Main',
-
-    components: {
-        Navigation,
-    },
-
 };
 </script>
 
@@ -24,6 +17,12 @@ export default {
 * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#app {
+    height: 100%;
 }
 
 body {
@@ -41,8 +40,6 @@ body {
 }
 
 #app {
-    margin: 0 auto;
-    max-width: $breakpoint-lg;
     padding: 0 $padding-x * 2;
 }
 </style>

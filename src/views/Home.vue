@@ -1,8 +1,29 @@
 <template>
     <div class="home">
+        <div class="navigation">
+            <img
+                class="logo"
+                :src="logoSrc"
+            >
+        </div>
         <div class="control">
             <div class="control__parameters">
+                <div class="control__handle-image">
+                    <input
+                        type="file"
+                        accept="image/x-png,image/jpeg"
+                        @change="encodeImageFileAsURL"
+                    >
+                </div>
+
+                <canvas
+                    id="canvas"
+                    :width="width"
+                    :height="height"
+                />
+
                 <div class="range-control">
+                    <label>amount of points: {{ amount }}</label>
                     <input
                         v-model="amount"
                         type="range"
@@ -12,18 +33,10 @@
                         class="amount"
                         @change="update"
                     >
-
-                    <label>amount of points:</label>
-                    <input
-                        v-model="amount"
-                        type="number"
-                        min="10"
-                        max="10000"
-                        @change="update"
-                    >
                 </div>
 
                 <div class="range-control">
+                    <label>hue: {{ hue }}</label>
                     <input
                         v-model="hue"
                         type="range"
@@ -33,18 +46,10 @@
                         class="hue"
                         @change="changeColor"
                     >
-
-                    <label>hue:</label>
-                    <input
-                        v-model="hue"
-                        type="number"
-                        min="0"
-                        max="360"
-                        @change="changeColor"
-                    >
                 </div>
 
                 <div class="range-control">
+                    <label>saturation: {{ saturation }}</label>
                     <input
                         v-model="saturation"
                         type="range"
@@ -54,18 +59,10 @@
                         class="saturation"
                         @change="changeColor"
                     >
-
-                    <label>saturation:</label>
-                    <input
-                        v-model="saturation"
-                        type="number"
-                        min="0"
-                        max="100"
-                        @change="changeColor"
-                    >
                 </div>
 
                 <div class="range-control">
+                    <label>lightness: {{ lightness }}</label>
                     <input
                         v-model="lightness"
                         type="range"
@@ -75,18 +72,10 @@
                         class="lightness"
                         @change="changeColor"
                     >
-
-                    <label>lightness:</label>
-                    <input
-                        v-model="lightness"
-                        type="number"
-                        min="0"
-                        max="100"
-                        @change="changeColor"
-                    >
                 </div>
 
                 <div class="range-control">
+                    <label>opacity: {{ opacity }}</label>
                     <input
                         v-model="opacity"
                         type="range"
@@ -96,18 +85,10 @@
                         class="opacity"
                         @change="changeColor"
                     >
-
-                    <label>opacity:</label>
-                    <input
-                        v-model="opacity"
-                        type="number"
-                        min="0"
-                        max="100"
-                        @change="changeColor"
-                    >
                 </div>
 
                 <div class="range-control">
+                    <label>contrast: {{ contrast }}</label>
                     <input
                         v-model="contrast"
                         type="range"
@@ -117,29 +98,12 @@
                         class="contrast"
                         @change="changeColor"
                     >
-
-                    <label>contrast:</label>
-                    <input
-                        v-model="contrast"
-                        type="number"
-                        min="-100"
-                        max="100"
-                        @change="changeColor"
-                    >
                 </div>
 
                 <button
                     @click="randomize"
                     v-text="'randomize'"
                 />
-            </div>
-
-            <div class="control__handle-image">
-                <input
-                    type="file"
-                    accept="image/x-png,image/jpeg"
-                    @change="encodeImageFileAsURL"
-                >
             </div>
         </div>
 
@@ -155,12 +119,6 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
             />
         </div>
-
-        <canvas
-            id="canvas"
-            :width="width"
-            :height="height"
-        />
 
         <img
             id="default-img"
@@ -203,6 +161,11 @@ export default {
     },
 
     computed: {
+
+        logoSrc() {
+            // eslint-disable-next-line global-require
+            return require('@/assets/img/logo.png');
+        },
 
         defaultImg() {
             // eslint-disable-next-line global-require
@@ -395,10 +358,27 @@ export default {
 <style lang="scss" scoped>
 .home {
     display: grid;
-    gap: $margin-y * 2 0;
-    grid-template-areas: "control" "context";
-    grid-template-columns: 1fr;
+    gap: $margin-y * 2 $margin-x * 2;
+    grid-template-areas: "navigation navigation" "control context";
+    grid-template-columns: min-content 1fr;
     grid-template-rows: min-content 1fr;
+    height: 100%;
+}
+
+.navigation {
+    border-bottom: 1px solid $black-25;
+    display: grid;
+    grid-area: navigation;
+    grid-template-areas: "logo .";
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: 1fr;
+    padding: $padding-y * 2 0;
+}
+
+.logo {
+    grid-area: logo;
+    height: 3rem;
+    user-select: none;
 }
 
 .control {
@@ -418,36 +398,45 @@ export default {
 }
 
 .range-control {
-    align-items: center;
     display: flex;
+    flex-direction: column;
 
     input[type="range"] {
-        width: 15rem;
+        margin-bottom: $margin-y;
+        width: 100%;
     }
 
-    input[type="number"] {
-        width: 5rem;
+    label {
+        font-size: $font-size;
+        margin-left: $margin-x;
+        white-space: nowrap;
     }
 }
 
 .context {
+    align-items: center;
+    display: flex;
     grid-area: context;
     height: 100%;
-    margin: 0 auto;
+    justify-content: center;
     width: 100%;
+}
+
+#canvas {
+    height: auto;
+    max-height: 6rem;
+    width: auto;
 }
 
 #svg {
     display: block;
-    height: 100%;
-    margin: 0 auto;
+    flex: 1;
+    max-height: 100%;
     pointer-events: none;
     user-select: none;
-    width: 75%;
 }
 
-#default-img,
-#canvas {
+#default-img {
     display: none;
     pointer-events: none;
     user-select: none;
