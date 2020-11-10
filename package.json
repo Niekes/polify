@@ -8,6 +8,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "reset": "rm package-lock.json || true && rm -rf node_modules/ || true && npm install && npm dedupe && npm start",
+    "deploy": "npm run build && node deploy",
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "ftp-deploy": "^2.3.8",
     "@vue/cli-plugin-babel": "^3.5.0",
     "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-plugin-pwa": "^3.5.0",
