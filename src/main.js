@@ -11,6 +11,7 @@ import './registerServiceWorker';
 
 /* eslint-disable import/extensions */
 import '@/assets/svg/logo.svg?sprite';
+import '@/assets/svg/upload.svg?sprite';
 
 Vue.config.productionTip = false;
 

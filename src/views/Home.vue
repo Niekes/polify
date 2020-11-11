@@ -7,21 +7,29 @@
             >
         </div>
         <div class="control">
-            <div class="control__parameters">
-                <div class="control__handle-image">
-                    <input
-                        type="file"
-                        accept="image/x-png,image/jpeg"
-                        @change="encodeImageFileAsURL"
-                    >
-                </div>
+            <div class="control__reference-image">
+                <small>Reference image:</small>
+                <input
+                    id="file-1"
+                    type="file"
+                    class="file"
+                    accept="image/x-png,image/jpeg"
+                    @change="encodeImageFileAsURL"
+                >
+                <label
+                    class="label"
+                    for="file-1"
+                >
+                    <svg-icon :xlink="'#upload'" />
+                </label>
 
                 <canvas
                     id="canvas"
                     :width="width"
                     :height="height"
                 />
-
+            </div>
+            <div class="control__parameters">
                 <div class="range-control">
                     <label>amount of points: {{ amount }}</label>
                     <input
@@ -113,7 +121,7 @@
             <svg
                 id="svg"
                 :viewBox="viewBox"
-                preserveAspectRatio="none"
+                preserveAspectRatio="xMidYMin"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -145,8 +153,14 @@ import {
     polygonCentroid,
 } from 'd3';
 
+import SvgIcon from '@/components/SvgIcon';
+
 export default {
     name: 'Home',
+
+    components: {
+        SvgIcon,
+    },
 
     data() {
         return {
@@ -361,8 +375,9 @@ export default {
     gap: $margin-y * 2 $margin-x * 2;
     grid-template-areas: "navigation navigation" "control context";
     grid-template-columns: min-content 1fr;
-    grid-template-rows: min-content 1fr;
-    height: 100%;
+    grid-template-rows: min-content minmax(0, 1fr);
+    height: calc(100% - #{$padding-y * 2});
+    padding-bottom: $padding-y * 2;
 }
 
 .navigation {
@@ -383,18 +398,55 @@ export default {
 
 .control {
     display: grid;
-    grid-area: control;
-    grid-template-areas: "parmeters handle-image";
-    grid-template-columns: 1fr min-content;
-    grid-template-rows: min-content;
+    gap: $margin-y 0;
+    grid-template-areas: "reference-image" "parameters";
+    grid-template-columns: 100%;
+    grid-template-rows: min-content 1fr;
+    padding: 0 $padding-x * 2;
+}
+
+.control__reference-image {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    grid-area: reference-image;
+    position: relative;
+
+    small {
+        align-self: flex-start;
+        color: $black;
+        text-align: left;
+    }
+
+    .label {
+        background-color: $black-50;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+        color: $white;
+        cursor: pointer;
+        filter: drop-shadow(0 0 1px $black-50);
+        padding: $padding;
+        position: absolute;
+        right: 0;
+
+        svg {
+            height: 1rem;
+            width: 1rem;
+        }
+    }
+
+    .file {
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        width: 0.1px;
+        z-index: -1;
+    }
 }
 
 .control__parameters {
-    grid-area: parmeters;
-}
-
-.control__handle-image {
-    grid-area: handle-image;
+    grid-area: parameters;
 }
 
 .range-control {
@@ -423,6 +475,8 @@ export default {
 }
 
 #canvas {
+    border: 5px solid $black-75;
+    border-radius: $border-radius;
     height: auto;
     max-height: 6rem;
     width: auto;
@@ -467,15 +521,9 @@ button {
 }
 
 #download-btn {
-    $h: 3rem;
-    $w: 8rem;
-
     bottom: $margin-y;
-    height: $h;
-    left: 50%;
-    margin-left: -($w / 2);
-    margin-top: -($h / 2);
+    left: 0;
+    margin-left: $margin-x;
     position: fixed;
-    width: $w;
 }
 </style>
