@@ -438,7 +438,7 @@ export default {
         gap: $margin-y * 2 $margin-x * 2;
         grid-template-areas: "navigation" "context" "control";
         grid-template-columns: 1fr;
-        grid-template-rows: min-content minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: min-content min-content minmax(0, 1fr);
         height: calc(100% - #{$padding-y * 2});
         padding-bottom: $padding-y * 2;
     }
