@@ -78,7 +78,7 @@
                         type="range"
                         class="slider"
                         :min="0"
-                        :max="360"
+                        :max="100"
                         :step="0.01"
                         @change="changeColor"
                     >
@@ -93,7 +93,7 @@
                         type="range"
                         class="slider"
                         :min="0"
-                        :max="360"
+                        :max="100"
                         :step="0.01"
                         @change="changeColor"
                     >
@@ -108,7 +108,7 @@
                         type="range"
                         class="slider"
                         :min="0"
-                        :max="360"
+                        :max="100"
                         :step="0.01"
                         @change="changeColor"
                     >
