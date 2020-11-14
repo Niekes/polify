@@ -1,8 +1,16 @@
+const path = require('path');
 const StylelintPlugin = require('stylelint-webpack-plugin');
+
+process.env.VUE_APP_VERSION = require('./package.json').version;
 
 module.exports = {
     publicPath: process.env.VUE_APP_BASE,
     configureWebpack: {
+        resolve: {
+            alias: {
+                localstyles: path.resolve(__dirname, 'src/scss/_variables.scss'),
+            },
+        },
         plugins: [
             new StylelintPlugin({
                 files: ['**/*.vue', '**/*.scss'],

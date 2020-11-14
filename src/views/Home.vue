@@ -8,7 +8,7 @@
         </div>
         <div class="control">
             <div class="control__reference-image">
-                <small>Reference image:</small>
+                <small v-text="$t('home.referenceImage')" />
                 <input
                     id="file-1"
                     type="file"
@@ -28,90 +28,165 @@
                     :width="width"
                     :height="height"
                 />
+
+                <img
+                    id="default-img"
+                    :src="defaultImg"
+                >
             </div>
             <div class="control__parameters">
-                <div class="range-control">
-                    <label>amount of points: {{ amount }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.amountOfPoints')"
+                    />
+                    <vue-range-slider
                         v-model="amount"
-                        type="range"
-                        min="10"
-                        max="10000"
-                        step="1"
-                        class="amount"
-                        @change="update"
-                    >
+                        :min="10"
+                        :max="10000"
+                        :step="10"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="update"
+                    />
                 </div>
 
-                <div class="range-control">
-                    <label>hue: {{ hue }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.hue')"
+                    />
+                    <vue-range-slider
                         v-model="hue"
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="0.01"
-                        class="hue"
-                        @change="changeColor"
-                    >
+                        :min="0"
+                        :max="360"
+                        :step="0.01"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :formatter="value => `${value}°`"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="changeColor"
+                    />
                 </div>
 
-                <div class="range-control">
-                    <label>saturation: {{ saturation }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.saturation')"
+                    />
+                    <vue-range-slider
                         v-model="saturation"
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        class="saturation"
-                        @change="changeColor"
-                    >
+                        :min="0"
+                        :max="200"
+                        :step="0.01"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :formatter="value => `${value}%`"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="changeColor"
+                    />
                 </div>
 
-                <div class="range-control">
-                    <label>lightness: {{ lightness }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.lightness')"
+                    />
+                    <vue-range-slider
                         v-model="lightness"
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        class="lightness"
-                        @change="changeColor"
-                    >
+                        :min="0"
+                        :max="200"
+                        :step="0.01"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :formatter="value => `${value}%`"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="changeColor"
+                    />
                 </div>
 
-                <div class="range-control">
-                    <label>opacity: {{ opacity }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.opacity')"
+                    />
+                    <vue-range-slider
                         v-model="opacity"
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        class="opacity"
-                        @change="changeColor"
-                    >
+                        :min="0"
+                        :max="100"
+                        :step="0.01"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :formatter="value => `${value}%`"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="changeColor"
+                    />
                 </div>
 
-                <div class="range-control">
-                    <label>contrast: {{ contrast }}</label>
-                    <input
+                <div class="parameters__range-slider">
+                    <label
+                        v-text="$t('home.contrast')"
+                    />
+                    <vue-range-slider
                         v-model="contrast"
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="0.01"
-                        class="contrast"
-                        @change="changeColor"
-                    >
+                        :min="-100"
+                        :max="100"
+                        :step="0.01"
+                        :clickable="false"
+                        :tooltip-dir="'bottom'"
+                        :process-style="sliderProcessStyle"
+                        :tooltip-style="sliderTooltipStyle"
+                        :slider-style="sliderTooltipStyle"
+                        :bg-style="sliderBgStyle"
+                        @drag-end="changeColor"
+                    />
                 </div>
 
-                <button
-                    @click="randomize"
-                    v-text="'randomize'"
-                />
+                <div class="parameters__buttons">
+                    <button
+                        @click="randomize"
+                        v-text="$t('home.randomize')"
+                    />
+                    <button
+                        :disabled="!(amount !== 250
+                            || hue !== 0
+                            || saturation !== 100
+                            || lightness !== 100
+                            || opacity !== 100
+                            || contrast !== 0)"
+                        @click="reset"
+                        v-text="$t('home.reset')"
+                    />
+                </div>
+            </div>
+            <div class="control__download">
+                <div
+                    class="download__button"
+                    @click="download"
+                >
+                    <span v-text="$t('home.download')" />
+                    <svg>
+                        <polyline
+                            class="o1"
+                            points="0 0, 150 0, 150 55, 0 55, 0 0"
+                        />
+                        <polyline
+                            class="o2"
+                            points="0 0, 150 0, 150 55, 0 55, 0 0"
+                        />
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -127,22 +202,16 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
             />
         </div>
-
-        <img
-            id="default-img"
-            :src="defaultImg"
-        >
-
-        <button
-            id="download-btn"
-            @click="download"
-            v-text="'DONWLOAD'"
-        />
     </div>
 </template>
 
 <script>
+import VueRangeSlider from 'vue-range-component';
 import { Delaunay } from 'd3-delaunay';
+// eslint-disable-next-line import/extensions
+import localstyles from 'localstyles';
+
+import 'vue-range-component/dist/vue-range-slider.css';
 
 import {
     range,
@@ -160,12 +229,23 @@ export default {
 
     components: {
         SvgIcon,
+        VueRangeSlider,
     },
 
     data() {
         return {
+            sliderBgStyle: {
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+            },
+            sliderProcessStyle: {
+                backgroundColor: localstyles.primary,
+            },
+            sliderTooltipStyle: {
+                backgroundColor: localstyles.primary,
+                borderColor: localstyles.primary,
+            },
             ctx: null,
-            amount: 10,
+            amount: 250,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -342,6 +422,17 @@ export default {
             }
         },
 
+        reset() {
+            this.amount = 250;
+            this.hue = 0;
+            this.saturation = 100;
+            this.lightness = 100;
+            this.opacity = 100;
+            this.contrast = 0;
+
+            this.update();
+        },
+
         download() {
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
@@ -374,7 +465,7 @@ export default {
     display: grid;
     gap: $margin-y * 2 $margin-x * 2;
     grid-template-areas: "navigation navigation" "control context";
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: minmax(0, 15rem) 1fr;
     grid-template-rows: min-content minmax(0, 1fr);
     height: calc(100% - #{$padding-y * 2});
     padding-bottom: $padding-y * 2;
@@ -398,10 +489,10 @@ export default {
 
 .control {
     display: grid;
-    gap: $margin-y 0;
-    grid-template-areas: "reference-image" "parameters";
-    grid-template-columns: 100%;
-    grid-template-rows: min-content 1fr;
+    gap: $margin-y * 2 0;
+    grid-template-areas: "reference-image" "parameters" "download";
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr 1fr;
     padding: 0 $padding-x * 2;
 }
 
@@ -449,19 +540,109 @@ export default {
     grid-area: parameters;
 }
 
-.range-control {
+.parameters__range-slider {
     display: flex;
     flex-direction: column;
 
-    input[type="range"] {
-        margin-bottom: $margin-y;
-        width: 100%;
+    .vue-range-slider {
+        margin-bottom: $margin-y * 7;
+        padding: 0 !important;
     }
 
     label {
-        font-size: $font-size;
-        margin-left: $margin-x;
+        font-size: $font-size * 0.7;
+        margin-bottom: $margin-y / 2;
         white-space: nowrap;
+    }
+}
+
+.parameters__buttons {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        background-color: $primary;
+        border: $border-width solid $black-25;
+        border-radius: $border-radius;
+        color: $white;
+        cursor: pointer;
+        display: inline-block;
+        filter: contrast(0.8);
+        font-size: 1rem;
+        padding: $padding;
+        text-align: center;
+        text-decoration: none;
+        transition: filter 450ms ease-in-out;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            filter: contrast(1);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    }
+}
+
+.control__download {
+    align-items: flex-end;
+    display: flex;
+    grid-area: download;
+    justify-content: center;
+
+    .download__button {
+        align-items: center;
+        border-radius: $border-radius;
+        color: $white;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        text-shadow: $text-shadow;
+        transition: color 1s ease-in-out;
+
+        svg {
+            fill: none;
+            height: 55px;
+            stroke-width: 3;
+            width: 150px;
+
+            .o1 {
+                fill: rgba($secondary, 0.7);
+                stroke: $black-25;
+                transition: fill 1s ease-in-out;
+            }
+
+            .o2 {
+                stroke: $white;
+                stroke-dasharray: 20 420;
+                stroke-dashoffset: 20;
+                transition: stroke-dashoffset 1s ease-in-out;
+            }
+        }
+
+        span {
+            letter-spacing: 1px;
+            margin: auto 0;
+            position: absolute;
+            text-transform: uppercase;
+        }
+
+        &:hover {
+            .o1 {
+                fill: rgba($secondary, 0.9);
+            }
+
+            .o2 {
+                stroke-dashoffset: -420;
+            }
+        }
     }
 }
 
@@ -494,36 +675,5 @@ export default {
     display: none;
     pointer-events: none;
     user-select: none;
-}
-
-button {
-    background: skyblue;
-    border: 2px solid $black-25;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    color: $white;
-    cursor: pointer;
-    filter: contrast(1);
-    padding: $padding-y $padding-x * 2;
-    text-shadow: $text-shadow;
-
-    &:hover {
-        filter: contrast(1.2);
-    }
-
-    &:focus {
-        outline: none;
-    }
-
-    &:active:hover {
-        filter: contrast(1.2);
-    }
-}
-
-#download-btn {
-    bottom: $margin-y;
-    left: 0;
-    margin-left: $margin-x;
-    position: fixed;
 }
 </style>
