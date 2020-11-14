@@ -432,6 +432,18 @@ export default {
     padding-bottom: $padding-y * 2;
 }
 
+@media (max-width: $breakpoint-sm) {
+    .home {
+        display: grid;
+        gap: $margin-y * 2 $margin-x * 2;
+        grid-template-areas: "navigation" "context" "control";
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content minmax(0, 1fr) minmax(0, 1fr);
+        height: calc(100% - #{$padding-y * 2});
+        padding-bottom: $padding-y * 2;
+    }
+}
+
 .navigation {
     border-bottom: 1px solid $black-25;
     display: grid;
@@ -674,6 +686,7 @@ export default {
         display: flex;
         justify-content: center;
         overflow: hidden;
+        padding: $padding-y * 2 $padding-x * 2;
         text-shadow: $text-shadow;
     }
 }
