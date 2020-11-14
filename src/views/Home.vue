@@ -175,22 +175,16 @@
                 </div>
             </div>
             <div class="control__download">
-                <div
+                <button
                     class="download__button"
-                    @click="download"
-                >
-                    <span v-text="$t('home.download')" />
-                    <svg>
-                        <polyline
-                            class="o1"
-                            points="0 0, 150 0, 150 55, 0 55, 0 0"
-                        />
-                        <polyline
-                            class="o2"
-                            points="0 0, 150 0, 150 55, 0 55, 0 0"
-                        />
-                    </svg>
-                </div>
+                    @click="downloadAsPng"
+                    v-text="$t('home.downloadAsPng')"
+                />
+                <button
+                    class="download__button"
+                    @click="downloadAsSvg"
+                    v-text="$t('home.downloadAsSvg')"
+                />
             </div>
         </div>
 
@@ -246,6 +240,8 @@ export default {
                 backgroundColor: localstyles.primary,
             },
             sliderTooltipStyle: {
+                fontSize: '0.5rem',
+                padding: '0rem',
                 backgroundColor: localstyles.primary,
                 borderColor: localstyles.primary,
             },
@@ -438,12 +434,7 @@ export default {
             this.update();
         },
 
-        download() {
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
-
-            /* eslint-disable */
-            return;
-
+        downloadAsSvg() {
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
@@ -463,6 +454,10 @@ export default {
             a.click();
 
             document.body.removeChild(a);
+        },
+
+        downloadAsPng() {
+            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
         },
 
     },
@@ -529,6 +524,12 @@ export default {
         padding: $padding;
         position: absolute;
         right: 0;
+        transition: background-color 450ms ease-in-out;
+        z-index: $z-index-dropdown;
+
+        &:hover {
+            background-color: $black-75;
+        }
 
         svg {
             height: 1rem;
@@ -555,7 +556,7 @@ export default {
     flex-direction: column;
 
     .vue-range-slider {
-        margin-bottom: $margin-y * 7;
+        margin-bottom: $margin-y * 5;
         padding: 0 !important;
     }
 
@@ -615,44 +616,6 @@ export default {
         justify-content: center;
         overflow: hidden;
         text-shadow: $text-shadow;
-        transition: color 1s ease-in-out;
-
-        svg {
-            fill: none;
-            height: 55px;
-            stroke-width: 3;
-            width: 150px;
-
-            .o1 {
-                fill: rgba($secondary, 0.7);
-                stroke: $black-25;
-                transition: fill 1s ease-in-out;
-            }
-
-            .o2 {
-                stroke: $white;
-                stroke-dasharray: 20 420;
-                stroke-dashoffset: 20;
-                transition: stroke-dashoffset 1s ease-in-out;
-            }
-        }
-
-        span {
-            letter-spacing: 1px;
-            margin: auto 0;
-            position: absolute;
-            text-transform: uppercase;
-        }
-
-        &:hover {
-            .o1 {
-                fill: rgba($secondary, 0.9);
-            }
-
-            .o2 {
-                stroke-dashoffset: -420;
-            }
-        }
     }
 }
 
