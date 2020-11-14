@@ -29,6 +29,10 @@
                     :height="height"
                 />
 
+                <canvas
+                    id="canvas-download"
+                />
+
                 <img
                     id="default-img"
                     :src="defaultImg"
@@ -206,6 +210,7 @@
 </template>
 
 <script>
+import { saveSvgAsPng } from 'save-svg-as-png';
 import VueRangeSlider from 'vue-range-component';
 import { Delaunay } from 'd3-delaunay';
 // eslint-disable-next-line import/extensions
@@ -434,6 +439,11 @@ export default {
         },
 
         download() {
+            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
+
+            /* eslint-disable */
+            return;
+
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
@@ -675,5 +685,10 @@ export default {
     display: none;
     pointer-events: none;
     user-select: none;
+}
+
+#canvas-download {
+    position: absolute;
+    top: 0;
 }
 </style>
