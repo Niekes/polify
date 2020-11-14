@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueAnalytics from 'vue-analytics';
-import VueGtag from 'vue-gtag';
 import router from '@/router';
 import store from '@/store';
 import App from './App';
@@ -13,13 +12,6 @@ import './registerServiceWorker';
 /* eslint-disable import/extensions */
 import '@/assets/svg/logo.svg?sprite';
 import '@/assets/svg/upload.svg?sprite';
-
-Vue.use(VueGtag, {
-    config: {
-        id: 'G-3YD0Y7WW62',
-    },
-    enabled: !(process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com'),
-});
 
 /*
     Add google analytics
