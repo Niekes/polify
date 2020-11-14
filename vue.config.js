@@ -33,6 +33,7 @@ module.exports = {
         name: process.env.VUE_APP_TITLE,
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
+        themeColor: '#000',
         workboxOptions: {
             skipWaiting: true,
         },
