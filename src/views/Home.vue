@@ -449,12 +449,13 @@ export default {
 }
 
 .control {
+    border-radius: $border-radius;
     display: grid;
     gap: $margin-y * 2 0;
     grid-template-areas: "reference-image" "parameters" "download";
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr 1fr;
-    padding: 0 $padding-x * 2;
+    padding: $padding-y * 2 $padding-x * 2;
 }
 
 .control__reference-image {
@@ -511,6 +512,7 @@ export default {
     display: flex;
     flex-direction: column;
 
+    /* https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/ */
     input[type=range].slider {
         -webkit-appearance: none;
         background-color: transparent;
@@ -678,6 +680,9 @@ export default {
 
 .context {
     align-items: center;
+    border: 1px solid $black-25;
+    border-radius: $border-radius;
+    box-shadow: inset 0 0 10px $black-50;
     display: flex;
     grid-area: context;
     height: 100%;
