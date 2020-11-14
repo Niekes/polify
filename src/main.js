@@ -17,7 +17,7 @@ import '@/assets/svg/upload.svg?sprite';
     Add google analytics
 */
 Vue.use(VueAnalytics, {
-    id: '252870826',
+    id: 'G-3YD0Y7WW62',
     checkDuplicatedScript: true,
     debug: {
         sendHitTask: process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com',
