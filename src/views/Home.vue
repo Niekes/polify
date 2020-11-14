@@ -41,9 +41,9 @@
                     />
                     <vue-range-slider
                         v-model="amount"
-                        :min="10"
+                        :min="100"
                         :max="10000"
-                        :step="10"
+                        :step="100"
                         :clickable="false"
                         :tooltip-dir="'bottom'"
                         :process-style="sliderProcessStyle"
@@ -159,7 +159,7 @@
                         v-text="$t('home.randomize')"
                     />
                     <button
-                        :disabled="!(amount !== 250
+                        :disabled="!(amount !== 1000
                             || hue !== 0
                             || saturation !== 100
                             || lightness !== 100
@@ -245,7 +245,7 @@ export default {
                 borderColor: localstyles.primary,
             },
             ctx: null,
-            amount: 250,
+            amount: 1000,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -423,7 +423,7 @@ export default {
         },
 
         reset() {
-            this.amount = 250;
+            this.amount = 1000;
             this.hue = 0;
             this.saturation = 100;
             this.lightness = 100;
