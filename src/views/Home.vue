@@ -775,10 +775,9 @@ export default {
 
 <style lang="scss">
 .triangles {
-    cursor: pointer;
-
     &:hover {
-        fill: #00b140;
+        cursor: pointer;
+        mask: url(#mask-stripe);
     }
 }
 </style>
