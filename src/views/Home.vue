@@ -52,7 +52,8 @@
                         :min="100"
                         :max="10000"
                         :step="100"
-                        @change="update"
+                        @dblclick="resetAmount(); update()"
+                        @change="update()"
                     >
                 </div>
 
@@ -67,6 +68,7 @@
                         :min="0"
                         :max="360"
                         :step="0.01"
+                        @dblclick="resetHue(); update()"
                         @change="changeColor"
                     >
                 </div>
@@ -82,6 +84,7 @@
                         :min="0"
                         :max="200"
                         :step="0.01"
+                        @dblclick="resetSaturation(); update()"
                         @change="changeColor"
                     >
                 </div>
@@ -97,6 +100,7 @@
                         :min="0"
                         :max="200"
                         :step="0.01"
+                        @dblclick="resetLightness(); update()"
                         @change="changeColor"
                     >
                 </div>
@@ -112,6 +116,7 @@
                         :min="0"
                         :max="100"
                         :step="0.01"
+                        @dblclick="resetOpacity(); update()"
                         @change="changeColor"
                     >
                 </div>
@@ -127,6 +132,7 @@
                         :min="-100"
                         :max="100"
                         :step="0.01"
+                        @dblclick="resetContrast(); update()"
                         @change="changeColor"
                     >
                 </div>
@@ -137,7 +143,7 @@
                         v-text="$t('home.randomize')"
                     />
                     <button
-                        :disabled="!(amount !== 1000
+                        :disabled="!(amount !== 100
                             || hue !== 0
                             || saturation !== 100
                             || lightness !== 100
@@ -202,7 +208,7 @@ export default {
     data() {
         return {
             ctx: null,
-            amount: 1000,
+            amount: 100,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -253,37 +259,22 @@ export default {
     },
 
     methods: {
-        update() {
-            const circles = range(this.amount).map(() => {
+        update(p) {
+            this.particales = p || range(this.amount).map(() => {
                 const x = randomInt(0, this.width)();
                 const y = randomInt(0, this.height)();
 
-                return {
-                    x,
-                    y,
-                };
+                return [x, y];
             });
 
-            circles.push(
-                {
-                    x: 0,
-                    y: 0,
-                },
-                {
-                    x: 0,
-                    y: this.height,
-                },
-                {
-                    x: this.width,
-                    y: this.height,
-                },
-                {
-                    x: this.width,
-                    y: 0,
-                },
+            this.particales.push(
+                [0, 0],
+                [0, this.height],
+                [this.width, this.height],
+                [this.width, 0],
             );
 
-            this.delaunay = Delaunay.from(circles, d => d.x, d => d.y);
+            this.delaunay = Delaunay.from(this.particales);
 
             const data = [];
 
@@ -313,6 +304,16 @@ export default {
                 .attr('fill', this.setColor)
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i))
                 .merge(tri)
+                .on('click', (event) => {
+                    const e = select('#svg').selectAll('path.triangles').nodes();
+                    const i = e.indexOf(event.currentTarget);
+
+                    const center = polygonCentroid(this.delaunay.trianglePolygon(i));
+
+                    this.particales.push(center);
+
+                    this.update(this.particales);
+                })
                 .attr('stroke', this.setColor)
                 .attr('stroke-opacity', this.setStrokeOpacity)
                 .attr('stroke-width', this.setStrokeWidth)
@@ -380,7 +381,7 @@ export default {
 
                         this.$nextTick(() => {
                             this.ctx.drawImage(newImage, 0, 0);
-                            this.update();
+                            this.reset();
                         });
                     };
 
@@ -392,14 +393,37 @@ export default {
         },
 
         reset() {
-            this.amount = 1000;
-            this.hue = 0;
-            this.saturation = 100;
-            this.lightness = 100;
-            this.opacity = 100;
-            this.contrast = 0;
-
+            this.resetAmount();
+            this.resetHue();
+            this.resetSaturation();
+            this.resetLightness();
+            this.resetOpacity();
+            this.resetContrast();
             this.update();
+        },
+
+        resetAmount() {
+            this.amount = 100;
+        },
+
+        resetHue() {
+            this.hue = 0;
+        },
+
+        resetSaturation() {
+            this.saturation = 100;
+        },
+
+        resetLightness() {
+            this.lightness = 100;
+        },
+
+        resetOpacity() {
+            this.opacity = 100;
+        },
+
+        resetContrast() {
+            this.contrast = 0;
         },
 
         downloadAsSvg() {
@@ -745,8 +769,16 @@ export default {
     flex: 1;
     max-height: 80%;
     max-width: 80%;
-    pointer-events: none;
-    shape-rendering: optimizespeed;
-    user-select: none;
+    shape-rendering: crispEdges;
+}
+</style>
+
+<style lang="scss">
+.triangles {
+    cursor: pointer;
+
+    &:hover {
+        fill: #00b140;
+    }
 }
 </style>
