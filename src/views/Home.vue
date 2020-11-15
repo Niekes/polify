@@ -1,11 +1,5 @@
 <template>
     <div class="home">
-        <div class="navigation">
-            <svg-icon
-                class="navigation__logo"
-                :xlink="'#logo'"
-            />
-        </div>
         <div class="control">
             <div class="control__reference-image">
                 <div class="reference-image__help">
@@ -460,44 +454,26 @@ export default {
 <style lang="scss" scoped>
 .home {
     display: grid;
-    grid-template-areas: "navigation navigation" "control context";
+    grid-template-areas: "control context";
     grid-template-columns: minmax(0, 20rem) 1fr;
-    grid-template-rows: min-content minmax(0, 1fr);
-    height: 100%;
+    grid-template-rows: minmax(0, 1fr);
+    height: calc(100% - 80px);
 }
 
 @media (max-width: $breakpoint-sm) {
     .home {
         display: grid;
-        grid-template-areas: "navigation" "context" "control";
+        grid-template-areas: "context" "control";
         grid-template-columns: 1fr;
-        grid-template-rows: min-content min-content minmax(0, 1fr);
-        height: 100%;
+        grid-template-rows: min-content minmax(0, 1fr);
+        height: calc(100% - 80px);
     }
-}
-
-.navigation {
-    background-color: $primary;
-    box-shadow: $box-shadow;
-    display: grid;
-    grid-area: navigation;
-    grid-template-areas: "logo .";
-    grid-template-columns: min-content 1fr;
-    grid-template-rows: 1fr;
-    padding: $padding-y * 2 $padding-x * 2;
-}
-
-.navigation__logo {
-    color: $white;
-    grid-area: logo;
-    height: 3rem;
-    user-select: none;
-    width: 12rem;
 }
 
 .control {
     background-color: $black-10;
     border-radius: $border-radius;
+    box-shadow: inset 20px 20px 60px $black-20, inset -30px -30px 60px $white;
     display: grid;
     gap: $margin-y * 2 0;
     grid-template-areas: "reference-image" "parameters" "download";
@@ -520,26 +496,35 @@ export default {
     width: 100%;
 
     small {
-        color: $black;
+        color: $black-50;
+        font-weight: bolder;
+        text-shadow: -1px -1px 1px $white, 1px 1px 1px $black-10;
+        text-transform: uppercase;
+        z-index: 1;
     }
 
     .label {
-        background-color: $black-50;
+        background: linear-gradient(145deg, $white, $black-10);
+        border: 1px solid $black-20;
         border-radius: $border-radius;
-        box-shadow: $box-shadow;
-        color: $white;
+        box-shadow:
+            5px 5px 10px $black-10,
+            -5px -5px 10px $white;
+        color: $black-50;
         cursor: pointer;
-        filter: drop-shadow(0 0 1px $black-50);
-        margin-bottom: $margin-y / 2;
+        margin-bottom: $margin-y;
         padding: $padding;
-        transition: background-color 450ms ease-in-out;
-        z-index: $z-index-dropdown;
+        transition: box-shadow 450ms ease-in-out;
+        z-index: 1;
 
         &:hover {
-            background-color: $black-75;
+            box-shadow:
+                5px 5px 10px $black-20,
+                -5px -5px 10px $white-90;
         }
 
         svg {
+            border-radius: $border-radius;
             height: 1rem;
             width: 1rem;
         }
@@ -556,8 +541,11 @@ export default {
 }
 
 #canvas {
-    border: 5px solid $black-75;
+    border: $border-width solid $black-50;
     border-radius: $border-radius;
+    box-shadow:
+        5px 5px 15px $black-30,
+        -5px -5px 15px $white;
     height: auto;
     max-height: 12rem;
     max-width: 100%;
@@ -597,7 +585,7 @@ export default {
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-webkit-slider-runnable-track {
-        background: $primary;
+        background: $black-20;
         border: 0;
         cursor: pointer;
         height: 1rem;
@@ -608,7 +596,7 @@ export default {
     input[type=range].slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         background: $white;
-        border: 0.4px solid $primary;
+        border: 0.4px solid $black-20;
         border-radius: $border-radius;
         cursor: pointer;
         height: 1rem;
@@ -617,12 +605,12 @@ export default {
     }
 
     input[type=range].slider:focus::-webkit-slider-runnable-track {
-        background: $primary;
+        background: $black-20;
     }
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-moz-range-track {
-        background: $primary;
+        background: $black-20;
         border: 0;
         cursor: pointer;
         height: 1rem;
@@ -632,7 +620,7 @@ export default {
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-moz-range-thumb {
         background: $white;
-        border: 0.4px solid $primary;
+        border: 0.4px solid $black-20;
         border-radius: $border-radius;
         cursor: pointer;
         height: 1rem;
@@ -652,19 +640,19 @@ export default {
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-ms-fill-lower {
-        background: $primary;
+        background: $black-20;
         border: 0;
     }
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-ms-fill-upper {
-        background: $primary;
+        background: $black-20;
         border: 0;
     }
 
     input[type=range].slider::-ms-thumb { /* stylelint-disable-line no-descending-specificity */
         background: $white;
-        border: 0.4px solid $primary;
+        border: 0.4px solid $black-20;
         border-radius: $border-radius;
         cursor: pointer;
         height: 1rem;
@@ -673,11 +661,11 @@ export default {
     }
 
     input[type=range].slider:focus::-ms-fill-lower {
-        background: $primary;
+        background: $black-20;
     }
 
     input[type=range].slider:focus::-ms-fill-upper {
-        background: $primary;
+        background: $black-20;
     }
 
     @supports (-ms-ime-align:auto) {
@@ -687,9 +675,14 @@ export default {
     }
 
     label {
+        color: $black-50;
         font-size: $font-size * 0.7;
+        font-weight: bolder;
         margin-bottom: $margin-y / 4;
+        text-shadow: -1px -1px 1px $white, 1px 1px 1px $black-10;
+        text-transform: uppercase;
         white-space: nowrap;
+        z-index: 1;
     }
 }
 
@@ -699,14 +692,18 @@ export default {
     justify-content: space-between;
 
     button {
-        background-color: $primary;
-        border: $border-width solid $black-25;
+        background: linear-gradient(135deg, $white, $black-10);
+        border: $border-width solid $black-20;
         border-radius: $border-radius;
-        color: $white;
+        box-shadow:
+            3px 3px 7.5px 2px $black-10,
+            -3px -3px 7.5px 2px $white;
+        color: $black-60;
         cursor: pointer;
         display: inline-block;
         filter: saturate(1);
         font-size: 1rem;
+        font-weight: bolder;
         padding: $padding;
         text-align: center;
         text-decoration: none;
@@ -734,23 +731,33 @@ export default {
     justify-content: space-around;
 
     .download__button {
-        align-items: center;
-        background: linear-gradient(0deg, $primary, $black);
-        border: none;
+        background: $white-10;
+        border-bottom: 1px solid $black-20;
+        border-left: 1px solid $white;
         border-radius: $border-radius;
-        color: $white;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        opacity: 0.85;
-        overflow: hidden;
+        border-right: 1px solid $black-20;
+        border-top: 1px solid $white;
+        box-shadow: 13px 13px 20px $black-10, -13px -13px 20px $white;
         padding: $padding-y * 1.5 $padding-x;
-        text-shadow: $text-shadow;
-        transition: opacity 250ms ease-in-out;
 
-        &:hover {
-            opacity: 1;
-        }
+        /*
+            align-items: center;
+            background: linear-gradient(0deg, $black-20, $black);
+            border-radius: $border-radius;
+            color: $white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            opacity: 0.85;
+            overflow: hidden;
+            padding: $padding-y * 1.5 $padding-x;
+            text-shadow: $text-shadow;
+            transition: opacity 250ms ease-in-out;
+
+            &:hover {
+                opacity: 1;
+            }
+        */
     }
 }
 

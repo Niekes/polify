@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <navigation />
         <router-view />
         <svg id="stripe-pattern">
             <defs>
@@ -30,9 +31,14 @@
 </template>
 
 <script>
+import Navigation from '@/components/Navigation';
 
 export default {
     name: 'Main',
+
+    components: {
+        Navigation,
+    },
 };
 </script>
 

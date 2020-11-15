@@ -58,6 +58,9 @@ $margin: $margin-y $margin-x;
 $box-shadow: 0 0 1rem $black-30;
 $text-shadow: 1px 1px 0 $black-25;
 
+$transition-duration: 450ms;
+$transition-timing-function: ease-in-out;
+
 $z-index-dropdown: 1000;
 $z-index-sticky: 1020;
 $z-index-fixed: 1030;
