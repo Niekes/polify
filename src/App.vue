@@ -40,6 +40,6 @@ body {
 }
 
 #app {
-    padding: 0 $padding-x * 2;
+    padding: 0;
 }
 </style>

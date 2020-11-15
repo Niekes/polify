@@ -5,14 +5,17 @@ import store from '@/store';
 import App from './App';
 import i18n from './i18n';
 import './registerServiceWorker';
-
-/* eslint-disable import/extensions */
-import '@/assets/svg/logo.svg?sprite';
-import '@/assets/svg/upload.svg?sprite';
 /*
     Register all SVG Icons here
 */
 
+/* eslint-disable import/extensions */
+import '@/assets/svg/logo.svg?sprite';
+import '@/assets/svg/upload.svg?sprite';
+
+/*
+    Google Analytics
+*/
 Vue.use(VueGtag, {
     config: {
         id: 'G-3YD0Y7WW62',

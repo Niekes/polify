@@ -1,27 +1,29 @@
 <template>
     <div class="home">
         <div class="navigation">
-            <img
-                class="logo"
-                :src="logoSrc"
-            >
+            <svg-icon
+                class="navigation__logo"
+                :xlink="'#logo'"
+            />
         </div>
         <div class="control">
             <div class="control__reference-image">
-                <small v-text="$t('home.referenceImage')" />
-                <input
-                    id="file-1"
-                    type="file"
-                    class="file"
-                    accept="image/x-png,image/jpeg"
-                    @change="encodeImageFileAsURL"
-                >
-                <label
-                    class="label"
-                    for="file-1"
-                >
-                    <svg-icon :xlink="'#upload'" />
-                </label>
+                <div class="reference-image__help">
+                    <small v-text="$t('home.referenceImage')" />
+                    <input
+                        id="file-1"
+                        type="file"
+                        class="file"
+                        accept="image/x-png,image/jpeg"
+                        @change="encodeImageFileAsURL"
+                    >
+                    <label
+                        class="label"
+                        for="file-1"
+                    >
+                        <svg-icon :xlink="'#upload'" />
+                    </label>
+                </div>
 
                 <canvas
                     id="canvas"
@@ -178,8 +180,6 @@
 <script>
 import { saveSvgAsPng } from 'save-svg-as-png';
 import { Delaunay } from 'd3-delaunay';
-// eslint-disable-next-line import/extensions
-import localstyles from 'localstyles';
 
 import {
     range,
@@ -308,10 +308,14 @@ export default {
                 .append('path')
                 .attr('class', 'triangles')
                 .attr('stroke', this.setColor)
+                .attr('stroke-opacity', this.setStrokeOpacity)
+                .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i))
                 .merge(tri)
                 .attr('stroke', this.setColor)
+                .attr('stroke-opacity', this.setStrokeOpacity)
+                .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i));
 
@@ -346,6 +350,14 @@ export default {
             rgb.b = rgb.b * c + intercept;
 
             return rgb;
+        },
+
+        setStrokeOpacity() {
+            return this.opacity / 100;
+        },
+
+        setStrokeWidth() {
+            return 1;
         },
 
         randomize() {
@@ -424,43 +436,43 @@ export default {
 <style lang="scss" scoped>
 .home {
     display: grid;
-    gap: $margin-y * 2 $margin-x * 2;
     grid-template-areas: "navigation navigation" "control context";
-    grid-template-columns: minmax(0, 18rem) 1fr;
+    grid-template-columns: minmax(0, 20rem) 1fr;
     grid-template-rows: min-content minmax(0, 1fr);
-    height: calc(100% - #{$padding-y * 2});
-    padding-bottom: $padding-y * 2;
+    height: 100%;
 }
 
 @media (max-width: $breakpoint-sm) {
     .home {
         display: grid;
-        gap: $margin-y * 2 $margin-x * 2;
         grid-template-areas: "navigation" "context" "control";
         grid-template-columns: 1fr;
         grid-template-rows: min-content min-content minmax(0, 1fr);
-        height: calc(100% - #{$padding-y * 2});
-        padding-bottom: $padding-y * 2;
+        height: 100%;
     }
 }
 
 .navigation {
-    border-bottom: 1px solid $black-25;
+    background-color: $primary;
+    box-shadow: $box-shadow;
     display: grid;
     grid-area: navigation;
     grid-template-areas: "logo .";
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
-    padding: $padding-y * 2 0;
+    padding: $padding-y * 2 $padding-x * 2;
 }
 
-.logo {
+.navigation__logo {
+    color: $white;
     grid-area: logo;
     height: 3rem;
     user-select: none;
+    width: 12rem;
 }
 
 .control {
+    background-color: $black-10;
     border-radius: $border-radius;
     display: grid;
     gap: $margin-y * 2 0;
@@ -475,12 +487,16 @@ export default {
     display: flex;
     flex-direction: column;
     grid-area: reference-image;
-    position: relative;
+}
+
+.reference-image__help {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 
     small {
-        align-self: flex-start;
         color: $black;
-        text-align: left;
     }
 
     .label {
@@ -490,9 +506,8 @@ export default {
         color: $white;
         cursor: pointer;
         filter: drop-shadow(0 0 1px $black-50);
+        margin-bottom: $margin-y / 2;
         padding: $padding;
-        position: absolute;
-        right: 0;
         transition: background-color 450ms ease-in-out;
         z-index: $z-index-dropdown;
 
@@ -514,6 +529,24 @@ export default {
         width: 0.1px;
         z-index: -1;
     }
+}
+
+#canvas {
+    border: 5px solid $black-75;
+    border-radius: $border-radius;
+    height: auto;
+    max-height: 12rem;
+    max-width: 100%;
+}
+
+#default-img,
+#canvas-download {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    user-select: none;
+    z-index: -100000;
 }
 
 .control__parameters {
@@ -648,7 +681,7 @@ export default {
         color: $white;
         cursor: pointer;
         display: inline-block;
-        filter: contrast(0.8);
+        filter: saturate(1);
         font-size: 1rem;
         padding: $padding;
         text-align: center;
@@ -660,7 +693,7 @@ export default {
         }
 
         &:hover {
-            filter: contrast(1);
+            filter: saturate(2);
         }
 
         &:disabled {
@@ -674,41 +707,37 @@ export default {
     align-items: flex-end;
     display: flex;
     grid-area: download;
-    justify-content: center;
+    justify-content: space-around;
 
     .download__button {
         align-items: center;
-        background: adjust-hue($primary, 30deg);
+        background: linear-gradient(0deg, $primary, $black);
         border: none;
         border-radius: $border-radius;
         color: $white;
         cursor: pointer;
         display: flex;
         justify-content: center;
+        opacity: 0.85;
         overflow: hidden;
-        padding: $padding-y * 2 $padding-x * 2;
+        padding: $padding-y * 1.5 $padding-x;
         text-shadow: $text-shadow;
+        transition: opacity 250ms ease-in-out;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 }
 
 .context {
     align-items: center;
-    border: 1px solid $black-25;
     border-radius: $border-radius;
-    box-shadow: inset 0 0 10px $black-50;
     display: flex;
     grid-area: context;
     height: 100%;
     justify-content: center;
     width: 100%;
-}
-
-#canvas {
-    border: 5px solid $black-75;
-    border-radius: $border-radius;
-    height: auto;
-    max-height: 6rem;
-    width: auto;
 }
 
 #svg {
@@ -717,17 +746,7 @@ export default {
     max-height: 80%;
     max-width: 80%;
     pointer-events: none;
+    shape-rendering: optimizespeed;
     user-select: none;
-}
-
-#default-img {
-    display: none;
-    pointer-events: none;
-    user-select: none;
-}
-
-#canvas-download {
-    position: absolute;
-    top: 0;
 }
 </style>
