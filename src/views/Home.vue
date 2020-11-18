@@ -165,6 +165,11 @@
         <div
             class="context"
         >
+            <small
+                v-if="hintIsShwon"
+                class="context__hint"
+                v-text="$t('home.mouseoverHint')"
+            />
             <svg
                 id="svg"
                 :viewBox="viewBox"
@@ -172,6 +177,8 @@
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                @mouseenter="showHint"
+                @mouseleave="hideHint"
             />
         </div>
     </div>
@@ -201,13 +208,13 @@ export default {
 
     data() {
         return {
-            ctx: null,
             amount: 100,
             hue: 0,
             contrast: 0,
             saturation: 100,
             lightness: 100,
             opacity: 100,
+            hintIsShwon: false,
         };
     },
 
@@ -446,6 +453,14 @@ export default {
             saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
         },
 
+        showHint() {
+            this.hintIsShwon = true;
+        },
+
+        hideHint() {
+            this.hintIsShwon = false;
+        },
+
     },
 
 };
@@ -471,9 +486,8 @@ export default {
 }
 
 .control {
-    background-color: $black-10;
+    background-color: rgba($primary, 0.2);
     border-radius: $border-radius;
-    box-shadow: inset 20px 20px 60px $black-20, inset -30px -30px 60px $white;
     display: grid;
     gap: $margin-y * 2 0;
     grid-template-areas: "reference-image" "parameters" "download";
@@ -498,30 +512,19 @@ export default {
     small {
         color: $black-50;
         font-weight: bolder;
-        text-shadow: -1px -1px 1px $white, 1px 1px 1px $black-10;
         text-transform: uppercase;
         z-index: 1;
     }
 
     .label {
-        background: linear-gradient(145deg, $white, $black-10);
-        border: 1px solid $black-20;
+        background: $tertiary;
+        border: $border-width solid $black-70;
         border-radius: $border-radius;
-        box-shadow:
-            5px 5px 10px $black-10,
-            -5px -5px 10px $white;
-        color: $black-50;
+        color: $black;
         cursor: pointer;
         margin-bottom: $margin-y;
         padding: $padding;
-        transition: box-shadow 450ms ease-in-out;
         z-index: 1;
-
-        &:hover {
-            box-shadow:
-                5px 5px 10px $black-20,
-                -5px -5px 10px $white-90;
-        }
 
         svg {
             border-radius: $border-radius;
@@ -543,9 +546,6 @@ export default {
 #canvas {
     border: $border-width solid $black-50;
     border-radius: $border-radius;
-    box-shadow:
-        5px 5px 15px $black-30,
-        -5px -5px 15px $white;
     height: auto;
     max-height: 12rem;
     max-width: 100%;
@@ -585,7 +585,7 @@ export default {
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-webkit-slider-runnable-track {
-        background: $black-20;
+        background: rgba($primary, 0.3);
         border: 0;
         cursor: pointer;
         height: 1rem;
@@ -605,12 +605,12 @@ export default {
     }
 
     input[type=range].slider:focus::-webkit-slider-runnable-track {
-        background: $black-20;
+        background: rgba($primary, 0.3);
     }
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-moz-range-track {
-        background: $black-20;
+        background: rgba($primary, 0.3);
         border: 0;
         cursor: pointer;
         height: 1rem;
@@ -640,13 +640,13 @@ export default {
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-ms-fill-lower {
-        background: $black-20;
+        background: rgba($primary, 0.3);
         border: 0;
     }
 
     /* stylelint-disable-next-line no-descending-specificity */
     input[type=range].slider::-ms-fill-upper {
-        background: $black-20;
+        background: rgba($primary, 0.3);
         border: 0;
     }
 
@@ -661,11 +661,11 @@ export default {
     }
 
     input[type=range].slider:focus::-ms-fill-lower {
-        background: $black-20;
+        background: rgba($primary, 0.3);
     }
 
     input[type=range].slider:focus::-ms-fill-upper {
-        background: $black-20;
+        background: rgba($primary, 0.3);
     }
 
     @supports (-ms-ime-align:auto) {
@@ -679,7 +679,6 @@ export default {
         font-size: $font-size * 0.7;
         font-weight: bolder;
         margin-bottom: $margin-y / 4;
-        text-shadow: -1px -1px 1px $white, 1px 1px 1px $black-10;
         text-transform: uppercase;
         white-space: nowrap;
         z-index: 1;
@@ -692,13 +691,10 @@ export default {
     justify-content: space-between;
 
     button {
-        background: linear-gradient(135deg, $white, $black-10);
-        border: $border-width solid $black-20;
+        background: $tertiary;
+        border: $border-width solid $black-70;
         border-radius: $border-radius;
-        box-shadow:
-            3px 3px 7.5px 2px $black-10,
-            -3px -3px 7.5px 2px $white;
-        color: $black-60;
+        color: $black;
         cursor: pointer;
         display: inline-block;
         filter: saturate(1);
@@ -714,7 +710,7 @@ export default {
         }
 
         &:hover {
-            filter: saturate(2);
+            filter: saturate(1);
         }
 
         &:disabled {
@@ -731,33 +727,17 @@ export default {
     justify-content: space-around;
 
     .download__button {
-        background: $white-10;
-        border-bottom: 1px solid $black-20;
-        border-left: 1px solid $white;
+        background: $secondary;
+        border: $border-width solid $black-30;
         border-radius: $border-radius;
-        border-right: 1px solid $black-20;
-        border-top: 1px solid $white;
-        box-shadow: 13px 13px 20px $black-10, -13px -13px 20px $white;
+        color: $white;
+        cursor: pointer;
         padding: $padding-y * 1.5 $padding-x;
 
-        /*
-            align-items: center;
-            background: linear-gradient(0deg, $black-20, $black);
-            border-radius: $border-radius;
-            color: $white;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            opacity: 0.85;
-            overflow: hidden;
-            padding: $padding-y * 1.5 $padding-x;
-            text-shadow: $text-shadow;
-            transition: opacity 250ms ease-in-out;
-
-            &:hover {
-                opacity: 1;
-            }
-        */
+        &:hover {
+            background: saturate($secondary, 10%);
+            opacity: 1;
+        }
     }
 }
 
@@ -768,7 +748,15 @@ export default {
     grid-area: context;
     height: 100%;
     justify-content: center;
+    position: relative;
     width: 100%;
+}
+
+.context__hint {
+    font-family: monospace;
+    position: absolute;
+    right: $margin-x * 2;
+    top: $margin-y * 2;
 }
 
 #svg {

@@ -12,5 +12,6 @@ export default {
         downloadAsSvg: 'Download as svg',
         randomize: 'Randomize',
         reset: 'Reset',
+        mouseoverHint: 'Click to split up selected polygon',
     },
 };
