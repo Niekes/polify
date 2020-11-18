@@ -1,4 +1,7 @@
 export default {
+    navigation: {
+        buymeacoffee: 'Buy me a coffee',
+    },
     home: {
         title: 'home',
         referenceImage: 'Reference image',
