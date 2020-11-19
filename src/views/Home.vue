@@ -309,6 +309,8 @@ export default {
                 .merge(tri)
                 .on('click', (event) => {
                     const [x, y] = pointer(event, document.body);
+                    const e = select('#svg').selectAll('path.triangles').nodes();
+                    const i = e.indexOf(event.currentTarget);
                     const halo = create('div')
                         .style('position', 'absolute')
                         .style('background', 'rgba(255, 255, 255, 0.5)')
@@ -333,7 +335,9 @@ export default {
                         .style('opacity', 0)
                         .remove();
 
-                    this.particales.push(pointer(event, select('#svg').node()));
+                    const center = polygonCentroid(this.delaunay.trianglePolygon(i));
+
+                    this.particales.push(center);
 
                     this.update(this.particales);
                 })
