@@ -189,9 +189,11 @@ import { saveSvgAsPng } from 'save-svg-as-png';
 import { Delaunay } from 'd3-delaunay';
 
 import {
+    create,
     range,
     select,
     randomInt,
+    pointer,
     color,
     hsl,
     polygonCentroid,
@@ -306,14 +308,64 @@ export default {
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i))
                 .merge(tri)
                 .on('click', (event) => {
-                    const e = select('#svg').selectAll('path.triangles').nodes();
-                    const i = e.indexOf(event.currentTarget);
+                    const [x, y] = pointer(event, document.body);
+                    const halo = create('div')
+                        .style('position', 'absolute')
+                        .style('background', 'rgba(255, 255, 255, 0.5)')
+                        .style('border', '2px solid rgba(255, 255, 255, 1)')
+                        .style('border-radius', '50%')
+                        .style('width', '100px')
+                        .style('height', '100px')
+                        .style('transform', 'scale(0.25)')
+                        .style('top', `${y - 50}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('z-index', 1)
+                        .style('left', `${x - 50}px`)
+                        .style('opacity', 1);
 
-                    const center = polygonCentroid(this.delaunay.trianglePolygon(i));
+                    document.body.appendChild(halo.node());
 
-                    this.particales.push(center);
+                    halo
+                        .transition()
+                        .duration(500)
+                        .style('transform', 'scale(1)')
+                        .style('opacity', 0)
+                        .remove();
+
+                    this.particales.push(pointer(event, select('#svg').node()));
 
                     this.update(this.particales);
+                })
+                .on('mouseenter', (event) => {
+                    const [x, y] = pointer(event, document.body);
+                    const centroid = create('div')
+                        .attr('id', 'centroid')
+                        .style('position', 'absolute')
+                        .style('background', 'rgba(255, 255, 255, 0.05)')
+                        .style('border', '1px solid rgba(0, 0, 0, 0.5)')
+                        .style('border-radius', '50%')
+                        .style('width', '100px')
+                        .style('height', '100px')
+                        .style('transform', 'scale(0.5)')
+                        .style('top', `${y - 50}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('z-index', 1)
+                        .style('left', `${x - 50}px`)
+                        .style('opacity', 1);
+
+                    document.body.appendChild(centroid.node());
+                })
+                .on('mousemove', (event) => {
+                    const [x, y] = pointer(event, document.body);
+                    select('#centroid')
+                        .style('top', `${y - 50}px`)
+                        .style('left', `${x - 50}px`);
+                })
+                .on('mouseleave', () => {
+                    select('#centroid')
+                        .remove();
                 })
                 .attr('stroke', this.setColor)
                 .attr('stroke-opacity', this.setStrokeOpacity)
@@ -771,8 +823,8 @@ export default {
 <style lang="scss">
 .triangles {
     &:hover {
-        cursor: pointer;
-        mask: url(#mask-stripe);
+        cursor: crosshair;
+        fill-opacity: 0.5;
     }
 }
 </style>

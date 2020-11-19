@@ -2,31 +2,6 @@
     <div id="app">
         <navigation />
         <router-view />
-        <svg id="stripe-pattern">
-            <defs>
-                <pattern
-                    id="pattern-stripe"
-                    width="8"
-                    height="8"
-                    patternUnits="userSpaceOnUse"
-                    patternTransform="rotate(45)"
-                >
-                    <path
-                        fill="#fff"
-                        d="M0 0h4v8H0z"
-                    />
-                </pattern>
-                <mask id="mask-stripe">
-                    <rect
-                        x="0"
-                        y="0"
-                        width="100%"
-                        height="100%"
-                        fill="url(#pattern-stripe)"
-                    />
-                </mask>
-            </defs>
-        </svg>
     </div>
 </template>
 
@@ -68,6 +43,7 @@ body {
         "Apple Color Emoji",
         "Segoe UI Emoji",
         "Segoe UI Symbol";
+    position: relative;
 }
 
 #app {
