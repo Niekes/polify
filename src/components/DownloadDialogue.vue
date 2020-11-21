@@ -73,10 +73,28 @@ export default {
             a.click();
 
             document.body.removeChild(a);
+
+            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
+                this.$gtag.event('download', {
+                    event_category: 'svg',
+                    event_label: 'svg',
+                    value: 1,
+                });
+            }
         },
 
         downloadAsPng() {
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
+            const scale = 2;
+
+            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale });
+
+            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
+                this.$gtag.event('download', {
+                    event_category: 'png',
+                    event_label: 'png',
+                    value: scale,
+                });
+            }
         },
     },
 };
