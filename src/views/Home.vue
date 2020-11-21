@@ -4,19 +4,11 @@
             <div class="control__reference-image">
                 <div class="reference-image__help">
                     <small v-text="$t('home.referenceImage')" />
-                    <input
-                        id="file-1"
-                        type="file"
-                        class="file"
-                        accept="image/x-png,image/jpeg"
-                        @change="encodeImageFileAsURL"
-                    >
-                    <label
-                        class="label"
-                        for="file-1"
-                    >
-                        <svg-icon :xlink="'#upload'" />
-                    </label>
+                    <button
+                        class="gallery-button"
+                        @click="$store.dispatch('modal/openGallery')"
+                        v-text="$t('home.changeImage')"
+                    />
                 </div>
 
                 <canvas
@@ -24,11 +16,6 @@
                     :width="width"
                     :height="height"
                 />
-
-                <img
-                    id="default-img"
-                    :src="defaultImg"
-                >
             </div>
             <div class="control__parameters">
                 <div class="parameters__range-slider">
@@ -199,14 +186,10 @@ import {
     polygonCentroid,
 } from 'd3';
 
-import SvgIcon from '@/components/SvgIcon';
+import config from '@/config';
 
 export default {
     name: 'Home',
-
-    components: {
-        SvgIcon,
-    },
 
     data() {
         return {
@@ -221,17 +204,6 @@ export default {
     },
 
     computed: {
-
-        logoSrc() {
-            // eslint-disable-next-line global-require
-            return require('@/assets/img/logo.png');
-        },
-
-        defaultImg() {
-            // eslint-disable-next-line global-require
-            return require('@/assets/img/default-0.jpg');
-        },
-
         height() {
             return this.$store.getters['canvas/height'];
         },
@@ -244,24 +216,35 @@ export default {
             return `0 0 ${this.width} ${this.height}`;
         },
 
+        referenceImages() {
+            return config.images;
+        },
+
     },
 
     mounted() {
         this.ctx = select('#canvas').node().getContext('2d');
-        const img = select('#default-img');
-
-        img.on('load', () => {
-            this.$store.commit('canvas/setWidth', img.node().width);
-            this.$store.commit('canvas/setHeight', img.node().height);
-
-            this.$nextTick(() => {
-                this.ctx.drawImage(img.node(), 0, 0);
-                this.update();
-            });
-        });
+        this.init();
+        this.$root.$on('reset', this.reset);
+        this.$root.$on('change-image', this.init);
     },
 
     methods: {
+        init(imageReference = 0) {
+            const newImage = create('img');
+
+            newImage.on('load', () => {
+                this.$store.commit('canvas/setWidth', newImage.node().width);
+                this.$store.commit('canvas/setHeight', newImage.node().height);
+
+                this.$nextTick(() => {
+                    this.ctx.drawImage(newImage.node(), 0, 0);
+                    this.update();
+                });
+            });
+
+            newImage.node().src = this.referenceImages.get(imageReference).src;
+        },
         update(p) {
             this.particales = p || range(this.amount).map(() => {
                 const x = randomInt(0, this.width)();
@@ -424,33 +407,6 @@ export default {
             this.update();
         },
 
-        encodeImageFileAsURL(e) {
-            const filesSelected = e.target.files;
-            if (filesSelected.length) {
-                const fileToLoad = filesSelected[0];
-                const fileReader = new FileReader();
-
-                fileReader.onload = (fileLoadedEvent) => {
-                    const srcData = fileLoadedEvent.target.result;
-                    const newImage = document.createElement('img');
-
-                    newImage.onload = () => {
-                        this.$store.commit('canvas/setWidth', newImage.width);
-                        this.$store.commit('canvas/setHeight', newImage.height);
-
-                        this.$nextTick(() => {
-                            this.ctx.drawImage(newImage, 0, 0);
-                            this.reset();
-                        });
-                    };
-
-                    newImage.src = srcData;
-                };
-
-                fileReader.readAsDataURL(fileToLoad);
-            }
-        },
-
         reset() {
             this.resetAmount();
             this.resetHue();
@@ -548,30 +504,34 @@ export default {
         z-index: 1;
     }
 
-    .label {
+    .gallery-button {
         background: $tertiary;
         border: $border-width solid $black-70;
         border-radius: $border-radius;
         color: $black;
         cursor: pointer;
+        display: inline-block;
+        filter: saturate(1);
+        font-size: 0.75rem;
+        font-weight: bolder;
         margin-bottom: $margin-y;
         padding: $padding;
-        z-index: 1;
+        text-align: center;
+        text-decoration: none;
+        transition: filter 450ms ease-in-out;
 
-        svg {
-            border-radius: $border-radius;
-            height: 1rem;
-            width: 1rem;
+        &:focus {
+            outline: none;
         }
-    }
 
-    .file {
-        height: 0.1px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        width: 0.1px;
-        z-index: -1;
+        &:hover {
+            filter: saturate(1);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
     }
 }
 
@@ -581,15 +541,6 @@ export default {
     height: auto;
     max-height: 12rem;
     max-width: 100%;
-}
-
-#default-img {
-    display: none;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    user-select: none;
-    z-index: -100000;
 }
 
 .control__parameters {

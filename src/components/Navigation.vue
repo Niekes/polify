@@ -14,11 +14,13 @@
             />
         </div>
         <download-dialogue v-if="downloadIsOpen" />
+        <image-gallery v-if="galleryIsOpen" />
     </div>
 </template>
 
 <script>
 import DownloadDialogue from '@/components/DownloadDialogue';
+import ImageGallery from '@/components/ImageGallery';
 import SvgIcon from '@/components/SvgIcon';
 
 import config from '@/config';
@@ -28,13 +30,20 @@ export default {
 
     components: {
         DownloadDialogue,
+        ImageGallery,
         SvgIcon,
     },
 
     computed: {
+
+        galleryIsOpen() {
+            return this.$store.getters['modal/galleryIsOpen'];
+        },
+
         downloadIsOpen() {
             return this.$store.getters['modal/downloadIsOpen'];
         },
+
     },
 
     created() {

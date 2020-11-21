@@ -20,11 +20,8 @@
 </template>
 
 <script>
-import {
-    select,
-} from 'd3';
-
 import SvgIcon from '@/components/SvgIcon';
+import ModalMixin from '@/mixins/modal-mixin';
 
 export default {
     name: 'Modal',
@@ -33,17 +30,15 @@ export default {
         SvgIcon,
     },
 
+    mixins: [ModalMixin],
+
     mounted() {
         document.body.appendChild(this.$el);
     },
 
     methods: {
         close() {
-            select(this.$el).classed('modal__mask--fading-out', true);
-
-            window.setTimeout(() => {
-                this.$store.dispatch('modal/close');
-            }, 450);
+            this.closeModal();
         },
     },
 };

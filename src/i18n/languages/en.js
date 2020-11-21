@@ -16,6 +16,7 @@ export default {
         randomize: 'Randomize',
         reset: 'Reset',
         download: 'download',
+        changeImage: 'Change image',
         mouseoverHint: 'Click to split up selected polygon',
     },
     downloadDialogue: {
@@ -23,5 +24,8 @@ export default {
         thanksForUsing: 'Thanks for using Polify!',
         downloadAsPng: 'Download as png',
         downloadAsSvg: 'Download as svg',
+    },
+    imageGallery: {
+        upload: 'upload',
     },
 };

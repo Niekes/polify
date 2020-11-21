@@ -6,4 +6,14 @@ export default {
     links: {
         buymeacoffee: 'https://www.buymeacoffee.com/niekes',
     },
+    images: new Map([
+        /* eslint-disable global-require */
+        [0, { src: require('@/assets/img/default-0.jpg') }],
+        [1, { src: require('@/assets/img/default-1.jpg') }],
+        [2, { src: require('@/assets/img/default-2.jpg') }],
+        [3, { src: require('@/assets/img/default-3.jpg') }],
+        [4, { src: require('@/assets/img/default-4.jpg') }],
+        [5, { src: require('@/assets/img/default-5.jpg') }],
+        /* eslint-enable global-require */
+    ]),
 };

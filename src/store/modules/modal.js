@@ -8,9 +8,15 @@ const s = {
 
 const getters = {
     downloadIsOpen: state => state.type === 'download',
+    galleryIsOpen: state => state.type === 'gallery',
 };
 
 const actions = {
+    openGallery({ commit }) {
+        commit('setOverflow', 'hidden');
+        commit('setType', 'gallery');
+    },
+
     openDownload({ commit }) {
         commit('setOverflow', 'hidden');
         commit('setType', 'download');
