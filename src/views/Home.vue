@@ -150,6 +150,16 @@
                     @click="$store.dispatch('modal/openDownload')"
                     v-text="$t('home.download')"
                 />
+                <div class="download__links">
+                    <router-link
+                        to="/imprint"
+                        v-text="$t('home.imprint')"
+                    />
+                    <router-link
+                        to="/cookies"
+                        v-text="$t('home.cookies')"
+                    />
+                </div>
             </div>
         </div>
 
@@ -740,10 +750,11 @@ export default {
 }
 
 .control__download {
-    align-items: flex-end;
+    align-items: center;
     display: flex;
+    flex-direction: column;
     grid-area: download;
-    justify-content: space-around;
+    justify-content: flex-end;
 
     .download__button {
         background: $secondary;
@@ -765,6 +776,20 @@ export default {
 
         &:focus {
             outline: none;
+        }
+    }
+
+    .download__links {
+        display: flex;
+        font-size: $font-size * 0.75;
+        font-weight: lighter;
+        justify-content: space-around;
+        padding-top: $padding-y * 2;
+        width: 100%;
+
+        a {
+            color: $black;
+            text-decoration: none;
         }
     }
 }

@@ -3,6 +3,7 @@
         <svg-icon
             class="navigation__logo"
             :xlink="'#logo'"
+            @click.native="$router.push({ name: 'Home' })"
         />
         <div class="sponsor">
             <a

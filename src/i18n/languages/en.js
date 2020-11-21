@@ -4,6 +4,8 @@ export default {
     },
     home: {
         title: 'home',
+        cookies: 'Cookies',
+        imprint: 'Imprint',
         referenceImage: 'Reference image',
         amountOfPoints: 'Amount of points: {n}',
         hue: 'Hue: {n}°',
