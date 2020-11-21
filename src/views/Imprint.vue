@@ -13,7 +13,7 @@
         <h2>Kontakt</h2>
         <p>
             Telefon: +4915678523933<br>
-            E-Mail: polify@niekes.com
+            E-Mail: polify [at] niekes.com
         </p>
 
 
