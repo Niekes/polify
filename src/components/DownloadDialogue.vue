@@ -54,6 +54,14 @@ export default {
 
     methods: {
         downloadAsSvg() {
+            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
+                this.$gtag.event('click', {
+                    event_category: 'download',
+                    event_label: 'svg',
+                    value: 1,
+                });
+            }
+
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
@@ -73,20 +81,10 @@ export default {
             a.click();
 
             document.body.removeChild(a);
-
-            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                this.$gtag.event('click', {
-                    event_category: 'download',
-                    event_label: 'svg',
-                    value: 1,
-                });
-            }
         },
 
         downloadAsPng() {
             const scale = 2;
-
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale });
 
             if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
                 this.$gtag.event('click', {
@@ -95,6 +93,8 @@ export default {
                     value: scale,
                 });
             }
+
+            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale });
         },
     },
 };
