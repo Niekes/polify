@@ -53,13 +53,15 @@ export default {
     },
 
     methods: {
-        downloadAsSvg() {
+        async downloadAsSvg() {
             if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                this.$gtag.event('click', {
+                const a = await this.$gtag.event('click', {
                     event_category: 'download',
                     event_label: 'svg',
                     value: 1,
                 });
+
+                console.log(a);
             }
 
             let source = new XMLSerializer().serializeToString(select('#svg').node());
