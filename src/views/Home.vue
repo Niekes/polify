@@ -219,7 +219,7 @@ export default {
 
         defaultImg() {
             // eslint-disable-next-line global-require
-            return require('@/assets/img/default.jpg');
+            return require('@/assets/img/default-0.jpg');
         },
 
         height() {
