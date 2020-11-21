@@ -391,7 +391,9 @@ export default {
 
             const { data: colors } = this.ctx.getImageData(x, y, 1, 1);
 
-            const colorHsl = hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
+            const colorHsl = colors[3] === 0
+                ? hsl(0, 0, 1)
+                : hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
 
             const c = (Number(this.contrast) / 100) + 1;
             const intercept = 128 * (1 - c);
