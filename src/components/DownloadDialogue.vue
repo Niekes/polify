@@ -53,17 +53,7 @@ export default {
     },
 
     methods: {
-        async downloadAsSvg() {
-            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                const a = await this.$gtag.event('click', {
-                    event_category: 'download',
-                    event_label: 'svg',
-                    value: 1,
-                });
-
-                console.log(a);
-            }
-
+        downloadAsSvg() {
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
@@ -86,17 +76,7 @@ export default {
         },
 
         downloadAsPng() {
-            const scale = 2;
-
-            if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                this.$gtag.event('click', {
-                    event_category: 'download',
-                    event_label: 'png',
-                    value: scale,
-                });
-            }
-
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale });
+            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
         },
     },
 };
