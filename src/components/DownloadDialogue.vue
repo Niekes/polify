@@ -75,8 +75,8 @@ export default {
             document.body.removeChild(a);
 
             if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                this.$gtag.event('download', {
-                    event_category: 'svg',
+                this.$gtag.event('click', {
+                    event_category: 'download',
                     event_label: 'svg',
                     value: 1,
                 });
@@ -89,8 +89,8 @@ export default {
             saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale });
 
             if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com') {
-                this.$gtag.event('download', {
-                    event_category: 'png',
+                this.$gtag.event('click', {
+                    event_category: 'download',
                     event_label: 'png',
                     value: scale,
                 });
