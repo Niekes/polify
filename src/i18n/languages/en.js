@@ -11,10 +11,15 @@ export default {
         opacity: 'Opacity: {n}%',
         saturation: 'Saturation: {n}%',
         lightness: 'Lightness: {n}%',
-        downloadAsPng: 'Download as png',
-        downloadAsSvg: 'Download as svg',
         randomize: 'Randomize',
         reset: 'Reset',
+        download: 'download',
         mouseoverHint: 'Click to split up selected polygon',
+    },
+    downloadDialogue: {
+        pleaseConsider: 'Please consider to buy me coffee',
+        thanksForUsing: 'Thanks for using Polify!',
+        downloadAsPng: 'Download as png',
+        downloadAsSvg: 'Download as svg',
     },
 };

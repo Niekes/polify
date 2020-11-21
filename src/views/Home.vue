@@ -25,10 +25,6 @@
                     :height="height"
                 />
 
-                <canvas
-                    id="canvas-download"
-                />
-
                 <img
                     id="default-img"
                     :src="defaultImg"
@@ -62,7 +58,7 @@
                         :min="0"
                         :max="360"
                         :step="0.01"
-                        @dblclick="resetHue(); update()"
+                        @dblclick="resetHue(); changeColor()"
                         @change="changeColor"
                     >
                 </div>
@@ -78,7 +74,7 @@
                         :min="0"
                         :max="200"
                         :step="0.01"
-                        @dblclick="resetSaturation(); update()"
+                        @dblclick="resetSaturation(); changeColor()"
                         @change="changeColor"
                     >
                 </div>
@@ -94,7 +90,7 @@
                         :min="0"
                         :max="200"
                         :step="0.01"
-                        @dblclick="resetLightness(); update()"
+                        @dblclick="resetLightness(); changeColor()"
                         @change="changeColor"
                     >
                 </div>
@@ -110,7 +106,7 @@
                         :min="0"
                         :max="100"
                         :step="0.01"
-                        @dblclick="resetOpacity(); update()"
+                        @dblclick="resetOpacity(); changeColor()"
                         @change="changeColor"
                     >
                 </div>
@@ -126,7 +122,7 @@
                         :min="-100"
                         :max="100"
                         :step="0.01"
-                        @dblclick="resetContrast(); update()"
+                        @dblclick="resetContrast(); changeColor()"
                         @change="changeColor"
                     >
                 </div>
@@ -151,13 +147,8 @@
             <div class="control__download">
                 <button
                     class="download__button"
-                    @click="downloadAsPng"
-                    v-text="$t('home.downloadAsPng')"
-                />
-                <button
-                    class="download__button"
-                    @click="downloadAsSvg"
-                    v-text="$t('home.downloadAsSvg')"
+                    @click="$store.dispatch('modal/openDownload')"
+                    v-text="$t('home.download')"
                 />
             </div>
         </div>
@@ -185,7 +176,6 @@
 </template>
 
 <script>
-import { saveSvgAsPng } from 'save-svg-as-png';
 import { Delaunay } from 'd3-delaunay';
 
 import {
@@ -483,32 +473,6 @@ export default {
             this.contrast = 0;
         },
 
-        downloadAsSvg() {
-            let source = new XMLSerializer().serializeToString(select('#svg').node());
-
-            source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
-
-            const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
-
-            const a = document.createElement('a');
-
-            a.style.display = 'none';
-
-            a.href = url;
-
-            a.setAttribute('download', 'polyfy');
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            document.body.removeChild(a);
-        },
-
-        downloadAsPng() {
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
-        },
-
         showHint() {
             this.hintIsShwon = true;
         },
@@ -607,8 +571,7 @@ export default {
     max-width: 100%;
 }
 
-#default-img,
-#canvas-download {
+#default-img {
     display: none;
     pointer-events: none;
     position: absolute;
@@ -784,15 +747,24 @@ export default {
 
     .download__button {
         background: $secondary;
-        border: $border-width solid $black-30;
+        border: $border-width * 2 solid $black-30;
         border-radius: $border-radius;
+        box-shadow: $box-shadow;
         color: $white;
         cursor: pointer;
-        padding: $padding-y * 1.5 $padding-x;
+        font-weight: bolder;
+        padding: $padding-y * 2 $padding-x * 2;
+        text-shadow: $text-shadow;
+        text-transform: uppercase;
+        width: 100%;
 
         &:hover {
             background: saturate($secondary, 10%);
             opacity: 1;
+        }
+
+        &:focus {
+            outline: none;
         }
     }
 }

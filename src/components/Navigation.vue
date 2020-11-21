@@ -7,22 +7,37 @@
         <div class="sponsor">
             <a
                 class="sponsor__link"
-                href="https://www.buymeacoffee.com/niekes"
+                :href="buymeacoffee"
                 target="_blank"
                 v-text="$t('navigation.buymeacoffee')"
             />
         </div>
+        <download-dialogue v-if="downloadIsOpen" />
     </div>
 </template>
 
 <script>
+import DownloadDialogue from '@/components/DownloadDialogue';
 import SvgIcon from '@/components/SvgIcon';
+
+import config from '@/config';
 
 export default {
     name: 'Navigation',
 
     components: {
+        DownloadDialogue,
         SvgIcon,
+    },
+
+    computed: {
+        downloadIsOpen() {
+            return this.$store.getters['modal/downloadIsOpen'];
+        },
+    },
+
+    created() {
+        this.buymeacoffee = config.links.buymeacoffee;
     },
 };
 </script>
@@ -37,6 +52,7 @@ export default {
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
     padding: $padding-y * 2 $padding-x * 2;
+    position: relative;
 }
 
 .navigation__logo {

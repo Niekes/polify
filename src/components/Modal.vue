@@ -5,20 +5,33 @@
         <div class="modal__container">
             <div class="modal__header">
                 <button
-                    class="u3-btn u3-btn--blue-outline u3-btn--small"
+                    class="modal__close"
                     @click.stop.prevent="close"
-                    v-text="$t('general.close').toUpperCase()"
-                />
+                >
+                    <svg-icon
+                        :xlink="'#close'"
+                    />
+                </button>
             </div>
 
-            <slot />
+            <slot class="modal__content" />
         </div>
     </div>
 </template>
 
 <script>
+import {
+    select,
+} from 'd3';
+
+import SvgIcon from '@/components/SvgIcon';
+
 export default {
     name: 'Modal',
+
+    components: {
+        SvgIcon,
+    },
 
     mounted() {
         document.body.appendChild(this.$el);
@@ -26,7 +39,11 @@ export default {
 
     methods: {
         close() {
-            this.$store.dispatch('modal/close');
+            select(this.$el).classed('modal__mask--fading-out', true);
+
+            window.setTimeout(() => {
+                this.$store.dispatch('modal/close');
+            }, 450);
         },
     },
 };
@@ -34,8 +51,9 @@ export default {
 
 <style lang="scss" scoped>
 .modal__mask {
-    align-items: flex-end;
+    align-items: center;
     animation: fade-in $transition-duration $transition-timing-function forwards;
+    backdrop-filter: blur(20px);
     background: $black-50;
     bottom: 0;
     display: flex;
@@ -47,6 +65,10 @@ export default {
     top: 0;
     width: 100%;
     z-index: $z-index-modal-backdrop;
+
+    &--fading-out {
+        animation: fade-out $transition-duration $transition-timing-function forwards;
+    }
 }
 
 @keyframes fade-in {
@@ -55,11 +77,27 @@ export default {
     }
 }
 
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 .modal__container {
-    background: rgb(244, 244, 244);
-    box-shadow: 0 -2px 20px 10px $black;
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: 0 -50px 20px 30px $black-20;
     cursor: default;
-    height: calc(100% - 165px);
+    display: grid;
+    gap: $margin-y * 2 0;
+    grid-template-areas: "header" "content";
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+    height: 75%;
     max-width: $breakpoint-lg;
     overflow: scroll;
     padding: $padding-y * 2 $padding-x * 2 $padding-y * 2 $padding-x * 2;
@@ -69,19 +107,42 @@ export default {
 }
 
 .modal__header {
-    background: #e8e8e8;
-    border-radius: $border-radius $border-radius 0 0;
     display: flex;
-    height: 40px;
+    grid-area: header;
     justify-content: flex-end;
-    left: 0;
     margin: auto;
-    max-width: $breakpoint-lg;
-    padding: $padding-y $padding-x;
-    position: fixed;
-    right: 0;
-    top: 165px - 40px;
     width: 100%;
     z-index: $z-index-modal-backdrop;
+}
+
+.modal__content {
+    grid-area: content;
+}
+
+.modal__close {
+    align-content: center;
+    background: $tertiary;
+    border: $border-width solid darken($tertiary, 20%);
+    border-radius: $border-radius;
+    color: $white;
+    cursor: pointer;
+    display: flex;
+    font-size: $font-size * 1.25;
+    font-weight: bolder;
+    padding: $padding-y $padding-x;
+    transition: background $transition-duration $transition-timing-function;
+
+    svg {
+        height: 1rem;
+        width: 1rem;
+    }
+
+    &:hover {
+        background: saturate($tertiary, 10%);
+    }
+
+    &:focus {
+        outline: none;
+    }
 }
 </style>
