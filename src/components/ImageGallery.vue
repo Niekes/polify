@@ -143,6 +143,7 @@ export default {
     gap: $margin-y $margin-x * 2;
     grid-auto-rows: 200px;
     grid-template-columns: repeat(3, 1fr);
+    margin-bottom: $margin-y * 2;
 
     div {
         align-content: center;
@@ -151,9 +152,15 @@ export default {
 
         img {
             border-radius: $border-radius;
+            box-shadow: 0 0 1rem rgba($black, 0);
             cursor: pointer;
             height: auto;
             max-width: 100%;
+            transition: box-shadow $transition-duration $transition-timing-function;
+
+            &:hover {
+                box-shadow: $box-shadow;
+            }
         }
     }
 }
