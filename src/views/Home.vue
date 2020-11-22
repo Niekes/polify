@@ -17,119 +17,88 @@
                     :height="height"
                 />
             </div>
-            <div class="control__parameters">
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.amountOfPoints', amount)"
-                    />
-                    <input
-                        v-model="amount"
-                        type="range"
-                        class="slider"
-                        :min="100"
-                        :max="10000"
-                        :step="100"
-                        @dblclick="resetAmount(); update()"
-                        @change="update()"
-                    >
-                </div>
+            <div class="control__sliders">
+                <input-range
+                    v-model.number="amount"
+                    class="sliders__input"
+                    :min="100"
+                    :max="10000"
+                    :step="100"
+                    :label="$tc('home.amountOfPoints', amount)"
+                    @dblclick.native="resetAmount(); update()"
+                    @change.native="update()"
+                />
 
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.hue', hue)"
-                    />
-                    <input
-                        v-model="hue"
-                        type="range"
-                        class="slider"
-                        :min="0"
-                        :max="360"
-                        :step="0.01"
-                        @dblclick="resetHue(); changeColor()"
-                        @change="changeColor"
-                    >
-                </div>
+                <input-range
+                    v-model.number="hue"
+                    class="sliders__input"
+                    :min="0"
+                    :max="360"
+                    :step="0.01"
+                    :label="$tc('home.hue', hue)"
+                    @dblclick.native="resetHue(); changeColor()"
+                    @change.native="changeColor()"
+                />
 
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.saturation', saturation)"
-                    />
-                    <input
-                        v-model="saturation"
-                        type="range"
-                        class="slider"
-                        :min="0"
-                        :max="200"
-                        :step="0.01"
-                        @dblclick="resetSaturation(); changeColor()"
-                        @change="changeColor"
-                    >
-                </div>
+                <input-range
+                    v-model.number="saturation"
+                    class="sliders__input"
+                    :min="0"
+                    :max="200"
+                    :step="0.01"
+                    :label="$tc('home.saturation', saturation)"
+                    @dblclick.native="resetSaturation(); changeColor()"
+                    @change.native="changeColor()"
+                />
 
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.lightness', lightness)"
-                    />
-                    <input
-                        v-model="lightness"
-                        type="range"
-                        class="slider"
-                        :min="0"
-                        :max="200"
-                        :step="0.01"
-                        @dblclick="resetLightness(); changeColor()"
-                        @change="changeColor"
-                    >
-                </div>
+                <input-range
+                    v-model.number="lightness"
+                    class="sliders__input"
+                    :min="0"
+                    :max="200"
+                    :step="0.01"
+                    :label="$tc('home.lightness', lightness)"
+                    @dblclick.native="resetLightness(); changeColor()"
+                    @change.native="changeColor()"
+                />
 
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.opacity', opacity)"
-                    />
-                    <input
-                        v-model="opacity"
-                        type="range"
-                        class="slider"
-                        :min="0"
-                        :max="100"
-                        :step="0.01"
-                        @dblclick="resetOpacity(); changeColor()"
-                        @change="changeColor"
-                    >
-                </div>
+                <input-range
+                    v-model.number="opacity"
+                    class="sliders__input"
+                    :min="0"
+                    :max="100"
+                    :step="0.01"
+                    :label="$tc('home.opacity', opacity)"
+                    @dblclick.native="resetOpacity(); changeColor()"
+                    @change.native="changeColor()"
+                />
 
-                <div class="parameters__range-slider">
-                    <label
-                        v-text="$tc('home.contrast', contrast)"
-                    />
-                    <input
-                        v-model="contrast"
-                        type="range"
-                        class="slider"
-                        :min="-100"
-                        :max="100"
-                        :step="0.01"
-                        @dblclick="resetContrast(); changeColor()"
-                        @change="changeColor"
-                    >
-                </div>
-
-                <div class="parameters__buttons">
-                    <button
-                        @click="randomize"
-                        v-text="$t('home.randomize')"
-                    />
-                    <button
-                        :disabled="!(amount !== 100
-                            || hue !== 0
-                            || saturation !== 100
-                            || lightness !== 100
-                            || opacity !== 100
-                            || contrast !== 0)"
-                        @click="reset"
-                        v-text="$t('home.reset')"
-                    />
-                </div>
+                <input-range
+                    v-model.number="contrast"
+                    class="sliders__input"
+                    :min="-100"
+                    :max="100"
+                    :step="0.01"
+                    :label="$tc('home.contrast', contrast)"
+                    @dblclick.native="resetContrast(); changeColor()"
+                    @change.native="changeColor()"
+                />
+            </div>
+            <div class="control__customize-buttons">
+                <button
+                    @click="randomize"
+                    v-text="$t('home.randomize')"
+                />
+                <button
+                    :disabled="!(amount !== 100
+                        || hue !== 0
+                        || saturation !== 100
+                        || lightness !== 100
+                        || opacity !== 100
+                        || contrast !== 0)"
+                    @click="reset"
+                    v-text="$t('home.reset')"
+                />
             </div>
             <div class="control__download">
                 <button
@@ -137,16 +106,6 @@
                     @click="$store.dispatch('modal/openDownload')"
                     v-text="$t('home.download')"
                 />
-                <div class="download__links">
-                    <router-link
-                        to="/imprint"
-                        v-text="$t('home.imprint')"
-                    />
-                    <router-link
-                        to="/cookies"
-                        v-text="$t('home.cookies')"
-                    />
-                </div>
             </div>
         </div>
 
@@ -186,10 +145,15 @@ import {
     polygonCentroid,
 } from 'd3';
 
+import InputRange from '@/components/InputRange';
 import config from '@/config';
 
 export default {
     name: 'Home',
+
+    components: {
+        InputRange,
+    },
 
     data() {
         return {
@@ -478,9 +442,9 @@ export default {
     border-radius: $border-radius;
     display: grid;
     gap: $margin-y * 2 0;
-    grid-template-areas: "reference-image" "parameters" "download";
+    grid-template-areas: "reference-image" "sliders" "customize-buttons" "download";
     grid-template-columns: 1fr;
-    grid-template-rows: min-content 1fr 1fr;
+    grid-template-rows: min-content min-content min-content 1fr;
     padding: $padding-y * 2 $padding-x * 2;
 }
 
@@ -543,133 +507,18 @@ export default {
     max-width: 100%;
 }
 
-.control__parameters {
-    grid-area: parameters;
-}
+.control__sliders {
+    grid-area: sliders;
 
-.parameters__range-slider {
-    display: flex;
-    flex-direction: column;
-
-    /* https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/ */
-    input[type=range].slider {
-        -webkit-appearance: none;
-        background-color: transparent;
-        border-radius: $border-radius;
+    .sliders__input {
         margin-bottom: $margin-y * 2;
-        overflow: hidden;
-        width: 100%;
-    }
-
-    input[type=range].slider:focus {
-        outline: none;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-webkit-slider-runnable-track {
-        background: rgba($primary, 0.3);
-        border: 0;
-        cursor: pointer;
-        height: 1rem;
-        width: 100%;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        background: $white;
-        border: 0.4px solid $black-20;
-        border-radius: $border-radius;
-        cursor: pointer;
-        height: 1rem;
-        margin-top: 0;
-        width: 17px;
-    }
-
-    input[type=range].slider:focus::-webkit-slider-runnable-track {
-        background: rgba($primary, 0.3);
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-moz-range-track {
-        background: rgba($primary, 0.3);
-        border: 0;
-        cursor: pointer;
-        height: 1rem;
-        width: 100%;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-moz-range-thumb {
-        background: $white;
-        border: 0.4px solid $black-20;
-        border-radius: $border-radius;
-        cursor: pointer;
-        height: 1rem;
-        width: 17px;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-ms-track {
-        background: transparent;
-        border-color: transparent;
-        border-width: 0;
-        color: transparent;
-        cursor: pointer;
-        height: 1rem;
-        width: 100%;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-ms-fill-lower {
-        background: rgba($primary, 0.3);
-        border: 0;
-    }
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    input[type=range].slider::-ms-fill-upper {
-        background: rgba($primary, 0.3);
-        border: 0;
-    }
-
-    input[type=range].slider::-ms-thumb { /* stylelint-disable-line no-descending-specificity */
-        background: $white;
-        border: 0.4px solid $black-20;
-        border-radius: $border-radius;
-        cursor: pointer;
-        height: 1rem;
-        margin-top: 0;
-        width: 17px;
-    }
-
-    input[type=range].slider:focus::-ms-fill-lower {
-        background: rgba($primary, 0.3);
-    }
-
-    input[type=range].slider:focus::-ms-fill-upper {
-        background: rgba($primary, 0.3);
-    }
-
-    @supports (-ms-ime-align:auto) {
-        input[type=range].slider {
-            margin: 0;
-        }
-    }
-
-    label {
-        color: $black-50;
-        font-size: $font-size * 0.7;
-        font-weight: bolder;
-        margin-bottom: $margin-y / 4;
-        text-transform: uppercase;
-        white-space: nowrap;
-        z-index: 1;
     }
 }
 
-.parameters__buttons {
+.control__customize-buttons {
     align-items: center;
     display: flex;
+    grid-area: customize-buttons;
     justify-content: space-between;
 
     button {
@@ -692,7 +541,7 @@ export default {
         }
 
         &:hover {
-            filter: saturate(1);
+            filter: saturate(2);
         }
 
         &:disabled {
@@ -700,6 +549,11 @@ export default {
             opacity: 0.7;
         }
     }
+}
+
+.parameters__range-slider {
+    display: flex;
+    flex-direction: column;
 }
 
 .control__download {
@@ -729,20 +583,6 @@ export default {
 
         &:focus {
             outline: none;
-        }
-    }
-
-    .download__links {
-        display: flex;
-        font-size: $font-size * 0.75;
-        font-weight: lighter;
-        justify-content: space-around;
-        padding-top: $padding-y * 2;
-        width: 100%;
-
-        a {
-            color: $black;
-            text-decoration: none;
         }
     }
 }

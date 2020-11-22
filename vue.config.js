@@ -22,6 +22,7 @@ module.exports = {
             sass: {
                 data: `
                     @import "@/scss/_variables.scss";
+                    @import '@/scss/mixins/_input-range.scss';
                 `,
             },
         },

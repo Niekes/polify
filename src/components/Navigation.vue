@@ -5,16 +5,32 @@
             :xlink="'#logo'"
             @click.native="$router.push({ name: 'Home' })"
         />
-        <div class="sponsor">
+
+        <div class="navigation__items">
+            <router-link
+                class="item__link"
+                to="/cookies"
+                v-text="$t('home.cookies')"
+            />
+            <router-link
+                class="item__link"
+                to="/imprint"
+                v-text="$t('home.imprint')"
+            />
             <a
-                class="sponsor__link"
+                class="item__sponsor"
                 :href="buymeacoffee"
                 target="_blank"
                 v-text="$t('navigation.buymeacoffee')"
             />
         </div>
+
         <download-dialogue v-if="downloadIsOpen" />
         <image-gallery v-if="galleryIsOpen" />
+
+        <!--
+            Add https://youtu.be/52M9FvpaBxE
+        -->
     </div>
 </template>
 
@@ -58,7 +74,7 @@ export default {
     box-shadow: $box-shadow;
     display: grid;
     grid-area: navigation;
-    grid-template-areas: "logo sponsor";
+    grid-template-areas: "logo items";
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
     padding: $padding-y * 2 $padding-x * 2;
@@ -74,14 +90,26 @@ export default {
     width: 12rem;
 }
 
-.sponsor {
+.navigation__items {
     align-items: center;
     display: flex;
-    grid-area: sponsor;
+    grid-area: items;
     justify-content: flex-end;
 
-    &__link {
+    .item__link,
+    .item__sponsor {
+        margin-left: $margin-x * 2;
+    }
+
+    .item__link {
+        color: $white-80;
+        font-size: $font-size * 0.75;
+        text-decoration: none;
+    }
+
+    .item__sponsor {
         color: $white;
+        font-weight: bolder;
     }
 }
 </style>
