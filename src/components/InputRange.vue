@@ -52,7 +52,7 @@ export default {
 }
 
 .range__label {
-    color: $black-50;
+    color: $primary;
     font-size: $font-size * 0.7;
     font-weight: bolder;
     margin-bottom: $margin-y / 2;

@@ -1,7 +1,7 @@
-@mixin input-type-range ($thumbColor: $white, $thumbWidth: 1rem, $thumbHeight: 1rem, $trackWidth: 100%, $trackHeight: 1rem, $borderRadius: $border-radius) {
+@mixin input-type-range ($thumbColor: $white, $thumbWidth: 1.25rem, $thumbHeight: 1.25rem, $trackWidth: 100%, $trackHeight: 1rem, $borderRadius: $border-radius) {
     appearance: none;
     background: $black-10;
-    border: $border-width solid $black-20;
+    border: $border-width solid $white-70;
     border-radius: $borderRadius;
     height: $trackHeight;
     margin: 0;
@@ -37,7 +37,7 @@
     &::-webkit-slider-thumb {
         appearance: none;
         background: $thumbColor;
-        border: $border-width solid $black-50;
+        border: $border-width solid $black-30;
         border-radius: $borderRadius;
         box-shadow: 0 0 1px $black-50;
         cursor: pointer;
@@ -56,7 +56,7 @@
 
     &::-moz-range-thumb { /* stylelint-disable-line no-descending-specificity */
         background: $thumbColor;
-        border: $border-width solid $black-50;
+        border: $border-width solid $black-30;
         border-radius: $borderRadius;
         box-shadow: 0 0 1px $black-50;
         cursor: pointer;
@@ -70,7 +70,7 @@
 
     &::-ms-thumb { /* stylelint-disable-line no-descending-specificity */
         background: $thumbColor;
-        border: $border-width solid $black-50;
+        border: $border-width solid $black-30;
         border-radius: $borderRadius;
         box-shadow: 0 0 1px $black-50;
         height: $thumbHeight !important;

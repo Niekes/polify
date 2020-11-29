@@ -4,10 +4,9 @@
             <div class="control__reference-image">
                 <div class="reference-image__help">
                     <small v-text="$t('home.referenceImage')" />
-                    <button
-                        class="gallery-button"
-                        @click="$store.dispatch('modal/openGallery')"
-                        v-text="$t('home.changeImage')"
+                    <base-button
+                        :text="$t('home.changeImage')"
+                        @click.native="$store.dispatch('modal/openGallery')"
                     />
                 </div>
 
@@ -63,17 +62,6 @@
                 />
 
                 <input-range
-                    v-model.number="opacity"
-                    class="sliders__input"
-                    :min="0"
-                    :max="100"
-                    :step="0.01"
-                    :label="$tc('home.opacity', opacity)"
-                    @dblclick.native="resetOpacity(); changeColor()"
-                    @change.native="changeColor()"
-                />
-
-                <input-range
                     v-model.number="contrast"
                     class="sliders__input"
                     :min="-100"
@@ -83,28 +71,53 @@
                     @dblclick.native="resetContrast(); changeColor()"
                     @change.native="changeColor()"
                 />
+
+                <input-range
+                    v-model.number="fillOpacity"
+                    class="sliders__input"
+                    :min="0"
+                    :max="100"
+                    :step="0.01"
+                    :label="$tc('home.fillOpacity', fillOpacity)"
+                    @dblclick.native="resetFillOpacity(); changeColor()"
+                    @change.native="changeColor()"
+                />
+
+                <input-range
+                    v-model.number="strokeOpacity"
+                    class="sliders__input"
+                    :min="0"
+                    :max="100"
+                    :step="0.01"
+                    :label="$tc('home.strokeOpacity', strokeOpacity)"
+                    @dblclick.native="resetStrokeOpacity(); changeColor()"
+                    @change.native="changeColor()"
+                />
             </div>
             <div class="control__customize-buttons">
-                <button
-                    @click="randomize"
-                    v-text="$t('home.randomize')"
+                <base-button
+                    :text="$t('home.randomize')"
+                    :icon="'#change'"
+                    @click.native="randomize"
                 />
-                <button
+                <base-button
+                    :icon="'#reset'"
                     :disabled="!(amount !== 100
                         || hue !== 0
                         || saturation !== 100
                         || lightness !== 100
-                        || opacity !== 100
+                        || fillOpacity !== 100
+                        || strokeOpacity !== 100
                         || contrast !== 0)"
-                    @click="reset"
-                    v-text="$t('home.reset')"
+                    :text="$t('home.reset')"
+                    @click.native="reset"
                 />
             </div>
             <div class="control__download">
-                <button
-                    class="download__button"
-                    @click="$store.dispatch('modal/openDownload')"
-                    v-text="$t('home.download')"
+                <base-button
+                    :text="$t('home.download')"
+                    :variant="2"
+                    @click.native="$store.dispatch('modal/openDownload')"
                 />
             </div>
         </div>
@@ -146,12 +159,14 @@ import {
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
+import BaseButton from '@/components/BaseButton';
 import config from '@/config';
 
 export default {
     name: 'Home',
 
     components: {
+        BaseButton,
         InputRange,
     },
 
@@ -162,7 +177,8 @@ export default {
             contrast: 0,
             saturation: 100,
             lightness: 100,
-            opacity: 100,
+            fillOpacity: 100,
+            strokeOpacity: 100,
             hintIsShwon: false,
         };
     },
@@ -248,8 +264,7 @@ export default {
                 .enter()
                 .append('path')
                 .attr('class', 'triangles')
-                .attr('stroke', this.setColor)
-                .attr('stroke-opacity', this.setStrokeOpacity)
+                .attr('stroke', this.setStrokeColor)
                 .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i))
@@ -318,8 +333,7 @@ export default {
                     select('#centroid')
                         .remove();
                 })
-                .attr('stroke', this.setColor)
-                .attr('stroke-opacity', this.setStrokeOpacity)
+                .attr('stroke', this.setStrokeColor)
                 .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i));
@@ -348,7 +362,7 @@ export default {
             colorHsl.h += Number(this.hue);
             colorHsl.s *= (Number(this.saturation) / 100);
             colorHsl.l *= (Number(this.lightness) / 100);
-            colorHsl.opacity = (Number(this.opacity) / 100);
+            colorHsl.opacity = (Number(this.fillOpacity) / 100);
 
             const rgb = colorHsl.rgb();
 
@@ -359,8 +373,30 @@ export default {
             return rgb;
         },
 
-        setStrokeOpacity() {
-            return this.opacity / 100;
+        setStrokeColor(d, i) {
+            const [x, y] = polygonCentroid(this.delaunay.trianglePolygon(i));
+
+            const { data: colors } = this.ctx.getImageData(x, y, 1, 1);
+
+            const colorHsl = colors[3] === 0
+                ? hsl(0, 0, 1)
+                : hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
+
+            const c = (Number(this.contrast) / 100) + 1;
+            const intercept = 128 * (1 - c);
+
+            colorHsl.h += Number(this.hue);
+            colorHsl.s *= (Number(this.saturation) / 100);
+            colorHsl.l *= (Number(this.lightness) / 100);
+            colorHsl.opacity = (Number(this.strokeOpacity) / 100);
+
+            const rgb = colorHsl.rgb();
+
+            rgb.r = rgb.r * c + intercept;
+            rgb.g = rgb.g * c + intercept;
+            rgb.b = rgb.b * c + intercept;
+
+            return rgb;
         },
 
         setStrokeWidth() {
@@ -376,7 +412,8 @@ export default {
             this.resetHue();
             this.resetSaturation();
             this.resetLightness();
-            this.resetOpacity();
+            this.resetFillOpacity();
+            this.resetStrokeOpacity();
             this.resetContrast();
             this.update();
         },
@@ -397,8 +434,12 @@ export default {
             this.lightness = 100;
         },
 
-        resetOpacity() {
-            this.opacity = 100;
+        resetFillOpacity() {
+            this.fillOpacity = 100;
+        },
+
+        resetStrokeOpacity() {
+            this.strokeOpacity = 100;
         },
 
         resetContrast() {
@@ -462,45 +503,22 @@ export default {
     width: 100%;
 
     small {
-        color: $black-50;
+        color: $primary;
+        font-size: $font-size * 0.75;
         font-weight: bolder;
+        margin-bottom: $margin-y / 2;
         text-transform: uppercase;
         z-index: 1;
     }
 
-    .gallery-button {
-        background: $tertiary;
-        border: $border-width solid $black-70;
-        border-radius: $border-radius;
-        color: $black;
-        cursor: pointer;
-        display: inline-block;
-        filter: saturate(1);
-        font-size: 0.75rem;
-        font-weight: bolder;
-        margin-bottom: $margin-y;
-        padding: $padding;
-        text-align: center;
-        text-decoration: none;
-        transition: filter 450ms ease-in-out;
-
-        &:focus {
-            outline: none;
-        }
-
-        &:hover {
-            filter: saturate(1);
-        }
-
-        &:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+    button {
+        font-size: $font-size * 0.75;
+        margin-bottom: $margin-y * 2;
     }
 }
 
 #canvas {
-    border: $border-width solid $black-50;
+    border: $border-width solid $white-50;
     border-radius: $border-radius;
     height: auto;
     max-height: 12rem;
@@ -510,7 +528,7 @@ export default {
 .control__sliders {
     grid-area: sliders;
 
-    .sliders__input {
+    .sliders__input:not(:last-child) {
         margin-bottom: $margin-y * 2;
     }
 }
@@ -520,35 +538,6 @@ export default {
     display: flex;
     grid-area: customize-buttons;
     justify-content: space-between;
-
-    button {
-        background: $tertiary;
-        border: $border-width solid $black-70;
-        border-radius: $border-radius;
-        color: $black;
-        cursor: pointer;
-        display: inline-block;
-        filter: saturate(1);
-        font-size: 1rem;
-        font-weight: bolder;
-        padding: $padding;
-        text-align: center;
-        text-decoration: none;
-        transition: filter 450ms ease-in-out;
-
-        &:focus {
-            outline: none;
-        }
-
-        &:hover {
-            filter: saturate(2);
-        }
-
-        &:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-    }
 }
 
 .parameters__range-slider {
@@ -563,27 +552,8 @@ export default {
     grid-area: download;
     justify-content: flex-end;
 
-    .download__button {
-        background: $secondary;
-        border: $border-width * 2 solid $black-30;
-        border-radius: $border-radius;
-        box-shadow: $box-shadow;
-        color: $white;
-        cursor: pointer;
-        font-weight: bolder;
-        padding: $padding-y * 2 $padding-x * 2;
-        text-shadow: $text-shadow;
-        text-transform: uppercase;
+    button {
         width: 100%;
-
-        &:hover {
-            background: saturate($secondary, 10%);
-            opacity: 1;
-        }
-
-        &:focus {
-            outline: none;
-        }
     }
 }
 

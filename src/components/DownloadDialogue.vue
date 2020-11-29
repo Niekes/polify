@@ -13,15 +13,17 @@
                 />
             </div>
             <div class="download-dialogue__control">
-                <button
+                <base-button
                     class="control__button"
-                    @click="downloadAsPng"
-                    v-text="$t('downloadDialogue.downloadAsPng')"
+                    :variant="2"
+                    :text="$t('downloadDialogue.downloadAsPng')"
+                    @click.native="downloadAsPng"
                 />
-                <button
+                <base-button
                     class="control__button"
-                    @click="downloadAsSvg"
-                    v-text="$t('downloadDialogue.downloadAsSvg')"
+                    :variant="2"
+                    :text="$t('downloadDialogue.downloadAsSvg')"
+                    @click.native="downloadAsSvg"
                 />
             </div>
         </div>
@@ -38,6 +40,7 @@ import {
 } from 'save-svg-as-png';
 
 import Modal from '@/components/Modal';
+import BaseButton from '@/components/BaseButton';
 
 import config from '@/config';
 
@@ -45,6 +48,7 @@ export default {
     name: 'DownloadDialogue',
 
     components: {
+        BaseButton,
         Modal,
     },
 
@@ -94,7 +98,7 @@ export default {
 .download-dialogue__thanks {
     display: flex;
     font-size: $font-size * 3;
-    font-weight: lighter;
+    font-weight: bolder;
     grid-area: thanks;
     justify-content: center;
     margin: $margin-y * 4;
@@ -102,8 +106,8 @@ export default {
 
 .download-dialogue__reminder {
     display: flex;
-    font-size: $font-size * 3;
-    font-weight: bolder;
+    font-size: $font-size * 2.5;
+    font-weight: lighter;
     grid-area: reminder;
     justify-content: center;
     margin: $margin-y * 4;
@@ -113,7 +117,7 @@ export default {
     align-items: center;
     display: flex;
     grid-area: control;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 .cross-fade {
@@ -126,28 +130,29 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
-    transition: color $transition-duration * 1.5 $transition-timing-function;
+    transition: color $transition-duration * 1.25 $transition-timing-function;
     z-index: 1;
 
     &::before,
     &::after {
-        background: rgba($primary, 0.5);
         content: '';
         height: 100%;
         left: -25%;
         position: absolute;
         top: 0;
-        transition: transform $transition-duration * 1.5 $transition-timing-function;
+        transition: transform $transition-duration * 1.25 $transition-timing-function;
         width: 150%;
         z-index: -1;
     }
 
     &::before {
+        background: rgba($quaternary, 0.5);
         transform: translate3d(100%, 0, 0) skew(20deg);
         transform-origin: 0 0;
     }
 
     &::after {
+        background: rgba($secondary, 0.5);
         transform: translate3d(-100%, 0, 0) skew(20deg);
         transform-origin: 100% 100%;
     }
@@ -163,25 +168,6 @@ export default {
 }
 
 .control__button {
-    background: $secondary;
-    border: $border-width * 2 solid $black-30;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    color: $white;
-    cursor: pointer;
-    font-weight: bolder;
-    padding: $padding-y * 4 $padding-x * 4;
-    text-shadow: $text-shadow;
-    text-transform: uppercase;
-    width: 30%;
-
-    &:hover {
-        background: saturate($secondary, 10%);
-        opacity: 1;
-    }
-
-    &:focus {
-        outline: none;
-    }
+    padding: $padding-y * 3 $padding-x * 3.5;
 }
 </style>

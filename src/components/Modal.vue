@@ -116,16 +116,16 @@ export default {
 
 .modal__close {
     align-content: center;
-    background: $tertiary;
+    background: transparent;
     border: $border-width solid darken($tertiary, 20%);
     border-radius: $border-radius;
-    color: $white;
+    color: $black-50;
     cursor: pointer;
     display: flex;
     font-size: $font-size * 1.25;
     font-weight: bolder;
     padding: $padding-y $padding-x;
-    transition: background $transition-duration $transition-timing-function;
+    transition: color $transition-duration $transition-timing-function;
 
     svg {
         height: 1rem;
@@ -133,7 +133,7 @@ export default {
     }
 
     &:hover {
-        background: saturate($tertiary, 10%);
+        color: $black-75;
     }
 
     &:focus {

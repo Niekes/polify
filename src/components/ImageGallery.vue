@@ -113,7 +113,7 @@ export default {
 .image-gallery__upload {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: $margin-y * 2;
+    margin-bottom: $margin-y * 4;
 
     .label {
         background: $tertiary;
@@ -140,10 +140,10 @@ export default {
 
 .image-gallery__images {
     display: grid;
-    gap: $margin-y $margin-x * 2;
+    gap: $margin-y * 4 $margin-x * 4;
     grid-auto-rows: 200px;
     grid-template-columns: repeat(3, 1fr);
-    margin-bottom: $margin-y * 2;
+    margin-bottom: $margin-y * 4;
 
     div {
         align-content: center;
@@ -151,15 +151,16 @@ export default {
         justify-content: center;
 
         img {
+            border: $border-width solid $black-70;
             border-radius: $border-radius;
-            box-shadow: 0 0 1rem rgba($black, 0);
+            box-shadow: $box-shadow;
             cursor: pointer;
             height: auto;
             max-width: 100%;
             transition: box-shadow $transition-duration $transition-timing-function;
 
             &:hover {
-                box-shadow: $box-shadow;
+                box-shadow: 0 0 1rem $black-75;
             }
         }
     }
