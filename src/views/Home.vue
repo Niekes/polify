@@ -94,6 +94,19 @@
                     @change.native="changeColor()"
                 />
             </div>
+            <div class="control__customize-checkbox">
+                <input
+                    id="invert"
+                    v-model="invert"
+                    type="checkbox"
+                    name="invert"
+                    @change="changeColor()"
+                >
+                <label
+                    for="invert"
+                    v-text="$t('home.invert')"
+                />
+            </div>
             <div class="control__customize-buttons">
                 <base-button
                     :text="$t('home.randomize')"
@@ -103,6 +116,7 @@
                 <base-button
                     :icon="'#reset'"
                     :disabled="!(amount !== 100
+                        || invert !== false
                         || hue !== 0
                         || saturation !== 100
                         || lightness !== 100
@@ -179,6 +193,7 @@ export default {
             lightness: 100,
             fillOpacity: 100,
             strokeOpacity: 100,
+            invert: false,
             hintIsShwon: false,
         };
     },
@@ -348,13 +363,11 @@ export default {
         },
 
         setColor(d, i) {
-            const [x, y] = polygonCentroid(this.delaunay.trianglePolygon(i));
-
-            const { data: colors } = this.ctx.getImageData(x, y, 1, 1);
-
-            const colorHsl = colors[3] === 0
+            const [x, y] = this.getXyKoords(i);
+            const pixel = this.getPixel(x, y);
+            const colorHsl = pixel[3] === 0
                 ? hsl(0, 0, 1)
-                : hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
+                : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
 
             const c = (Number(this.contrast) / 100) + 1;
             const intercept = 128 * (1 - c);
@@ -370,17 +383,21 @@ export default {
             rgb.g = rgb.g * c + intercept;
             rgb.b = rgb.b * c + intercept;
 
+            if (this.invert) {
+                rgb.r = 255 - rgb.r;
+                rgb.g = 255 - rgb.g;
+                rgb.b = 255 - rgb.b;
+            }
+
             return rgb;
         },
 
         setStrokeColor(d, i) {
-            const [x, y] = polygonCentroid(this.delaunay.trianglePolygon(i));
-
-            const { data: colors } = this.ctx.getImageData(x, y, 1, 1);
-
-            const colorHsl = colors[3] === 0
+            const [x, y] = this.getXyKoords(i);
+            const pixel = this.getPixel(x, y);
+            const colorHsl = pixel[3] === 0
                 ? hsl(0, 0, 1)
-                : hsl(color(`rgba(${colors[0]},${colors[1]},${colors[2]},${colors[3]})`));
+                : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
 
             const c = (Number(this.contrast) / 100) + 1;
             const intercept = 128 * (1 - c);
@@ -396,7 +413,21 @@ export default {
             rgb.g = rgb.g * c + intercept;
             rgb.b = rgb.b * c + intercept;
 
+            if (this.invert) {
+                rgb.r = 255 - rgb.r;
+                rgb.g = 255 - rgb.g;
+                rgb.b = 255 - rgb.b;
+            }
+
             return rgb;
+        },
+
+        getXyKoords(index) {
+            return polygonCentroid(this.delaunay.trianglePolygon(index));
+        },
+
+        getPixel(x, y) {
+            return this.ctx.getImageData(x, y, 1, 1).data;
         },
 
         setStrokeWidth() {
@@ -415,6 +446,7 @@ export default {
             this.resetFillOpacity();
             this.resetStrokeOpacity();
             this.resetContrast();
+            this.resetInvert();
             this.update();
         },
 
@@ -446,6 +478,10 @@ export default {
             this.contrast = 0;
         },
 
+        resetInvert() {
+            this.invert = false;
+        },
+
         showHint() {
             this.hintIsShwon = true;
         },
@@ -465,7 +501,7 @@ export default {
     grid-template-areas: "control context";
     grid-template-columns: minmax(0, 20rem) 1fr;
     grid-template-rows: minmax(0, 1fr);
-    height: calc(100% - 80px);
+    min-height: calc(100% - 80px);
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -474,16 +510,15 @@ export default {
         grid-template-areas: "context" "control";
         grid-template-columns: 1fr;
         grid-template-rows: min-content minmax(0, 1fr);
-        height: calc(100% - 80px);
+        min-height: calc(100% - 80px);
     }
 }
 
 .control {
     background-color: rgba($primary, 0.2);
-    border-radius: $border-radius;
     display: grid;
     gap: $margin-y * 2 0;
-    grid-template-areas: "reference-image" "sliders" "customize-buttons" "download";
+    grid-template-areas: "reference-image" "sliders" "checkbox" "customize-buttons" "download";
     grid-template-columns: 1fr;
     grid-template-rows: min-content min-content min-content 1fr;
     padding: $padding-y * 2 $padding-x * 2;
@@ -530,6 +565,23 @@ export default {
 
     .sliders__input:not(:last-child) {
         margin-bottom: $margin-y * 2;
+    }
+}
+
+.control__customize-checkbox {
+    align-items: center;
+    display: flex;
+    grid-area: checkbox;
+
+    label {
+        color: $primary;
+        cursor: pointer;
+        font-size: $font-size * 0.7;
+        font-weight: bolder;
+        margin-left: $margin-x / 2;
+        text-transform: uppercase;
+        white-space: nowrap;
+        z-index: 1;
     }
 }
 

@@ -15,6 +15,7 @@ export default {
         saturation: 'Saturation: {n}%',
         lightness: 'Lightness: {n}%',
         randomize: 'Randomize',
+        invert: 'Invert',
         reset: 'Reset',
         download: 'download',
         changeImage: 'Change image',

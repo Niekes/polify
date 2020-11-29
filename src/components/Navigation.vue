@@ -29,7 +29,7 @@
         <image-gallery v-if="galleryIsOpen" />
 
         <!--
-            Add https://youtu.be/52M9FvpaBxE
+            Embedd tutorial https://youtu.be/52M9FvpaBxE
         -->
     </div>
 </template>
@@ -70,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 .navigation {
-    background-color: $primary;
+    background: linear-gradient(90deg, $primary, $tertiary);
     box-shadow: $box-shadow;
     display: grid;
     grid-area: navigation;

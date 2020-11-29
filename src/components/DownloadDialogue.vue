@@ -146,13 +146,13 @@ export default {
     }
 
     &::before {
-        background: rgba($quaternary, 0.5);
+        background: rgba($primary, 0.5);
         transform: translate3d(100%, 0, 0) skew(20deg);
         transform-origin: 0 0;
     }
 
     &::after {
-        background: rgba($secondary, 0.5);
+        background: rgba($tertiary, 0.5);
         transform: translate3d(-100%, 0, 0) skew(20deg);
         transform-origin: 100% 100%;
     }

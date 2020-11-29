@@ -79,9 +79,7 @@ export default {
             linear-gradient(
                 90deg,
                 $primary 0%,
-                $tertiary 25%,
-                saturate($tertiary, 25) 50%,
-                $tertiary 75%,
+                $tertiary 50%,
                 $primary 100%,
             );
         background-position: center center;
