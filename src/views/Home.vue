@@ -501,7 +501,7 @@ export default {
     grid-template-areas: "control context";
     grid-template-columns: minmax(0, 20rem) 1fr;
     grid-template-rows: minmax(0, 1fr);
-    min-height: calc(100% - 80px);
+    height: calc(100% - 80px);
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -521,7 +521,9 @@ export default {
     grid-template-areas: "reference-image" "sliders" "checkbox" "customize-buttons" "download";
     grid-template-columns: 1fr;
     grid-template-rows: min-content min-content min-content 1fr;
-    padding: $padding-y * 2 $padding-x * 2;
+    max-height: 100%;
+    overflow: auto;
+    padding: $padding-y * 2 $padding-x * 2 0 $padding-y * 2;
 }
 
 .control__reference-image {
@@ -586,7 +588,7 @@ export default {
 }
 
 .control__customize-buttons {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     grid-area: customize-buttons;
     justify-content: space-between;
@@ -605,6 +607,7 @@ export default {
     justify-content: flex-end;
 
     button {
+        margin-bottom: $margin-y * 2;
         width: 100%;
     }
 }
