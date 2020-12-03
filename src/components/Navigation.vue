@@ -54,7 +54,6 @@ export default {
     computed: {
 
         isMobile() {
-            console.log(this.$store.getters['mobile/isMobile']);
             return this.$store.getters['mobile/isMobile'];
         },
 

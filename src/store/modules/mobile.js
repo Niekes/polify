@@ -2,23 +2,25 @@
     Set initital state
 */
 const s = {
-    isMobile: null,
-    isTablet: null,
+    data: null,
 };
+
+const getters = {
+    isMobile: state => state.data && state.data.isMobile,
+    isTablet: state => state.data && state.data.isTablet,
+    isiOs: state => state.data && state.data.isiOs,
+    isAndroid: state => state.data && state.data.isAndroid,
+};
+
 
 /*
     Set mutations
 */
 const mutations = {
 
-    setMobile: (st, isMobile) => {
+    set: (st, data) => {
         const state = st;
-        state.isMobile = isMobile;
-    },
-
-    setTablet: (st, isTablet) => {
-        const state = st;
-        state.isTablet = isTablet;
+        state.data = data;
     },
 
 };
@@ -26,5 +28,6 @@ const mutations = {
 export default {
     namespaced: true,
     state: s,
+    getters,
     mutations,
 };

@@ -9,10 +9,13 @@ if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
 require_once './MobileDetect.php';
 $detect = new Mobile_Detect;
 
-$myObj->isMobile = $detect->isMobile();
-$myObj->isTablet = $detect->isTablet();
+$response->isMobile = $detect->isMobile();
+$response->isTablet = $detect->isTablet();
+$response->isiOS = $detect->isiOS();
+$response->isAndroidOS = $detect->isAndroidOS();
 
-$myJSON = json_encode($myObj);
+$response_json = json_encode($response);
 
-echo $myJSON;
+http_response_code(200);
+echo $response_json;
 ?>
