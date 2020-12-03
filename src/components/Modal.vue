@@ -140,4 +140,12 @@ export default {
         outline: none;
     }
 }
+
+@media (max-width: $breakpoint-sm) {
+    .modal__container {
+        background: $white;
+        border: none;
+        height: 100%;
+    }
+}
 </style>
