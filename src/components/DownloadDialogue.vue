@@ -41,9 +41,7 @@ import {
 import {
     svgAsPngUri,
     saveSvgAsPng,
-    svgAsDataUri,
 } from 'save-svg-as-png';
-
 
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
@@ -70,39 +68,25 @@ export default {
 
     methods: {
         async downloadAsSvg() {
-            if (process.env.NODE_ENV === 'production' && this.isMobile) {
-                const t = await axios({
-                    method: 'POST',
-                    url: 'api/send-images.php',
-                    data: {
-                        type: 'svg',
-                        image: await svgAsDataUri(select('#svg').node(), { scale: 0.1 }),
-                        recipient: 'stefan.nieke@gmail.com',
-                    },
-                });
+            let source = new XMLSerializer().serializeToString(select('#svg').node());
 
-                console.log(t.data);
-            } else {
-                let source = new XMLSerializer().serializeToString(select('#svg').node());
+            source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
 
-                source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
+            const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
 
-                const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
+            const a = document.createElement('a');
 
-                const a = document.createElement('a');
+            a.style.display = 'none';
 
-                a.style.display = 'none';
+            a.href = url;
 
-                a.href = url;
+            a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
 
-                a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
+            document.body.appendChild(a);
 
-                document.body.appendChild(a);
+            a.click();
 
-                a.click();
-
-                document.body.removeChild(a);
-            }
+            document.body.removeChild(a);
         },
 
         async downloadAsPng() {
