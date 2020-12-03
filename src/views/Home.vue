@@ -234,7 +234,7 @@ export default {
 
                 this.$nextTick(() => {
                     this.ctx.drawImage(newImage.node(), 0, 0);
-                    this.update();
+                    this.reset();
                 });
             });
 
