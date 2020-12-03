@@ -28,13 +28,11 @@ export default {
                 this.isMobileReponse = await axios({
                     url: 'api/is-mobile.php',
                 });
-            } catch (e) {
-                console.error(e);
+            } catch (error) {
+                throw new Error(error);
             } finally {
-                console.log(this.isMobileReponse);
                 if (this.isMobileReponse !== null && this.isMobileReponse.status === 200) {
-                    this.$store.commit('mobile/setMobile', this.isMobileReponse.data.isMobile);
-                    this.$store.commit('mobile/setTablet', this.isMobileReponse.data.isTablet);
+                    this.$store.commit('mobile/set', this.isMobileReponse.data);
                 }
             }
         }
