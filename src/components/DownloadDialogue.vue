@@ -31,15 +31,16 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 import {
     select,
 } from 'd3';
 
 import {
-    // svgAsPngUri,
+    svgAsPngUri,
     saveSvgAsPng,
+    svgAsDataUri,
 } from 'save-svg-as-png';
 
 
@@ -56,46 +57,69 @@ export default {
         Modal,
     },
 
+    computed: {
+        isMobile() {
+            return this.$store.getters['mobile/isMobile'];
+        },
+    },
+
     created() {
         this.buymeacoffee = config.links.buymeacoffee;
     },
 
     methods: {
-        downloadAsSvg() {
-            let source = new XMLSerializer().serializeToString(select('#svg').node());
+        async downloadAsSvg() {
+            if (process.env.NODE_ENV === 'production' && this.isMobile) {
+                const t = await axios({
+                    method: 'POST',
+                    url: 'api/send-images.php',
+                    data: {
+                        type: 'svg',
+                        image: await svgAsDataUri(select('#svg').node(), { scale: 0.1 }),
+                        recipient: 'stefan.nieke@gmail.com',
+                    },
+                });
 
-            source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
+                console.log(t.data);
+            } else {
+                let source = new XMLSerializer().serializeToString(select('#svg').node());
 
-            const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
+                source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
 
-            const a = document.createElement('a');
+                const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
 
-            a.style.display = 'none';
+                const a = document.createElement('a');
 
-            a.href = url;
+                a.style.display = 'none';
 
-            a.setAttribute('download', 'polyfy');
+                a.href = url;
 
-            document.body.appendChild(a);
+                a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
 
-            a.click();
+                document.body.appendChild(a);
 
-            document.body.removeChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+            }
         },
 
         async downloadAsPng() {
-            // const t = await axios({
-            //     method: 'POST',
-            //     url: 'api/send-images.php',
-            //     data: {
-            //         image: await svgAsPngUri(select('#svg').node(), { scale: 2 }),
-            //         recipient: 'stefan.nieke@gmail.com',
-            //     },
-            // });
+            if (process.env.NODE_ENV === 'production' && this.isMobile) {
+                const t = await axios({
+                    method: 'POST',
+                    url: 'api/send-images.php',
+                    data: {
+                        type: 'png',
+                        image: await svgAsPngUri(select('#svg').node(), { scale: 1 }),
+                        recipient: 'stefan.nieke@gmail.com',
+                    },
+                });
 
-            // console.log(t.data);
-
-            saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
+                console.log(t.data);
+            } else {
+                saveSvgAsPng(select('#svg').node(), `polify-${new Date().toISOString()}.png`, { scale: 2 });
+            }
         },
     },
 };

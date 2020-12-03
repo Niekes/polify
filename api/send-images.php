@@ -26,7 +26,7 @@ $img = str_replace('data:image/png;base64,', '', $img);
 $img = str_replace(' ', '+', $img);
 $decode = base64_decode($img);
 $uniqid = uniqid();
-$filename = 'polify-' . $uniqid . '.png';
+$filename = 'polify-' . $uniqid . '.'. $data['type'];
 $file = UPLOAD_DIR . $filename;
 
 file_put_contents($file, $decode);
