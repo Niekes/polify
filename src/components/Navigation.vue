@@ -6,7 +6,10 @@
             @click.native="$router.push({ name: 'Home' })"
         />
 
-        <div class="navigation__items">
+        <div
+            v-if="isMobile"
+            class="navigation__items"
+        >
             <router-link
                 class="item__link"
                 to="/cookies"
@@ -51,6 +54,10 @@ export default {
     },
 
     computed: {
+        isMobile() {
+            return this.$store.getters['mobile/isMobile'];
+        },
+
         galleryIsOpen() {
             return this.$store.getters['modal/galleryIsOpen'];
         },
