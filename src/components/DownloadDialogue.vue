@@ -31,13 +31,17 @@
 </template>
 
 <script>
+// import axios from 'axios';
+
 import {
     select,
 } from 'd3';
 
 import {
+    // svgAsPngUri,
     saveSvgAsPng,
 } from 'save-svg-as-png';
+
 
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
@@ -79,7 +83,18 @@ export default {
             document.body.removeChild(a);
         },
 
-        downloadAsPng() {
+        async downloadAsPng() {
+            // const t = await axios({
+            //     method: 'POST',
+            //     url: 'api/send-images.php',
+            //     data: {
+            //         image: await svgAsPngUri(select('#svg').node(), { scale: 2 }),
+            //         recipient: 'stefan.nieke@gmail.com',
+            //     },
+            // });
+
+            // console.log(t.data);
+
             saveSvgAsPng(select('#svg').node(), 'polyfy.png', { scale: 2 });
         },
     },

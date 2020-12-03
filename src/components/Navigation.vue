@@ -7,6 +7,7 @@
         />
 
         <div class="navigation__items">
+            <span v-if="isMobile">Your on mobile</span>
             <router-link
                 class="item__link"
                 to="/cookies"
@@ -51,6 +52,11 @@ export default {
     },
 
     computed: {
+
+        isMobile() {
+            console.log(this.$store.getters['mobile/isMobile']);
+            return this.$store.getters['mobile/isMobile'];
+        },
 
         galleryIsOpen() {
             return this.$store.getters['modal/galleryIsOpen'];

@@ -26,5 +26,9 @@ export default new Router({
             name: 'Imprint',
             component: Imprint,
         },
+        {
+            path: '*',
+            redirect: '/',
+        },
     ],
 });

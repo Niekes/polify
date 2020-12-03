@@ -8,7 +8,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "reset": "rm package-lock.json || true && rm -rf node_modules/ || true && npm install && npm dedupe && npm start",
-    "deploy": "npm run build && node deploy",
+    "deploy": "npm run build && mkdir dist/api && cp api/* dist/api && node deploy",
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {

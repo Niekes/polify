@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Navigation from '@/components/Navigation';
 
 export default {
@@ -13,6 +14,30 @@ export default {
 
     components: {
         Navigation,
+    },
+
+    data() {
+        return {
+            isMobileReponse: null,
+        };
+    },
+
+    async created() {
+        if (process.env.NODE_ENV === 'production') {
+            try {
+                this.isMobileReponse = await axios({
+                    url: 'api/is-mobile.php',
+                });
+            } catch (e) {
+                console.error(e);
+            } finally {
+                console.log(this.isMobileReponse);
+                if (this.isMobileReponse !== null && this.isMobileReponse.status === 200) {
+                    this.$store.commit('mobile/setMobile', this.isMobileReponse.data.isMobile);
+                    this.$store.commit('mobile/setTablet', this.isMobileReponse.data.isTablet);
+                }
+            }
+        }
     },
 };
 </script>
