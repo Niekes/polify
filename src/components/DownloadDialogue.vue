@@ -20,6 +20,7 @@
                     @click.native="downloadAsPng"
                 />
                 <base-button
+                    v-if="!isMobile"
                     class="control__button"
                     :variant="2"
                     :text="$t('downloadDialogue.downloadAsSvg')"
