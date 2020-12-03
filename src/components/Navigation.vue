@@ -7,7 +7,7 @@
         />
 
         <div
-            v-if="isMobile"
+            v-if="!isMobile"
             class="navigation__items"
         >
             <router-link
