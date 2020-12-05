@@ -658,6 +658,7 @@ export default {
 
     .context {
         border-bottom: $border-width solid $black-50;
+        border-radius: 0;
         box-shadow: $box-shadow;
     }
 
