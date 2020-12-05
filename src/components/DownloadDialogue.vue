@@ -20,7 +20,6 @@
                     @click.native="downloadAsPng"
                 />
                 <base-button
-                    v-if="!isMobile"
                     class="control__button"
                     :variant="2"
                     :text="$t('downloadDialogue.downloadAsSvg')"
@@ -72,21 +71,35 @@ export default {
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
 
-            const url = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
+            const image = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
 
-            const a = document.createElement('a');
+            if (process.env.NODE_ENV === 'production' && this.isMobile) {
+                const t = await axios({
+                    method: 'POST',
+                    url: 'api/send-images.php',
+                    data: {
+                        type: 'svg',
+                        image,
+                        recipient: 'stefan.nieke@gmail.com',
+                    },
+                });
 
-            a.style.display = 'none';
+                console.log(t.data);
+            } else {
+                const a = document.createElement('a');
 
-            a.href = url;
+                a.style.display = 'none';
 
-            a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
+                a.href = image;
 
-            document.body.appendChild(a);
+                a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
 
-            a.click();
+                document.body.appendChild(a);
 
-            document.body.removeChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+            }
         },
 
         async downloadAsPng() {

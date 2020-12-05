@@ -31,6 +31,13 @@ $file = UPLOAD_DIR . $filename;
 
 file_put_contents($file, $decode);
 
+try {
+    $Imagick = new Imagick();
+    $works = 1;
+} catch {
+    $works = 0;
+}
+
 $email = new PHPMailer();
 $email->SetFrom('polify@niekes.com');
 $email->Subject = 'Your image from polify.niekes.com';
@@ -43,6 +50,7 @@ $send = $email->Send();
 if ($send) {
     http_response_code(201);
 
+    $response->works = $works;
     $response->send = $send;
     $response->recipient = $data["recipient"];
     $response_json = json_encode($response);
