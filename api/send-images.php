@@ -1,11 +1,5 @@
 <?php
 
-if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
-    http_response_code(403);
-    echo "";
-    return;
-}
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -13,10 +7,19 @@ require './Exception.php';
 require './PHPMailer.php';
 require './SMTP.php';
 
+if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
+    http_response_code(403);
+    echo "";
+    return;
+}
+
+/*
+    Define upload directory
+*/
 define('UPLOAD_DIR', './images/');
 
 /*
-    Create our directory if it does not exist
+    Create upload directory if it does not exist
 */
 if (!is_dir('images')) {
     mkdir('images');
@@ -26,6 +29,15 @@ if (!is_dir('images')) {
     Read data from request as JSON
 */
 $data = json_decode(file_get_contents("php://input"), true);
+
+/*
+    Check if email is correct
+*/
+if (!filter_var($data["recipient"], FILTER_VALIDATE_EMAIL)) {
+    http_response_code(404);
+    echo "";
+    return;
+}
 
 /*
     Create unique id

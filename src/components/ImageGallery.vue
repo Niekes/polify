@@ -165,4 +165,10 @@ export default {
         }
     }
 }
+
+@media (max-width: $breakpoint-sm) {
+    .image-gallery__images {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
 </style>

@@ -28,7 +28,7 @@ export default {
         downloadAsSvg: 'Download as svg',
         sendImages: 'Send images',
         pleaseEnterEmail: 'Please enter your email',
-        imageSendSuccess: 'Images were sent successfully to "{recipient}".\r\nPlease check your mails',
+        imageSendSuccess: 'Images were sent successfully to:\r\n\r\n"{recipient}"\r\n\r\nPlease check your mails',
         imageSendError: 'Error. Please try again later',
     },
     imageGallery: {
