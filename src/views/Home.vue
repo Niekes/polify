@@ -194,6 +194,10 @@ export default {
     },
 
     computed: {
+        isMobile() {
+            return this.$store.getters['mobile/isMobile'];
+        },
+
         height() {
             return this.$store.getters['canvas/height'];
         },
@@ -280,6 +284,8 @@ export default {
                 .attr('d', (d, i) => this.delaunay.renderTriangle(i))
                 .merge(tri)
                 .on('click', (event) => {
+                    if (this.isMobile) return;
+
                     const [x, y] = pointer(event, document.body);
                     const e = select('#svg').selectAll('path.triangles').nodes();
                     const i = e.indexOf(event.currentTarget);
@@ -314,6 +320,8 @@ export default {
                     this.update(this.particales);
                 })
                 .on('mouseenter', (event) => {
+                    if (this.isMobile) return;
+
                     const [x, y] = pointer(event, document.body);
 
                     const hint = create('div')
@@ -353,6 +361,8 @@ export default {
                     document.body.appendChild(hint.node());
                 })
                 .on('mousemove', (event) => {
+                    if (this.isMobile) return;
+
                     const [x, y] = pointer(event, document.body);
 
                     select('#hint')
@@ -364,7 +374,7 @@ export default {
                         .style('left', `${x - 50}px`);
                 })
                 .on('mouseleave', () => {
-                    console.log('mouseleave');
+                    if (this.isMobile) return;
 
                     select('#hint').remove();
                     select('#centroid').remove();
@@ -504,7 +514,7 @@ export default {
         },
 
         showHint() {
-            this.hintIsShwon = true;
+            this.hintIsShwon = !this.isMobile;
         },
 
         hideHint() {
