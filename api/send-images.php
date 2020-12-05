@@ -84,7 +84,7 @@ if ($send) {
     $response_json = json_encode($response);
 
     unlink($fileSvg);
-    unlink($fileSvg);
+    unlink($filePng);
 
     $imagick->clear();
     $imagick->destroy();
