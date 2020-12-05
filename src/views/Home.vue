@@ -222,7 +222,7 @@ export default {
             strokeOpacity: 100,
             invert: false,
             hintIsShwon: false,
-            shape: 'cell',
+            shape: 'triangle',
         };
     },
 
