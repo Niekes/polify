@@ -87,7 +87,7 @@ export default {
 
     computed: {
         isMobile() {
-            return !this.$store.getters['mobile/isMobile'];
+            return this.$store.getters['mobile/isMobile'];
         },
         isEmailValid() {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.recipient);
