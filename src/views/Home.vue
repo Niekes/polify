@@ -1,15 +1,11 @@
 <template>
     <div class="home">
         <div class="control">
+            <div
+                class="control__hint"
+                v-text="$t('home.referenceImage')"
+            />
             <div class="control__reference-image">
-                <div class="reference-image__help">
-                    <small v-text="$t('home.referenceImage')" />
-                    <base-button
-                        :text="$t('home.changeImage')"
-                        @click.native="$store.dispatch('modal/openGallery')"
-                    />
-                </div>
-
                 <canvas
                     id="canvas"
                     :width="width"
@@ -113,6 +109,12 @@
                     :icon="'#change'"
                     @click.native="randomize"
                 />
+                <base-button
+                    :icon="'#image'"
+                    :text="$t('home.changeImage')"
+                    @click.native="$store.dispatch('modal/openGallery')"
+                />
+
                 <base-button
                     :icon="'#reset'"
                     :disabled="!(amount !== 100
@@ -522,64 +524,55 @@ export default {
 .home {
     display: grid;
     grid-template-areas: "control context";
-    grid-template-columns: minmax(0, 20rem) 1fr;
+    grid-template-columns: minmax(0, 26rem) 1fr;
     grid-template-rows: minmax(0, 1fr);
     height: calc(100% - 80px);
-}
-
-@media (max-width: $breakpoint-sm) {
-    .home {
-        display: grid;
-        grid-template-areas: "context" "control";
-        grid-template-columns: 1fr;
-        grid-template-rows: min-content minmax(0, 1fr);
-        min-height: calc(100% - 80px);
-    }
 }
 
 .control {
     background-color: rgba($primary, 0.2);
     display: grid;
     gap: $margin-y * 2 0;
-    grid-template-areas: "reference-image" "sliders" "checkbox" "customize-buttons" "download";
+    grid-template-areas:
+        "reference-hint"
+        "reference-image"
+        "sliders"
+        "checkbox"
+        "customize-buttons"
+        "download";
     grid-template-columns: 1fr;
-    grid-template-rows: min-content min-content min-content 1fr;
+    grid-template-rows: min-content min-content min-content min-content 1fr;
     max-height: 100%;
     overflow: auto;
     padding: $padding-y * 2 $padding-x * 2 0 $padding-y * 2;
 }
 
+.control__hint {
+    align-items: flex-end;
+    color: $primary;
+    display: flex;
+    font-size: $font-size * 0.75;
+    font-weight: bolder;
+    grid-area: reference-hint;
+    justify-content: space-between;
+    text-transform: uppercase;
+    width: 100%;
+    z-index: 1;
+}
+
 .control__reference-image {
     align-items: center;
+    background-color: $black-10;
+    border-radius: $border-radius;
     display: flex;
     flex-direction: column;
     grid-area: reference-image;
-}
-
-.reference-image__help {
-    align-items: flex-end;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-
-    small {
-        color: $primary;
-        font-size: $font-size * 0.75;
-        font-weight: bolder;
-        margin-bottom: $margin-y / 2;
-        text-transform: uppercase;
-        z-index: 1;
-    }
-
-    button {
-        font-size: $font-size * 0.75;
-        margin-bottom: $margin-y * 2;
-    }
+    padding: $padding;
 }
 
 #canvas {
-    border: $border-width solid $white-50;
     border-radius: $border-radius;
+    box-shadow: $box-shadow;
     height: auto;
     max-height: 12rem;
     max-width: 100%;
@@ -652,6 +645,21 @@ export default {
     max-height: 80%;
     max-width: 80%;
     shape-rendering: crispEdges;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .home {
+        display: grid;
+        grid-template-areas: "context" "control";
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content minmax(0, 1fr);
+        min-height: calc(100% - 80px);
+    }
+
+    .context {
+        border-bottom: $border-width solid $black-50;
+        box-shadow: $box-shadow;
+    }
 }
 </style>
 

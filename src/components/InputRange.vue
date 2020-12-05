@@ -64,4 +64,10 @@ export default {
 .range__input {
     @include input-type-range;
 }
+
+@media (max-width: $breakpoint-sm) {
+    .range__input {
+        @include input-type-range($white, 1.75rem, 1.75rem, 100%, 1.5rem);
+    }
+}
 </style>
