@@ -41,7 +41,7 @@
                 >
                 <base-button
                     class="control__button"
-                    :disabled="!isEmailValid"
+                    :disabled="!isEmailValid || isLoading"
                     :variant="2"
                     :text="$t('downloadDialogue.sendImages')"
                     @click.native="sendImages"
@@ -82,6 +82,7 @@ export default {
         return {
             recipient: '',
             sendImagesResponse: null,
+            isLoading: false,
         };
     },
 
@@ -125,6 +126,8 @@ export default {
 
         async sendImages() {
             if (this.isEmailValid) {
+                this.isLoading = true;
+
                 try {
                     this.sendImagesResponse = await axios({
                         method: 'POST',
@@ -149,6 +152,8 @@ export default {
                             text: this.$t('downloadDialogue.imageSendError'),
                         });
                     }
+
+                    this.isLoading = false;
                 }
             }
         },
