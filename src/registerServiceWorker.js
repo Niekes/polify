@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-
 import { register } from 'register-service-worker';
+import FlashMessageMixin from '@/mixins/flash-message-mixin';
 
 if (process.env.NODE_ENV === 'production') {
     register(`${process.env.VUE_APP_BASE}service-worker.js`, {
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
             console.log('New content is downloading.');
         },
         updated() {
-            console.log('New content is available; please refresh.');
+            FlashMessageMixin.sendFlashMessage('New content is available; please refresh.');
         },
         offline() {
             console.log('No internet connection found. App is running in offline mode.');
