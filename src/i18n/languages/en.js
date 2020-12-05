@@ -20,6 +20,8 @@ export default {
         download: 'download',
         changeImage: 'Change image',
         mouseoverHint: 'Click to split up selected polygon',
+        cell: 'Cell',
+        triangle: 'Triangle',
     },
     downloadDialogue: {
         pleaseConsider: 'Please consider to buy me coffee',

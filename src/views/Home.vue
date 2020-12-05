@@ -103,11 +103,41 @@
                     v-text="$t('home.invert')"
                 />
             </div>
+            <div class="control__shape">
+                <div>
+                    <input
+                        id="shape-triangle"
+                        v-model="shape"
+                        type="radio"
+                        name="shape"
+                        value="triangle"
+                        @change="update()"
+                    >
+                    <label
+                        for="shape-triangle"
+                        v-text="$t('home.triangle')"
+                    />
+                </div>
+                <div>
+                    <input
+                        id="shape-cell"
+                        v-model="shape"
+                        type="radio"
+                        name="shape"
+                        value="cell"
+                        @change="update()"
+                    >
+                    <label
+                        for="shape-cell"
+                        v-text="$t('home.cell')"
+                    />
+                </div>
+            </div>
             <div class="control__customize-buttons">
                 <base-button
                     :text="$t('home.randomize')"
                     :icon="'#change'"
-                    @click.native="randomize"
+                    @click.native="update()"
                 />
                 <base-button
                     :icon="'#image'"
@@ -162,11 +192,11 @@ import {
     create,
     range,
     select,
-    randomInt,
     pointer,
     color,
     hsl,
     polygonCentroid,
+    randomInt,
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
@@ -192,6 +222,7 @@ export default {
             strokeOpacity: 100,
             invert: false,
             hintIsShwon: false,
+            shape: 'cell',
         };
     },
 
@@ -242,53 +273,62 @@ export default {
             newImage.node().src = this.referenceImages.get(imageReference).src;
         },
         update(p) {
-            this.particales = p || range(this.amount).map(() => {
-                const x = randomInt(0, this.width)();
-                const y = randomInt(0, this.height)();
+            this.particales = p || (this.shape === 'triangle'
+                ? range(this.amount).map(() => [
+                    randomInt(0, this.width)(),
+                    randomInt(0, this.height)(),
+                ])
+                : range(this.amount).map(() => [
+                    Math.random() * (this.width - 5) + 5,
+                    Math.random() * (this.height - 5) + 5,
+                ]));
 
-                return [x, y];
-            });
-
-            this.particales.push(
-                [0, 0],
-                [0, this.height],
-                [this.width, this.height],
-                [this.width, 0],
-            );
+            if (!p && this.shape === 'triangle') {
+                this.particales.push(
+                    [0, 0],
+                    [0, this.height],
+                    [this.width, this.height],
+                    [this.width, 0],
+                );
+            }
 
             this.delaunay = Delaunay.from(this.particales);
 
-            const data = [];
+            this.voronoi = this.delaunay
+                .voronoi([0, 0, this.width, this.height]);
 
-            for (let i = 0; i < this.delaunay.triangles.length; i += 3) {
-                data.push({
-                    data: [
-                        this.delaunay.triangles[i],
-                        this.delaunay.triangles[i + 1],
-                        this.delaunay.triangles[i + 2],
-                    ],
-                });
+            if (this.shape === 'triangle') {
+                this.updatePolygons(this.delaunay.trianglePolygons());
             }
 
-            this.updateTriangles(data);
+            if (this.shape === 'cell') {
+                this.updatePolygons(this.voronoi.cellPolygons());
+            }
         },
 
-        updateTriangles(data) {
-            const tri = select(this.$el).select('#svg').selectAll('path.triangles').data(data);
+        updatePolygons(data) {
+            const tri = select(this.$el).select('#svg').selectAll('path.polygons').data(data);
 
             tri
                 .enter()
                 .append('path')
-                .attr('class', 'triangles')
+                .attr('class', 'polygons')
                 .attr('stroke', this.setStrokeColor)
                 .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
-                .attr('d', (d, i) => this.delaunay.renderTriangle(i))
+                .attr('d', (d, i) => {
+                    if (this.shape === 'cell') {
+                        return this.voronoi.renderCell(i);
+                    }
+
+                    return this.delaunay.renderTriangle(i);
+                })
                 .merge(tri)
                 .on('click', (event) => {
                     const [x, y] = pointer(event, document.body);
-                    const e = select('#svg').selectAll('path.triangles').nodes();
+                    const e = select('#svg').selectAll('path.polygons').nodes();
                     const i = e.indexOf(event.currentTarget);
+
                     const halo = create('div')
                         .style('position', 'absolute')
                         .style('background', 'rgba(255, 255, 255, 0.5)')
@@ -313,7 +353,7 @@ export default {
                         .style('opacity', 0)
                         .remove();
 
-                    const center = polygonCentroid(this.delaunay.trianglePolygon(i));
+                    const center = this.getPolygonCentroid(i);
 
                     this.particales.push(center);
 
@@ -376,7 +416,13 @@ export default {
                 .attr('stroke', this.setStrokeColor)
                 .attr('stroke-width', this.setStrokeWidth)
                 .attr('fill', this.setColor)
-                .attr('d', (d, i) => this.delaunay.renderTriangle(i));
+                .attr('d', (d, i) => {
+                    if (this.shape === 'cell') {
+                        return this.voronoi.renderCell(i);
+                    }
+
+                    return this.delaunay.renderTriangle(i);
+                });
 
             tri
                 .exit()
@@ -384,11 +430,11 @@ export default {
         },
 
         changeColor() {
-            this.updateTriangles(select(this.$el).select('#svg').selectAll('path.triangles').data());
+            this.updatePolygons(select(this.$el).select('#svg').selectAll('path.polygons').data());
         },
 
         setColor(d, i) {
-            const [x, y] = this.getXyKoords(i);
+            const [x, y] = this.getPolygonCentroid(i);
             const pixel = this.getPixel(x, y);
             const colorHsl = pixel[3] === 0
                 ? hsl(0, 0, 1)
@@ -418,7 +464,7 @@ export default {
         },
 
         setStrokeColor(d, i) {
-            const [x, y] = this.getXyKoords(i);
+            const [x, y] = this.getPolygonCentroid(i);
             const pixel = this.getPixel(x, y);
             const colorHsl = pixel[3] === 0
                 ? hsl(0, 0, 1)
@@ -447,20 +493,24 @@ export default {
             return rgb;
         },
 
-        getXyKoords(index) {
-            return polygonCentroid(this.delaunay.trianglePolygon(index));
+        getPixel(x, y) {
+            try {
+                return this.ctx.getImageData(x, y, 1, 1).data;
+            } catch (e) {
+                return [0, 0, 0, 1];
+            }
         },
 
-        getPixel(x, y) {
-            return this.ctx.getImageData(x, y, 1, 1).data;
+        getPolygonCentroid(i) {
+            if (this.shape === 'cell') {
+                return polygonCentroid(this.voronoi.cellPolygon(i));
+            }
+
+            return polygonCentroid(this.delaunay.trianglePolygon(i));
         },
 
         setStrokeWidth() {
             return 1;
-        },
-
-        randomize() {
-            this.update();
         },
 
         reset() {
@@ -538,10 +588,17 @@ export default {
         "reference-image"
         "sliders"
         "checkbox"
+        "shape"
         "customize-buttons"
         "download";
     grid-template-columns: 1fr;
-    grid-template-rows: min-content min-content min-content min-content 1fr;
+    grid-template-rows:
+        min-content
+        min-content
+        min-content
+        min-content
+        min-content
+        1fr;
     max-height: 100%;
     overflow: auto;
     padding: $padding-y * 2 $padding-x * 2 0 $padding-y * 2;
@@ -590,6 +647,33 @@ export default {
     align-items: center;
     display: flex;
     grid-area: checkbox;
+
+    label {
+        color: $primary;
+        cursor: pointer;
+        font-size: $font-size * 0.7;
+        font-weight: bolder;
+        margin-left: $margin-x / 2;
+        text-transform: uppercase;
+        white-space: nowrap;
+        z-index: 1;
+    }
+}
+
+.control__shape {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    grid-area: shape;
+
+    div {
+        align-items: center;
+        display: flex;
+
+        &:not(:last-child) {
+            margin-bottom: $margin-y / 2;
+        }
+    }
 
     label {
         color: $primary;
@@ -677,7 +761,7 @@ export default {
 </style>
 
 <style lang="scss">
-.triangles {
+.polygons {
     &:hover {
         cursor: crosshair;
         fill-opacity: 0.5;
