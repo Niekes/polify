@@ -87,7 +87,7 @@ export default {
 
     computed: {
         isMobile() {
-            return this.$store.getters['mobile/isMobile'];
+            return !this.$store.getters['mobile/isMobile'];
         },
         isEmailValid() {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.recipient);
@@ -123,14 +123,13 @@ export default {
             saveSvgAsPng(select('#svg').node(), `polify-${new Date().toISOString()}.png`, { scale: 2 });
         },
 
-        async sendImage() {
-            if (this.isEmailValid && this.isMobile) {
+        async sendImages() {
+            if (this.isEmailValid) {
                 try {
                     this.sendImagesResponse = await axios({
                         method: 'POST',
                         url: 'api/send-images.php',
                         data: {
-                            type: 'svg',
                             image: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>${new XMLSerializer().serializeToString(select('#svg').node())}`,
                             recipient: this.recipient,
                         },
@@ -138,15 +137,17 @@ export default {
                 } catch (error) {
                     this.sendImagesResponse = error.response;
                 } finally {
-                    if (this.sendImagesResponse.status === 200) {
+                    if (this.sendImagesResponse.status === 201) {
                         this.recipient = '';
                         this.sendFlashMessage({
-                            text: this.$t('downloadDialogue.recipient', { recipient: this.recipient }),
+                            text: this.$t('downloadDialogue.imageSendSuccess', { recipient: this.sendImagesResponse.data.recipient }),
                         });
                     }
 
-                    if (this.sendImagesResponse.status !== 200) {
-                        console.log(this.sendImagesResponse.data);
+                    if (this.sendImagesResponse.status !== 201) {
+                        this.sendFlashMessage({
+                            text: this.$t('downloadDialogue.imageSendError'),
+                        });
                     }
                 }
             }
@@ -170,7 +171,7 @@ export default {
     font-weight: bolder;
     grid-area: thanks;
     justify-content: center;
-    margin: $margin-y * 4;
+    margin: $margin-y * 4 0;
 }
 
 .download-dialogue__reminder {
@@ -179,7 +180,7 @@ export default {
     font-weight: lighter;
     grid-area: reminder;
     justify-content: center;
-    margin: $margin-y * 4;
+    margin: $margin-y * 4 0;
 }
 
 .download-dialogue__control {
@@ -196,6 +197,9 @@ export default {
         justify-content: space-evenly;
 
         input {
+            border: $border-width $black solid;
+            border-radius: $border-radius;
+            max-width: 35rem;
             padding: $padding-y * 2;
             width: 100%;
         }
@@ -256,12 +260,18 @@ export default {
 @media (max-width: $breakpoint-sm) {
     .download-dialogue__thanks {
         font-size: $font-size * 2;
-        margin: $margin-y * 3;
+        margin: $margin-y * 3 0;
+        width: 100%;
     }
 
     .download-dialogue__reminder {
         font-size: $font-size * 1.5;
-        margin: $margin-y * 3;
+        margin: $margin-y * 3 0;
+        width: 100%;
+
+        a {
+            width: 100%;
+        }
     }
 }
 </style>

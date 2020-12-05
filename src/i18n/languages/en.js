@@ -29,7 +29,7 @@ export default {
         sendImages: 'Send images',
         pleaseEnterEmail: 'Please enter your email',
         imageSendSuccess: 'Images were sent successfully to "{recipient}". Please check your mails',
-        imageSendError: 'Please enter your email',
+        imageSendError: 'Error. Please try again later',
     },
     imageGallery: {
         upload: 'upload',
