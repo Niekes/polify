@@ -26,6 +26,10 @@ export default {
         thanksForUsing: 'Thanks for using Polify!',
         downloadAsPng: 'Download as png',
         downloadAsSvg: 'Download as svg',
+        sendImages: 'Send images',
+        pleaseEnterEmail: 'Please enter your email',
+        imageSendSuccess: 'Images were sent successfully to "{recipient}". Please check your mails',
+        imageSendError: 'Please enter your email',
     },
     imageGallery: {
         upload: 'upload',

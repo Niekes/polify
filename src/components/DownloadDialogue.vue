@@ -12,7 +12,10 @@
                     v-text="$t('downloadDialogue.pleaseConsider')"
                 />
             </div>
-            <div class="download-dialogue__control">
+            <div
+                v-if="!isMobile"
+                class="download-dialogue__control"
+            >
                 <base-button
                     class="control__button"
                     :variant="2"
@@ -24,6 +27,24 @@
                     :variant="2"
                     :text="$t('downloadDialogue.downloadAsSvg')"
                     @click.native="downloadAsSvg"
+                />
+            </div>
+            <div
+                v-if="isMobile"
+                class="download-dialogue__control--mobile"
+            >
+                <input
+                    v-model="recipient"
+                    type="email"
+                    name="email"
+                    :placeholder="$t('downloadDialogue.pleaseEnterEmail')"
+                >
+                <base-button
+                    class="control__button"
+                    :disabled="!isEmailValid"
+                    :variant="2"
+                    :text="$t('downloadDialogue.sendImages')"
+                    @click.native="sendImages"
                 />
             </div>
         </div>
@@ -38,12 +59,12 @@ import {
 } from 'd3';
 
 import {
-    svgAsPngUri,
     saveSvgAsPng,
 } from 'save-svg-as-png';
 
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
+import FlashMessageMixin from '@/mixins/flash-message-mixin';
 
 import config from '@/config';
 
@@ -55,9 +76,21 @@ export default {
         Modal,
     },
 
+    mixins: [FlashMessageMixin],
+
+    data() {
+        return {
+            recipient: '',
+            sendImagesResponse: null,
+        };
+    },
+
     computed: {
         isMobile() {
             return this.$store.getters['mobile/isMobile'];
+        },
+        isEmailValid() {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.recipient);
         },
     },
 
@@ -66,57 +99,56 @@ export default {
     },
 
     methods: {
-        async downloadAsSvg() {
+        downloadAsSvg() {
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
 
             const image = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
+            const a = document.createElement('a');
 
-            if (process.env.NODE_ENV === 'production' && this.isMobile) {
-                const t = await axios({
-                    method: 'POST',
-                    url: 'api/send-images.php',
-                    data: {
-                        type: 'svg',
-                        image,
-                        recipient: 'stefan.nieke@gmail.com',
-                    },
-                });
+            a.style.display = 'none';
+            a.href = image;
 
-                console.log(t.data);
-            } else {
-                const a = document.createElement('a');
+            a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
 
-                a.style.display = 'none';
+            document.body.appendChild(a);
 
-                a.href = image;
+            a.click();
 
-                a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
-
-                document.body.appendChild(a);
-
-                a.click();
-
-                document.body.removeChild(a);
-            }
+            document.body.removeChild(a);
         },
 
-        async downloadAsPng() {
-            if (process.env.NODE_ENV === 'production' && this.isMobile) {
-                const t = await axios({
-                    method: 'POST',
-                    url: 'api/send-images.php',
-                    data: {
-                        type: 'png',
-                        image: await svgAsPngUri(select('#svg').node(), { scale: 1 }),
-                        recipient: 'stefan.nieke@gmail.com',
-                    },
-                });
+        downloadAsPng() {
+            saveSvgAsPng(select('#svg').node(), `polify-${new Date().toISOString()}.png`, { scale: 2 });
+        },
 
-                console.log(t.data);
-            } else {
-                saveSvgAsPng(select('#svg').node(), `polify-${new Date().toISOString()}.png`, { scale: 2 });
+        async sendImage() {
+            if (this.isEmailValid && this.isMobile) {
+                try {
+                    this.sendImagesResponse = await axios({
+                        method: 'POST',
+                        url: 'api/send-images.php',
+                        data: {
+                            type: 'svg',
+                            image: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>${new XMLSerializer().serializeToString(select('#svg').node())}`,
+                            recipient: this.recipient,
+                        },
+                    });
+                } catch (error) {
+                    this.sendImagesResponse = error.response;
+                } finally {
+                    if (this.sendImagesResponse.status === 200) {
+                        this.recipient = '';
+                        this.sendFlashMessage({
+                            text: this.$t('downloadDialogue.recipient', { recipient: this.recipient }),
+                        });
+                    }
+
+                    if (this.sendImagesResponse.status !== 200) {
+                        console.log(this.sendImagesResponse.data);
+                    }
+                }
             }
         },
     },
@@ -155,6 +187,19 @@ export default {
     display: flex;
     grid-area: control;
     justify-content: space-evenly;
+
+    &--mobile {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        grid-area: control;
+        justify-content: space-evenly;
+
+        input {
+            padding: $padding-y * 2;
+            width: 100%;
+        }
+    }
 }
 
 .cross-fade {
@@ -206,5 +251,17 @@ export default {
 
 .control__button {
     padding: $padding-y * 3 $padding-x * 3.5;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .download-dialogue__thanks {
+        font-size: $font-size * 2;
+        margin: $margin-y * 3;
+    }
+
+    .download-dialogue__reminder {
+        font-size: $font-size * 1.5;
+        margin: $margin-y * 3;
+    }
 }
 </style>

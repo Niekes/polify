@@ -6,13 +6,6 @@ if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
     return;
 }
 
-define('UPLOAD_DIR', './images/');
-
-if (!is_dir('images')) {
-    //Create our directory if it does not exist
-    mkdir('images');
-}
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -20,42 +13,81 @@ require './Exception.php';
 require './PHPMailer.php';
 require './SMTP.php';
 
-$data = json_decode(file_get_contents("php://input"), true);
-$img = $data['image'];
-$img = str_replace('data:image/png;base64,', '', $img);
-$img = str_replace(' ', '+', $img);
-$decode = base64_decode($img);
-$uniqid = uniqid();
-$filename = 'polify-' . $uniqid . '.'. $data['type'];
-$file = UPLOAD_DIR . $filename;
+define('UPLOAD_DIR', './images/');
 
-file_put_contents($file, $decode);
-
-try {
-    $Imagick = new Imagick();
-    $works = 1;
-} catch {
-    $works = 0;
+/*
+    Create our directory if it does not exist
+*/
+if (!is_dir('images')) {
+    mkdir('images');
 }
 
+/*
+    Read data from request as JSON
+*/
+$data = json_decode(file_get_contents("php://input"), true);
+
+/*
+    Create unique id
+*/
+$uniqid = uniqid();
+
+/*
+    Add filenames
+*/
+$filenameSvg = 'polify-' . $uniqid . '.'. 'svg';
+$filenamePng = 'polify-' . $uniqid . '.'. 'png';
+
+/*
+    Add filenames
+*/
+$fileSvg = UPLOAD_DIR . $filenameSvg;
+$filePng = UPLOAD_DIR . $filenamePng;
+
+/*
+    Write svg file to server
+*/
+file_put_contents($fileSvg, $data['image']);
+
+/*
+    Convert svg to png
+*/
+$imagick = new Imagick();
+$imagick->readImageBlob(file_get_contents($fileSvg));
+$imagick->setImageFormat("png24");
+$imagick->writeImage($filePng);
+
+/*
+    Prepare e-mail
+*/
 $email = new PHPMailer();
 $email->SetFrom('polify@niekes.com');
 $email->Subject = 'Your image from polify.niekes.com';
 $email->Body = "Hi,\r\n\r\nThank you for using polify.niekes.com\r\n\r\nPlease find your images attached.\r\n\r\n\r\n\r\nYour polify team";
 $email->AddAddress($data["recipient"]);
-$email->AddAttachment($file, $filename);
+$email->AddAttachment($fileSvg, $filenameSvg);
+$email->AddAttachment($filePng, $filenamePng);
 
+/*
+    Send email
+*/
 $send = $email->Send();
 
+
+/*
+    Send response, delete files in success
+*/
 if ($send) {
     http_response_code(201);
 
-    $response->works = $works;
-    $response->send = $send;
     $response->recipient = $data["recipient"];
     $response_json = json_encode($response);
 
-    unlink($file);
+    unlink($fileSvg);
+    unlink($fileSvg);
+
+    $imagick->clear();
+    $imagick->destroy();
 
     echo $response_json;
 } else {
