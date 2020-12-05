@@ -76,7 +76,10 @@ export default {
 
 <style lang="scss" scoped>
 .navigation {
-    background: linear-gradient(90deg, $primary, $tertiary);
+    background:
+        linear-gradient(90deg, rgba($primary, 0.5), rgba($tertiary, 0.5)),
+        url('~@/assets/svg/navigation-bg.svg') center right no-repeat;
+    background-size: 100%, 100%;
     box-shadow: $box-shadow;
     display: grid;
     grid-area: navigation;
@@ -105,6 +108,7 @@ export default {
     .item__link,
     .item__sponsor {
         margin-left: $margin-x * 2;
+        text-shadow: $text-shadow;
     }
 
     .item__link {
