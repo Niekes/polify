@@ -376,7 +376,7 @@ export default {
                         .style('user-select', 'none')
                         .style('text-shadow', '1px 1px 2px rgba(255, 255, 255, 0.5)')
                         .style('z-index', 1)
-                        .style('left', `${x}px`)
+                        .style('left', `${x - 100}px`)
                         .style('opacity', 1)
                         .html(this.$t('home.mouseoverHint'));
 
@@ -404,7 +404,7 @@ export default {
 
                     select('#hint')
                         .style('top', `${y - 65}px`)
-                        .style('left', `${x}px`);
+                        .style('left', `${x - 100}px`);
 
                     select('#centroid')
                         .style('top', `${y - 50}px`)
