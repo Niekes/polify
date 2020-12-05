@@ -139,11 +139,6 @@
         <div
             class="context"
         >
-            <small
-                v-if="hintIsShwon"
-                class="context__hint"
-                v-text="$t('home.mouseoverHint')"
-            />
             <svg
                 id="svg"
                 :viewBox="viewBox"
@@ -320,6 +315,24 @@ export default {
                 })
                 .on('mouseenter', (event) => {
                     const [x, y] = pointer(event, document.body);
+
+                    const hint = create('div')
+                        .attr('id', 'hint')
+                        .style('position', 'absolute')
+                        .style('font-family', 'monospace')
+                        .style('font-size', '0.8rem')
+                        .style('font-weight', 'bolder')
+                        .style('width', 'auto')
+                        .style('height', 'auto')
+                        .style('top', `${y - 65}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('text-shadow', '1px 1px 2px rgba(255, 255, 255, 0.5)')
+                        .style('z-index', 1)
+                        .style('left', `${x}px`)
+                        .style('opacity', 1)
+                        .html(this.$t('home.mouseoverHint'));
+
                     const centroid = create('div')
                         .attr('id', 'centroid')
                         .style('position', 'absolute')
@@ -337,16 +350,24 @@ export default {
                         .style('opacity', 1);
 
                     document.body.appendChild(centroid.node());
+                    document.body.appendChild(hint.node());
                 })
                 .on('mousemove', (event) => {
                     const [x, y] = pointer(event, document.body);
+
+                    select('#hint')
+                        .style('top', `${y - 65}px`)
+                        .style('left', `${x}px`);
+
                     select('#centroid')
                         .style('top', `${y - 50}px`)
                         .style('left', `${x - 50}px`);
                 })
                 .on('mouseleave', () => {
-                    select('#centroid')
-                        .remove();
+                    console.log('mouseleave');
+
+                    select('#hint').remove();
+                    select('#centroid').remove();
                 })
                 .attr('stroke', this.setStrokeColor)
                 .attr('stroke-width', this.setStrokeWidth)
@@ -621,13 +642,6 @@ export default {
     justify-content: center;
     position: relative;
     width: 100%;
-}
-
-.context__hint {
-    font-family: monospace;
-    position: absolute;
-    right: $margin-x * 2;
-    top: $margin-y * 2;
 }
 
 #svg {
