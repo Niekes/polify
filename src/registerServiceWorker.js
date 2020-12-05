@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
             console.log('New content is downloading.');
         },
         updated() {
-            FlashMessageMixin.sendFlashMessage('New content is available; please refresh.');
+            FlashMessageMixin.methods.sendFlashMessage('New content is available; please refresh.');
         },
         offline() {
             console.log('No internet connection found. App is running in offline mode.');

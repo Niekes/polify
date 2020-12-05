@@ -223,6 +223,7 @@ export default {
             invert: false,
             hintIsShwon: false,
             shape: 'triangle',
+            radius: 2,
         };
     },
 
@@ -279,8 +280,8 @@ export default {
                     randomInt(0, this.height)(),
                 ])
                 : range(this.amount).map(() => [
-                    Math.random() * (this.width - 5) + 5,
-                    Math.random() * (this.height - 5) + 5,
+                    Math.random() * (this.width - this.radius * 2) + this.radius,
+                    Math.random() * (this.height - this.radius * 2) + this.radius,
                 ]));
 
             if (!p && this.shape === 'triangle') {
