@@ -819,18 +819,6 @@ export default {
         border-radius: 0;
         box-shadow: $box-shadow;
     }
-
-    .control__customize-buttons {
-        flex-direction: column;
-
-        button {
-            width: 100%;
-
-            &:not(:last-child) {
-                margin-bottom: $margin-y * 2;
-            }
-        }
-    }
 }
 </style>
 
