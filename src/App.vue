@@ -1,11 +1,24 @@
 <template>
-    <div id="app">
+    <div
+        id="app"
+        @drop.prevent="encodeImageFileAsURL"
+        @dragover.prevent="showDropItOverlay = true"
+        @mouseleave="handleMouseLeave"
+    >
         <navigation />
         <router-view />
+        <div
+            :class="{
+                'drop-it--show': showDropItOverlay === true,
+            }"
+            class="drop-it"
+            v-text="$t('general.dropIt')"
+        />
     </div>
 </template>
 
 <script>
+import { select, create } from 'd3';
 import axios from 'axios';
 import Navigation from '@/components/Navigation';
 
@@ -19,6 +32,7 @@ export default {
     data() {
         return {
             isMobileReponse: null,
+            showDropItOverlay: false,
         };
     },
 
@@ -36,6 +50,47 @@ export default {
                 }
             }
         }
+    },
+
+    mounted() {
+        this.ctx = select('#canvas').node().getContext('2d');
+    },
+
+    methods: {
+        encodeImageFileAsURL(e) {
+            this.showDropItOverlay = false;
+
+            const filesSelected = e.dataTransfer.files;
+            const hasCorrectFormat = filesSelected[0].type === 'image/jpeg' || filesSelected[0].type === 'image/png';
+
+            if (filesSelected.length && hasCorrectFormat) {
+                const fileToLoad = filesSelected[0];
+                const fileReader = new FileReader();
+
+                fileReader.onload = (fileLoadedEvent) => {
+                    const srcData = fileLoadedEvent.target.result;
+                    const newImage = create('img');
+
+                    newImage.on('load', () => {
+                        this.$store.commit('canvas/setWidth', newImage.node().width);
+                        this.$store.commit('canvas/setHeight', newImage.node().height);
+
+                        this.$nextTick(() => {
+                            this.ctx.drawImage(newImage.node(), 0, 0);
+                            this.$root.$emit('reset');
+                        });
+                    });
+
+                    newImage.node().src = srcData;
+                };
+
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        },
+
+        handleMouseLeave() {
+            this.showDropItOverlay = false;
+        },
     },
 };
 </script>
@@ -71,15 +126,27 @@ body {
 
 #app {
     padding: 0;
+    position: relative;
 }
 
-#stripe-pattern {
-    height: 5000000000px;
-    left: -999999999px;
-    pointer-events: none;
+.drop-it {
+    align-items: center;
+    backdrop-filter: blur(10px);
+    background: $white-10;
+    display: none;
+    font-size: 4rem;
+    font-weight: 900;
+    height: 100%;
+    justify-content: center;
+    left: 0;
     position: absolute;
-    user-select: none;
-    width: 5000000000px;
-    z-index: -1000000;
+    text-shadow: 1px 1px 2px $white-75;
+    top: 0;
+    width: 100%;
+    z-index: $z-index-popover + 1;
+
+    &--show {
+        display: flex;
+    }
 }
 </style>

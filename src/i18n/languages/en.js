@@ -1,4 +1,7 @@
 export default {
+    general: {
+        dropIt: 'Drop it!',
+    },
     navigation: {
         buymeacoffee: 'Buy me a coffee',
     },

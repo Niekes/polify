@@ -56,6 +56,7 @@ export default {
     padding: $padding;
     position: absolute;
     width: calc(100% - #{$margin-x * 2});
+    z-index: $z-index-popover + 1;
 
     button {
         background: $tertiary;
