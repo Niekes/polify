@@ -23,6 +23,9 @@ export default {
         [12, { src: require('@/assets/img/default-12.jpg') }],
         [13, { src: require('@/assets/img/default-13.jpg') }],
         [14, { src: require('@/assets/img/default-14.jpg') }],
+        [15, { src: require('@/assets/img/default-15.jpg') }],
+        [16, { src: require('@/assets/img/default-16.jpg') }],
+        [17, { src: require('@/assets/img/default-17.jpg') }],
         /* eslint-enable global-require */
     ]),
 };
