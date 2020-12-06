@@ -23,8 +23,9 @@ Vue.use(VueGtag, {
     config: {
         id: 'G-3YD0Y7WW62',
     },
+    appName: process.env.VUE_APP_TITLE,
     enabled: process.env.NODE_ENV === 'production' && process.env.VUE_APP_URL === 'https://polyfy.niekes.com',
-});
+}, router);
 
 Vue.config.productionTip = false;
 

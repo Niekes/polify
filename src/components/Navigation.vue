@@ -30,6 +30,7 @@
 
         <download-dialogue v-if="downloadIsOpen" />
         <image-gallery v-if="galleryIsOpen" />
+        <cookies-banner v-if="showCookieBanner" />
 
         <!--
             Embedd tutorial https://youtu.be/52M9FvpaBxE
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import CookiesBanner from '@/components/CookiesBanner';
 import DownloadDialogue from '@/components/DownloadDialogue';
 import ImageGallery from '@/components/ImageGallery';
 import SvgIcon from '@/components/SvgIcon';
@@ -48,12 +50,17 @@ export default {
     name: 'Navigation',
 
     components: {
+        CookiesBanner,
         DownloadDialogue,
         ImageGallery,
         SvgIcon,
     },
 
     computed: {
+        showCookieBanner() {
+            return this.$route.name === 'Home' && window.localStorage.getItem('gtag-cookie-accepted') !== 'true';
+        },
+
         isMobile() {
             return this.$store.getters['mobile/isMobile'];
         },
@@ -76,9 +83,7 @@ export default {
 
 <style lang="scss" scoped>
 .navigation {
-    background:
-        linear-gradient(90deg, rgba($primary, 0.5), rgba($tertiary, 0.5)),
-        url('~@/assets/svg/navigation-bg.svg') center right no-repeat;
+    background: linear-gradient(90deg, $primary, $tertiary);
     background-size: 100%, 100%;
     box-shadow: $box-shadow;
     display: grid;

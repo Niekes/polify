@@ -12,7 +12,6 @@ const getters = {
     isAndroid: state => state.data && state.data.isAndroid,
 };
 
-
 /*
     Set mutations
 */

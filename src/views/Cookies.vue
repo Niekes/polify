@@ -64,14 +64,28 @@
         <p>However if you are still looking for more information then you can contact us through one of our preferred contact methods:</p>
 
         <ul>
-            <li>Email: polify@niekes.com</li>
+            <li>Email: polify [at] niekes.com</li>
         </ul>
+
+        <div>
+            You can opt-out.
+            <button @click="optOut">
+                Opt out
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: 'Cookies',
+
+    methods: {
+        optOut() {
+            this.$gtag.optOut();
+            window.localStorage.setItem('gtag-cookie-accepted', false);
+        },
+    },
 };
 </script>
 

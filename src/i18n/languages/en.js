@@ -36,4 +36,9 @@ export default {
     imageGallery: {
         upload: 'upload',
     },
+    cookiesBanner: {
+        text: 'Our website uses cookies to improve your experience. We\'ll assume you\'re ok with this, but you can opt-out if you wish.',
+        accept: 'Accept',
+        learnMore: 'Learn more',
+    },
 };
