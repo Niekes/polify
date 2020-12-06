@@ -135,17 +135,14 @@
             </div>
             <div class="control__customize-buttons">
                 <base-button
+                    class="randomize-btn"
                     :text="$t('home.randomize')"
                     :icon="'#change'"
                     @click.native="update()"
                 />
-                <base-button
-                    :icon="'#image'"
-                    :text="$t('home.changeImage')"
-                    @click.native="$store.dispatch('modal/openGallery')"
-                />
 
                 <base-button
+                    class="reset-btn"
                     :icon="'#reset'"
                     :disabled="!(amount !== 100
                         || invert !== false
@@ -157,6 +154,20 @@
                         || contrast !== 0)"
                     :text="$t('home.reset')"
                     @click.native="reset"
+                />
+
+                <base-button
+                    class="image-gallery-btn"
+                    :icon="'#image'"
+                    :text="$t('home.changeImage')"
+                    @click.native="$store.dispatch('modal/openGallery')"
+                />
+
+                <base-button
+                    class="upload-btn"
+                    :icon="'#upload'"
+                    :text="$t('home.upload')"
+                    @click.native="upload"
                 />
             </div>
             <div class="control__download">
@@ -516,6 +527,44 @@ export default {
             return polygonCentroid(this.delaunay.trianglePolygon(i));
         },
 
+        upload() {
+            const fileInput = create('input')
+                .attr('id', 'file')
+                .attr('type', 'file')
+                .attr('accept', 'image/x-png,image/jpeg');
+
+            fileInput.node().click();
+
+            fileInput.on('change', (e) => {
+                const filesSelected = e.target.files;
+                if (filesSelected.length) {
+                    const fileToLoad = filesSelected[0];
+                    const fileReader = new FileReader();
+
+                    fileReader.onload = (fileLoadedEvent) => {
+                        const srcData = fileLoadedEvent.target.result;
+                        const newImage = create('img');
+
+                        newImage.on('load', () => {
+                            this.$store.commit('canvas/setWidth', newImage.node().width);
+                            this.$store.commit('canvas/setHeight', newImage.node().height);
+
+                            this.$nextTick(() => {
+                                this.ctx.drawImage(newImage.node(), 0, 0);
+                                this.reset();
+
+                                fileInput.remove();
+                            });
+                        });
+
+                        newImage.node().src = srcData;
+                    };
+
+                    fileReader.readAsDataURL(fileToLoad);
+                }
+            });
+        },
+
         setStrokeWidth() {
             return 1;
         },
@@ -581,7 +630,7 @@ export default {
 .home {
     display: grid;
     grid-template-areas: "control context";
-    grid-template-columns: minmax(0, 26rem) 1fr;
+    grid-template-columns: minmax(0, 24rem) 1fr;
     grid-template-rows: minmax(0, 1fr);
     height: calc(100% - 80px);
 }
@@ -695,10 +744,28 @@ export default {
 }
 
 .control__customize-buttons {
-    align-items: flex-start;
-    display: flex;
+    display: grid;
+    gap: $margin-y $margin-x;
     grid-area: customize-buttons;
-    justify-content: space-between;
+    grid-template-areas: "randomize reset" "image-gallery upload";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content min-content;
+
+    .randomize-btn {
+        grid-area: randomize;
+    }
+
+    .reset-btn {
+        grid-area: reset;
+    }
+
+    .image-gallery-btn {
+        grid-area: image-gallery;
+    }
+
+    .upload-btn {
+        grid-area: upload;
+    }
 }
 
 .parameters__range-slider {
@@ -768,10 +835,12 @@ export default {
 </style>
 
 <style lang="scss">
-.polygons {
-    &:hover {
-        cursor: crosshair;
-        fill-opacity: 0.5;
+@media (min-width: $breakpoint-md) {
+    .polygons {
+        &:hover {
+            cursor: crosshair;
+            fill-opacity: 0.5;
+        }
     }
 }
 </style>

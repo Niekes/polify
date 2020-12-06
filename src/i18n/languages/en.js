@@ -22,6 +22,7 @@ export default {
         mouseoverHint: 'Click to split up selected polygon',
         cell: 'Cell',
         triangle: 'Triangle',
+        upload: 'Upload',
     },
     downloadDialogue: {
         pleaseConsider: 'Please consider to buy me coffee',
