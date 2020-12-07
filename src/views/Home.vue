@@ -63,6 +63,7 @@
                     :min="-100"
                     :max="100"
                     :step="0.01"
+                    :center="50"
                     :label="$tc('home.contrast', contrast)"
                     @dblclick.native="resetContrast(); changeColor()"
                     @change.native="changeColor()"

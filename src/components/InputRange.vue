@@ -11,12 +11,17 @@
             :max="max"
             :step="step"
             type="range"
-            @input="$emit('input', $event.target.value)"
+            @input="handleInput"
         >
     </div>
 </template>
 
 <script>
+import {
+    select,
+    scaleLinear,
+} from 'd3';
+
 export default {
     name: 'InputRange',
 
@@ -40,6 +45,39 @@ export default {
         step: {
             type: Number,
             default: 1,
+        },
+    },
+
+    data() {
+        return {
+            p: 0,
+        };
+    },
+
+    watch: {
+        value() {
+            this.adjustGradient();
+        },
+    },
+
+    mounted() {
+        this.scale = scaleLinear().domain([this.min, this.max]);
+
+        this.slider = select(this.$el).select('.range__input');
+
+        this.slider.dispatch('input');
+    },
+
+    methods: {
+        handleInput(e) {
+            this.adjustGradient();
+            this.$emit('input', e.target.value);
+        },
+        adjustGradient() {
+            this.p = this.scale(this.value) * 100;
+
+            this.slider
+                .style('background', `linear-gradient(90deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.20) ${this.p}%, white ${this.p}%)`);
         },
     },
 };
