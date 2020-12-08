@@ -1,6 +1,11 @@
 <template>
     <div class="navigation">
         <svg-icon
+            class="navigation__bg"
+            :xlink="'#navigation-bg'"
+        />
+
+        <svg-icon
             class="navigation__logo"
             :xlink="'#logo'"
             @click.native="$router.push({ name: 'Home' })"
@@ -93,6 +98,14 @@ export default {
     grid-template-rows: 1fr;
     padding: $padding-y * 2 $padding-x * 2;
     position: relative;
+    z-index: 0;
+}
+
+.navigation__bg {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
 }
 
 .navigation__logo {
@@ -102,6 +115,7 @@ export default {
     height: 3rem;
     user-select: none;
     width: 17rem;
+    z-index: 2;
 }
 
 .navigation__items {
@@ -109,6 +123,7 @@ export default {
     display: flex;
     grid-area: items;
     justify-content: flex-end;
+    z-index: 2;
 
     .item__link,
     .item__sponsor {

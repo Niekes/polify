@@ -16,9 +16,9 @@
                 <input-range
                     v-model.number="amount"
                     class="sliders__input"
-                    :min="100"
+                    :min="10"
                     :max="10000"
-                    :step="100"
+                    :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
                     @dblclick.native="resetAmount(); update()"
                     @change.native="update()"
@@ -145,7 +145,7 @@
                 <base-button
                     class="reset-btn"
                     :icon="'#reset'"
-                    :disabled="!(amount !== 100
+                    :disabled="!(amount !== 10
                         || invert !== false
                         || hue !== 0
                         || saturation !== 100
@@ -225,7 +225,7 @@ export default {
 
     data() {
         return {
-            amount: 100,
+            amount: 10,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -583,7 +583,7 @@ export default {
         },
 
         resetAmount() {
-            this.amount = 100;
+            this.amount = 10;
         },
 
         resetHue() {
@@ -819,6 +819,10 @@ export default {
         border-bottom: $border-width solid $black-50;
         border-radius: 0;
         box-shadow: $box-shadow;
+    }
+
+    #svg {
+        max-width: 100%;
     }
 }
 </style>

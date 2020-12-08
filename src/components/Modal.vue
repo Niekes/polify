@@ -141,7 +141,7 @@ export default {
     }
 }
 
-@media (max-width: $breakpoint-sm) {
+@media (max-width: $breakpoint-md) {
     .modal__container {
         background: $white;
         border: none;
