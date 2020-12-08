@@ -13,12 +13,12 @@
             <router-link
                 class="item__link"
                 to="/cookies"
-                v-text="$t('home.cookies')"
+                v-text="$t('navigation.cookies')"
             />
             <router-link
                 class="item__link"
                 to="/imprint"
-                v-text="$t('home.imprint')"
+                v-text="$t('navigation.imprint')"
             />
             <a
                 class="item__sponsor"
@@ -101,7 +101,7 @@ export default {
     grid-area: logo;
     height: 3rem;
     user-select: none;
-    width: 12rem;
+    width: 17rem;
 }
 
 .navigation__items {
