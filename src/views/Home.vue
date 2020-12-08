@@ -348,7 +348,7 @@ export default {
             for (const triangle of this.delaunay.trianglePolygons()) {
                 this.context.beginPath();
                 this.context.fillStyle = this.setColor(null, i).toString();
-                this.context.strokeStyle = this.setColor(null, i).toString();
+                this.context.strokeStyle = this.setStrokeColor(null, i).toString();
                 this.delaunay.renderTriangle(i, this.context);
                 this.context.fill();
                 this.context.stroke();
@@ -364,7 +364,7 @@ export default {
             for (const value of data) {
                 this.context.beginPath();
                 this.context.fillStyle = this.setColor(null, i).toString();
-                this.context.strokeStyle = this.setColor(null, i).toString();
+                this.context.strokeStyle = this.setStrokeColor(null, i).toString();
                 this.voronoi.renderCell(i, this.context);
                 this.context.stroke();
                 this.context.fill();
