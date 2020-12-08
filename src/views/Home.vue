@@ -17,11 +17,12 @@
                     v-model.number="amount"
                     class="sliders__input"
                     :min="10"
-                    :max="10000"
+                    :max="2000"
                     :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
                     @dblclick.native="resetAmount(); update()"
                     @change.native="update()"
+                    @input.native="update()"
                 />
 
                 <input-range
@@ -33,6 +34,7 @@
                     :label="$tc('home.hue', hue)"
                     @dblclick.native="resetHue(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -44,6 +46,7 @@
                     :label="$tc('home.saturation', saturation)"
                     @dblclick.native="resetSaturation(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -55,6 +58,7 @@
                     :label="$tc('home.lightness', lightness)"
                     @dblclick.native="resetLightness(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -67,6 +71,7 @@
                     :label="$tc('home.contrast', contrast)"
                     @dblclick.native="resetContrast(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -78,6 +83,7 @@
                     :label="$tc('home.fillOpacity', fillOpacity)"
                     @dblclick.native="resetFillOpacity(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -89,6 +95,7 @@
                     :label="$tc('home.strokeOpacity', strokeOpacity)"
                     @dblclick.native="resetStrokeOpacity(); changeColor()"
                     @change.native="changeColor()"
+                    @input.native="changeColor()"
                 />
             </div>
             <div class="control__customize-checkbox">
@@ -183,15 +190,8 @@
         <div
             class="context"
         >
-            <svg
-                id="svg"
-                :viewBox="viewBox"
-                preserveAspectRatio="xMidYMin"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                @mouseenter="showHint"
-                @mouseleave="hideHint"
+            <canvas
+                id="canvas-1"
             />
         </div>
     </div>
@@ -234,7 +234,7 @@ export default {
             strokeOpacity: 100,
             invert: false,
             hintIsShwon: false,
-            shape: 'triangle',
+            shape: 'cell',
             radius: 2,
         };
     },
@@ -264,6 +264,7 @@ export default {
 
     mounted() {
         this.ctx = select('#canvas').node().getContext('2d');
+
         this.init();
         this.$root.$on('reset', this.reset);
         this.$root.$on('change-image', this.init);
@@ -276,6 +277,26 @@ export default {
             newImage.on('load', () => {
                 this.$store.commit('canvas/setWidth', newImage.node().width);
                 this.$store.commit('canvas/setHeight', newImage.node().height);
+
+                /*
+                    NEW
+                */
+                const canvasSelection = select(this.$el).select('#canvas-1');
+
+                canvasSelection.node().width = newImage.node().width;
+                canvasSelection.node().height = newImage.node().height;
+
+                this.canvasWidth = canvasSelection.node().width;
+                this.canvasHeight = canvasSelection.node().height;
+
+                canvasSelection.style('max-width', '80%');
+                canvasSelection.style('max-height', '80%');
+
+                this.context = canvasSelection.node().getContext('2d');
+
+                /*
+                    NEW
+                */
 
                 this.$nextTick(() => {
                     this.ctx.drawImage(newImage.node(), 0, 0);
@@ -311,145 +332,54 @@ export default {
                 .voronoi([0, 0, this.width, this.height]);
 
             if (this.shape === 'triangle') {
-                this.updatePolygons(this.delaunay.trianglePolygons());
+                this.updateTriangles();
             }
 
             if (this.shape === 'cell') {
-                this.updatePolygons(this.voronoi.cellPolygons());
+                this.updateCells(this.voronoi.cellPolygons());
             }
         },
 
-        updatePolygons(data) {
-            const tri = select(this.$el).select('#svg').selectAll('path.polygons').data(data);
+        updateTriangles() {
+            this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-            tri
-                .enter()
-                .append('path')
-                .attr('class', 'polygons')
-                .attr('stroke', this.setStrokeColor)
-                .attr('stroke-width', this.setStrokeWidth)
-                .attr('fill', this.setColor)
-                .attr('d', (d, i) => {
-                    if (this.shape === 'cell') {
-                        return this.voronoi.renderCell(i);
-                    }
+            let i = 0;
+            // eslint-disable-next-line no-restricted-syntax, no-unused-vars
+            for (const triangle of this.delaunay.trianglePolygons()) {
+                this.context.beginPath();
+                this.context.fillStyle = this.setColor(null, i).toString();
+                this.context.strokeStyle = this.setColor(null, i).toString();
+                this.delaunay.renderTriangle(i, this.context);
+                this.context.fill();
+                this.context.stroke();
+                i += 1;
+            }
+        },
 
-                    return this.delaunay.renderTriangle(i);
-                })
-                .merge(tri)
-                .on('click', (event) => {
-                    const [x, y] = pointer(event, document.body);
-                    const e = select('#svg').selectAll('path.polygons').nodes();
-                    const i = e.indexOf(event.currentTarget);
+        updateCells(data) {
+            this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-                    const halo = create('div')
-                        .style('position', 'absolute')
-                        .style('background', 'rgba(255, 255, 255, 0.5)')
-                        .style('border', '2px solid rgba(255, 255, 255, 1)')
-                        .style('border-radius', '50%')
-                        .style('width', '100px')
-                        .style('height', '100px')
-                        .style('transform', 'scale(0.25)')
-                        .style('top', `${y - 50}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('z-index', 1)
-                        .style('left', `${x - 50}px`)
-                        .style('opacity', 1);
-
-                    document.body.appendChild(halo.node());
-
-                    halo
-                        .transition()
-                        .duration(500)
-                        .style('transform', 'scale(1)')
-                        .style('opacity', 0)
-                        .remove();
-
-                    const center = this.getPolygonCentroid(i);
-
-                    this.particales.push(center);
-
-                    this.update(this.particales);
-                })
-                .on('mouseenter', (event) => {
-                    if (this.isMobile) return;
-
-                    const [x, y] = pointer(event, document.body);
-
-                    const hint = create('div')
-                        .attr('id', 'hint')
-                        .style('position', 'absolute')
-                        .style('font-family', 'monospace')
-                        .style('font-size', '0.8rem')
-                        .style('font-weight', 'bolder')
-                        .style('width', 'auto')
-                        .style('height', 'auto')
-                        .style('top', `${y - 65}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('text-shadow', '1px 1px 2px rgba(255, 255, 255, 0.5)')
-                        .style('z-index', 1)
-                        .style('left', `${x - 100}px`)
-                        .style('opacity', 1)
-                        .html(this.$t('home.mouseoverHint'));
-
-                    const centroid = create('div')
-                        .attr('id', 'centroid')
-                        .style('position', 'absolute')
-                        .style('background', 'rgba(255, 255, 255, 0.05)')
-                        .style('border', '1px solid rgba(0, 0, 0, 0.5)')
-                        .style('border-radius', '50%')
-                        .style('width', '100px')
-                        .style('height', '100px')
-                        .style('transform', 'scale(0.5)')
-                        .style('top', `${y - 50}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('z-index', 1)
-                        .style('left', `${x - 50}px`)
-                        .style('opacity', 1);
-
-                    document.body.appendChild(centroid.node());
-                    document.body.appendChild(hint.node());
-                })
-                .on('mousemove', (event) => {
-                    if (this.isMobile) return;
-
-                    const [x, y] = pointer(event, document.body);
-
-                    select('#hint')
-                        .style('top', `${y - 65}px`)
-                        .style('left', `${x - 100}px`);
-
-                    select('#centroid')
-                        .style('top', `${y - 50}px`)
-                        .style('left', `${x - 50}px`);
-                })
-                .on('mouseleave', () => {
-                    if (this.isMobile) return;
-
-                    select('#hint').remove();
-                    select('#centroid').remove();
-                })
-                .attr('stroke', this.setStrokeColor)
-                .attr('stroke-width', this.setStrokeWidth)
-                .attr('fill', this.setColor)
-                .attr('d', (d, i) => {
-                    if (this.shape === 'cell') {
-                        return this.voronoi.renderCell(i);
-                    }
-
-                    return this.delaunay.renderTriangle(i);
-                });
-
-            tri
-                .exit()
-                .remove();
+            let i = 0;
+            // eslint-disable-next-line no-restricted-syntax, no-unused-vars
+            for (const value of data) {
+                this.context.beginPath();
+                this.context.fillStyle = this.setColor(null, i).toString();
+                this.context.strokeStyle = this.setColor(null, i).toString();
+                this.voronoi.renderCell(i, this.context);
+                this.context.stroke();
+                this.context.fill();
+                i += 1;
+            }
         },
 
         changeColor() {
-            this.updatePolygons(select(this.$el).select('#svg').selectAll('path.polygons').data());
+            if (this.shape === 'triangle') {
+                this.updateTriangles();
+            }
+
+            if (this.shape === 'cell') {
+                this.updateCells(this.voronoi.cellPolygons());
+            }
         },
 
         setColor(d, i) {
@@ -798,12 +728,10 @@ export default {
     width: 100%;
 }
 
-#svg {
-    display: block;
-    flex: 1;
+#canvas-1 {
+    border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;
-    shape-rendering: crispEdges;
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -821,7 +749,7 @@ export default {
         box-shadow: $box-shadow;
     }
 
-    #svg {
+    #canvas-1 {
         max-width: 100%;
     }
 }
