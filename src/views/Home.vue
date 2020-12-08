@@ -789,7 +789,7 @@ export default {
 
 .context {
     align-items: center;
-    border-radius: $border-radius;
+    box-shadow: inset 0 0 10px $black-50;
     display: flex;
     grid-area: context;
     height: 100%;
