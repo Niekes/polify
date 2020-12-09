@@ -152,7 +152,7 @@
                 <base-button
                     class="reset-btn"
                     :icon="'#reset'"
-                    :disabled="!(amount !== 10
+                    :disabled="!(amount !== 100
                         || invert !== false
                         || hue !== 0
                         || saturation !== 100
@@ -225,7 +225,7 @@ export default {
 
     data() {
         return {
-            amount: 10,
+            amount: 100,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -234,7 +234,7 @@ export default {
             strokeOpacity: 100,
             invert: false,
             hintIsShwon: false,
-            shape: 'cell',
+            shape: 'triangle',
             radius: 2,
         };
     },
@@ -283,21 +283,18 @@ export default {
                 */
                 const canvasSelection = select(this.$el).select('#canvas-1');
 
-                canvasSelection.node().width = newImage.node().width;
-                canvasSelection.node().height = newImage.node().height;
+                canvasSelection.node().width = newImage.node().width * 2;
+                canvasSelection.node().height = newImage.node().height * 2;
 
                 this.canvasWidth = canvasSelection.node().width;
                 this.canvasHeight = canvasSelection.node().height;
 
-                canvasSelection.style('max-width', '80%');
-                canvasSelection.style('max-height', '80%');
-
                 this.context = canvasSelection.node().getContext('2d');
+                this.context.scale(2, 2);
 
                 /*
                     NEW
                 */
-
                 this.$nextTick(() => {
                     this.ctx.drawImage(newImage.node(), 0, 0);
                     this.reset();
@@ -308,7 +305,7 @@ export default {
         },
         update(p) {
             this.particales = p || (this.shape === 'triangle'
-                ? range(this.amount).map(() => [
+                ? range(this.amount - 4).map(() => [
                     randomInt(0, this.width)(),
                     randomInt(0, this.height)(),
                 ])
@@ -336,7 +333,7 @@ export default {
             }
 
             if (this.shape === 'cell') {
-                this.updateCells(this.voronoi.cellPolygons());
+                this.updateCells();
             }
         },
 
@@ -356,12 +353,12 @@ export default {
             }
         },
 
-        updateCells(data) {
+        updateCells() {
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-            for (const value of data) {
+            for (const value of this.voronoi.cellPolygons()) {
                 this.context.beginPath();
                 this.context.fillStyle = this.setColor(null, i).toString();
                 this.context.strokeStyle = this.setStrokeColor(null, i).toString();
@@ -378,7 +375,7 @@ export default {
             }
 
             if (this.shape === 'cell') {
-                this.updateCells(this.voronoi.cellPolygons());
+                this.updateCells();
             }
         },
 
@@ -513,7 +510,7 @@ export default {
         },
 
         resetAmount() {
-            this.amount = 10;
+            this.amount = 100;
         },
 
         resetHue() {
