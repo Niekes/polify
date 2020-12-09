@@ -356,7 +356,7 @@ export default {
         },
 
         updateCells() {
-            const cells = this.delaunay.cellPolygons();
+            const cells = this.voronoi.cellPolygons();
 
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
