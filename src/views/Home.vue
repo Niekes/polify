@@ -338,11 +338,13 @@ export default {
         },
 
         updateTriangles() {
+            const triangles = this.delaunay.trianglePolygons();
+
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-            for (const triangle of this.delaunay.trianglePolygons()) {
+            for (const triangle of triangles) {
                 this.context.beginPath();
                 this.context.fillStyle = this.setColor(null, i).toString();
                 this.context.strokeStyle = this.setStrokeColor(null, i).toString();
@@ -354,11 +356,13 @@ export default {
         },
 
         updateCells() {
+            const cells = this.delaunay.cellPolygons();
+
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-            for (const value of this.voronoi.cellPolygons()) {
+            for (const value of cells) {
                 this.context.beginPath();
                 this.context.fillStyle = this.setColor(null, i).toString();
                 this.context.strokeStyle = this.setStrokeColor(null, i).toString();
