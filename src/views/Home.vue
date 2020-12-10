@@ -145,7 +145,7 @@
                 <base-button
                     class="reset-btn"
                     :icon="'#reset'"
-                    :disabled="!(amount !== 10
+                    :disabled="!(amount !== 100
                         || invert !== false
                         || hue !== 0
                         || saturation !== 100
@@ -225,7 +225,7 @@ export default {
 
     data() {
         return {
-            amount: 10,
+            amount: 100,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -287,7 +287,7 @@ export default {
         },
         update(p) {
             this.particales = p || (this.shape === 'triangle'
-                ? range(this.amount).map(() => [
+                ? range(this.amount - 4).map(() => [
                     randomInt(0, this.width)(),
                     randomInt(0, this.height)(),
                 ])
@@ -583,7 +583,7 @@ export default {
         },
 
         resetAmount() {
-            this.amount = 10;
+            this.amount = 100;
         },
 
         resetHue() {
