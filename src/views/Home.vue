@@ -92,17 +92,34 @@
                 />
             </div>
             <div class="control__customize-checkbox">
-                <input
-                    id="invert"
-                    v-model="invert"
-                    type="checkbox"
-                    name="invert"
-                    @change="changeColor()"
-                >
-                <label
-                    for="invert"
-                    v-text="$t('home.invert')"
-                />
+                <div class="customize-checkbox">
+                    <input
+                        id="invert"
+                        v-model="invert"
+                        type="checkbox"
+                        name="invert"
+                        @change="changeColor()"
+                    >
+                    <label
+                        class="customize-checkbox__label"
+                        for="invert"
+                        v-text="$t('home.invert')"
+                    />
+                </div>
+                <div class="customize-checkbox">
+                    <input
+                        id="grayscale"
+                        v-model="grayscale"
+                        type="checkbox"
+                        name="grayscale"
+                        @change="changeColor()"
+                    >
+                    <label
+                        class="customize-checkbox__label"
+                        for="grayscale"
+                        v-text="$t('home.grayscale')"
+                    />
+                </div>
             </div>
             <div class="control__shape">
                 <div>
@@ -233,6 +250,7 @@ export default {
             fillOpacity: 100,
             strokeOpacity: 100,
             invert: false,
+            grayscale: true,
             hintIsShwon: false,
             shape: 'triangle',
             radius: 2,
@@ -479,6 +497,13 @@ export default {
                 rgb.b = 255 - rgb.b;
             }
 
+            if (this.grayscale) {
+                const gs = (rgb.r + rgb.g + rgb.b) / 3;
+                rgb.r = gs;
+                rgb.g = gs;
+                rgb.b = gs;
+            }
+
             return rgb;
         },
 
@@ -507,6 +532,13 @@ export default {
                 rgb.r = 255 - rgb.r;
                 rgb.g = 255 - rgb.g;
                 rgb.b = 255 - rgb.b;
+            }
+
+            if (this.grayscale) {
+                const gs = (rgb.r + rgb.g + rgb.b) / 3;
+                rgb.r = gs;
+                rgb.g = gs;
+                rgb.b = gs;
             }
 
             return rgb;
@@ -701,19 +733,24 @@ export default {
 }
 
 .control__customize-checkbox {
-    align-items: center;
     display: flex;
     grid-area: checkbox;
+    justify-content: space-between;
 
-    label {
-        color: $primary;
-        cursor: pointer;
-        font-size: $font-size * 0.7;
-        font-weight: bolder;
-        margin-left: $margin-x / 2;
-        text-transform: uppercase;
-        white-space: nowrap;
-        z-index: 1;
+    .customize-checkbox {
+        align-items: center;
+        display: flex;
+
+        &__label {
+            color: $primary;
+            cursor: pointer;
+            font-size: $font-size * 0.7;
+            font-weight: bolder;
+            margin-left: $margin-x / 2;
+            text-transform: uppercase;
+            white-space: nowrap;
+            z-index: 1;
+        }
     }
 }
 

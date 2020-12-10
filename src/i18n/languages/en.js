@@ -19,6 +19,7 @@ export default {
         lightness: 'Lightness: {n}%',
         randomize: 'Randomize',
         invert: 'Invert',
+        grayscale: 'Grayscale',
         reset: 'Reset',
         download: 'download',
         changeImage: 'Change image',
