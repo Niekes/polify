@@ -250,7 +250,7 @@ export default {
             fillOpacity: 100,
             strokeOpacity: 100,
             invert: false,
-            grayscale: true,
+            grayscale: false,
             hintIsShwon: false,
             shape: 'triangle',
             radius: 2,
