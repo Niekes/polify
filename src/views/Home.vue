@@ -242,6 +242,7 @@ import {
     pointer,
     color,
     hsl,
+    rgb,
     polygonCentroid,
     randomInt,
 } from 'd3';
@@ -277,6 +278,7 @@ export default {
             radius: 2,
             canvasWidth: 0,
             canvasHeight: 0,
+            virtualCanvas: null,
         };
     },
 
@@ -304,6 +306,7 @@ export default {
     },
 
     mounted() {
+        this.colorDataMap = new Map();
         this.throttleThreshold = 1000;
         this.refCtx = select('#reference-image__canvas').node().getContext('2d');
 
@@ -364,13 +367,18 @@ export default {
             }
 
             select(this.$el).select('#canvas')
-                .on('click', (e) => {
-                    const i = e.indexOf(e.currentTarget);
-                    const center = this.getPolygonCentroid(i);
+                .on('click', (event) => {
+                    const [x, y] = pointer(event);
 
-                    this.particales.push(center);
+                    const imageData = this.virtualCanvas
+                        .node()
+                        .getContext('2d')
+                        .getImageData(x, y, 1, 1);
 
-                    this.update(this.particales);
+                    const c = rgb(...imageData.data).toString();
+                    const d = this.colorDataMap.get(c);
+
+                    console.log(d);
                 });
         },
 
@@ -389,6 +397,8 @@ export default {
         }),
 
         updateTriangles() {
+            this.colorDataMap.clear();
+
             const triangles = this.delaunay.trianglePolygons();
 
             this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -402,6 +412,19 @@ export default {
                 this.delaunay.renderTriangle(i, this.ctx);
                 this.ctx.fill();
                 this.ctx.stroke();
+
+                /*
+                    Draw to virtual context
+                */
+                const uniqueColor = this.getUniqueColorByInt(i);
+
+                this.colorDataMap.set(uniqueColor, i);
+
+                this.virtualContext.beginPath();
+                this.virtualContext.fillStyle = uniqueColor;
+                this.delaunay.renderTriangle(i, this.virtualContext);
+
+                this.virtualContext.fill();
                 i += 1;
             }
         },
@@ -420,6 +443,19 @@ export default {
                 this.voronoi.renderCell(i, this.ctx);
                 this.ctx.stroke();
                 this.ctx.fill();
+
+                /*
+                    Draw to virtual context
+                */
+                const uniqueColor = this.getUniqueColorByInt(i);
+
+                this.colorDataMap.set(uniqueColor, i);
+
+                this.virtualContext.beginPath();
+                this.virtualContext.fillStyle = uniqueColor;
+                this.delaunay.renderTriangle(i, this.virtualContext);
+
+                this.virtualContext.fill();
                 i += 1;
             }
         },
@@ -449,26 +485,38 @@ export default {
             colorHsl.l *= this.lightness / 100;
             colorHsl.opacity = opacity / 100;
 
-            const rgb = colorHsl.rgb();
+            const rgbColor = colorHsl.rgb();
 
-            rgb.r = rgb.r * c + intercept;
-            rgb.g = rgb.g * c + intercept;
-            rgb.b = rgb.b * c + intercept;
+            rgbColor.r = rgbColor.r * c + intercept;
+            rgbColor.g = rgbColor.g * c + intercept;
+            rgbColor.b = rgbColor.b * c + intercept;
 
             if (this.invert) {
-                rgb.r = 255 - rgb.r;
-                rgb.g = 255 - rgb.g;
-                rgb.b = 255 - rgb.b;
+                rgbColor.r = 255 - rgbColor.r;
+                rgbColor.g = 255 - rgbColor.g;
+                rgbColor.b = 255 - rgbColor.b;
             }
 
             if (this.grayscale) {
-                const gs = (rgb.r + rgb.g + rgb.b) / 3;
-                rgb.r = gs;
-                rgb.g = gs;
-                rgb.b = gs;
+                const gs = (rgbColor.r + rgbColor.g + rgbColor.b) / 3;
+                rgbColor.r = gs;
+                rgbColor.g = gs;
+                rgbColor.b = gs;
             }
 
-            return rgb;
+            return rgbColor;
+        },
+
+        getUniqueColorByInt(index) {
+            return rgb(
+                // eslint-disable-next-line no-bitwise
+                (index & 0b111111110000000000000000) >> 16,
+                // eslint-disable-next-line no-bitwise
+                (index & 0b000000001111111100000000) >> 8,
+                // eslint-disable-next-line no-bitwise
+                (index & 0b000000000000000011111111),
+            )
+                .toString();
         },
 
         getPixel(x, y) {
