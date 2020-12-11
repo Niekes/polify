@@ -140,7 +140,7 @@
                 </div>
             </div>
             <div class="control__shape">
-                <div>
+                <div class="customize-radio">
                     <input
                         id="shape-triangle"
                         v-model="shape"
@@ -150,11 +150,12 @@
                         @change="update()"
                     >
                     <label
+                        class="customize-radio__label"
                         for="shape-triangle"
                         v-text="$t('home.triangle')"
                     />
                 </div>
-                <div>
+                <div class="customize-radio">
                     <input
                         id="shape-cell"
                         v-model="shape"
@@ -164,6 +165,7 @@
                         @change="update()"
                     >
                     <label
+                        class="customize-radio__label"
                         for="shape-cell"
                         v-text="$t('home.cell')"
                     />
@@ -182,6 +184,7 @@
                     :icon="'#reset'"
                     :disabled="!(amount !== 100
                         || invert !== false
+                        || grayscale !== false
                         || hue !== 0
                         || saturation !== 100
                         || lightness !== 100
@@ -384,8 +387,8 @@ export default {
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
             for (const triangle of triangles) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.setColor(null, i).toString();
-                this.ctx.strokeStyle = this.setStrokeColor(null, i).toString();
+                this.ctx.fillStyle = this.setColor(i, this.fillOpacity).toString();
+                this.ctx.strokeStyle = this.setColor(i, this.strokeOpacity).toString();
                 this.delaunay.renderTriangle(i, this.ctx);
                 this.ctx.fill();
                 this.ctx.stroke();
@@ -402,8 +405,8 @@ export default {
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
             for (const cell of cells) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.setColor(null, i).toString();
-                this.ctx.strokeStyle = this.setStrokeColor(null, i).toString();
+                this.ctx.fillStyle = this.setColor(i, this.fillOpacity).toString();
+                this.ctx.strokeStyle = this.setColor(i, this.strokeOpacity).toString();
                 this.voronoi.renderCell(i, this.ctx);
                 this.ctx.stroke();
                 this.ctx.fill();
@@ -421,7 +424,7 @@ export default {
             }
         },
 
-        setColor(d, i) {
+        setColor(i, opacity) {
             const [x, y] = this.getPolygonCentroid(i);
             const pixel = this.getPixel(x, y);
             const colorHsl = pixel[3] === 0
@@ -434,44 +437,7 @@ export default {
             colorHsl.h += Number(this.hue);
             colorHsl.s *= (Number(this.saturation) / 100);
             colorHsl.l *= (Number(this.lightness) / 100);
-            colorHsl.opacity = (Number(this.fillOpacity) / 100);
-
-            const rgb = colorHsl.rgb();
-
-            rgb.r = rgb.r * c + intercept;
-            rgb.g = rgb.g * c + intercept;
-            rgb.b = rgb.b * c + intercept;
-
-            if (this.invert) {
-                rgb.r = 255 - rgb.r;
-                rgb.g = 255 - rgb.g;
-                rgb.b = 255 - rgb.b;
-            }
-
-            if (this.grayscale) {
-                const gs = (rgb.r + rgb.g + rgb.b) / 3;
-                rgb.r = gs;
-                rgb.g = gs;
-                rgb.b = gs;
-            }
-
-            return rgb;
-        },
-
-        setStrokeColor(d, i) {
-            const [x, y] = this.getPolygonCentroid(i);
-            const pixel = this.getPixel(x, y);
-            const colorHsl = pixel[3] === 0
-                ? hsl(0, 0, 1)
-                : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
-
-            const c = (Number(this.contrast) / 100) + 1;
-            const intercept = 128 * (1 - c);
-
-            colorHsl.h += Number(this.hue);
-            colorHsl.s *= (Number(this.saturation) / 100);
-            colorHsl.l *= (Number(this.lightness) / 100);
-            colorHsl.opacity = (Number(this.strokeOpacity) / 100);
+            colorHsl.opacity = (Number(opacity) / 100);
 
             const rgb = colorHsl.rgb();
 
@@ -564,6 +530,7 @@ export default {
             this.resetStrokeOpacity();
             this.resetContrast();
             this.resetInvert();
+            this.resetGrayscale();
             this.update();
         },
 
@@ -597,6 +564,10 @@ export default {
 
         resetInvert() {
             this.invert = false;
+        },
+
+        resetGrayscale() {
+            this.grayscale = false;
         },
 
         showHint() {
@@ -713,24 +684,24 @@ export default {
     flex-direction: column;
     grid-area: shape;
 
-    div {
+    .customize-radio {
         align-items: center;
         display: flex;
 
         &:not(:last-child) {
             margin-bottom: $margin-y / 2;
         }
-    }
 
-    label {
-        color: $primary;
-        cursor: pointer;
-        font-size: $font-size * 0.7;
-        font-weight: bolder;
-        margin-left: $margin-x / 2;
-        text-transform: uppercase;
-        white-space: nowrap;
-        z-index: 1;
+        &__label {
+            color: $primary;
+            cursor: pointer;
+            font-size: $font-size * 0.7;
+            font-weight: bolder;
+            margin-left: $margin-x / 2;
+            text-transform: uppercase;
+            white-space: nowrap;
+            z-index: 1;
+        }
     }
 }
 
