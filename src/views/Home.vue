@@ -431,13 +431,13 @@ export default {
                 ? hsl(0, 0, 1)
                 : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
 
-            const c = (Number(this.contrast) / 100) + 1;
+            const c = (this.contrast / 100) + 1;
             const intercept = 128 * (1 - c);
 
-            colorHsl.h += Number(this.hue);
-            colorHsl.s *= (Number(this.saturation) / 100);
-            colorHsl.l *= (Number(this.lightness) / 100);
-            colorHsl.opacity = (Number(opacity) / 100);
+            colorHsl.h += this.hue;
+            colorHsl.s *= this.saturation / 100;
+            colorHsl.l *= this.lightness / 100;
+            colorHsl.opacity = opacity / 100;
 
             const rgb = colorHsl.rgb();
 
