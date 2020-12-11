@@ -7,7 +7,7 @@
             />
             <div class="control__reference-image">
                 <canvas
-                    id="canvas"
+                    id="reference-image__canvas"
                     :width="width"
                     :height="height"
                 />
@@ -21,8 +21,7 @@
                     :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
                     @dblclick.native="resetAmount(); update()"
-                    @change.native="update()"
-                    @input.native="update()"
+                    @input.native="amount > throttleThreshold ? updateThrottle() : update()"
                 />
 
                 <input-range
@@ -33,8 +32,10 @@
                     :step="0.01"
                     :label="$tc('home.hue', hue)"
                     @dblclick.native="resetHue(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
 
                 <input-range
@@ -45,8 +46,10 @@
                     :step="0.01"
                     :label="$tc('home.saturation', saturation)"
                     @dblclick.native="resetSaturation(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
 
                 <input-range
@@ -57,8 +60,10 @@
                     :step="0.01"
                     :label="$tc('home.lightness', lightness)"
                     @dblclick.native="resetLightness(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
 
                 <input-range
@@ -70,8 +75,10 @@
                     :center="50"
                     :label="$tc('home.contrast', contrast)"
                     @dblclick.native="resetContrast(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
 
                 <input-range
@@ -82,8 +89,10 @@
                     :step="0.01"
                     :label="$tc('home.fillOpacity', fillOpacity)"
                     @dblclick.native="resetFillOpacity(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
 
                 <input-range
@@ -94,8 +103,10 @@
                     :step="0.01"
                     :label="$tc('home.strokeOpacity', strokeOpacity)"
                     @dblclick.native="resetStrokeOpacity(); changeColor()"
-                    @change.native="changeColor()"
-                    @input.native="changeColor()"
+                    @input.native="amount > throttleThreshold
+                        ? changeColorThrottle()
+                        : changeColor()
+                    "
                 />
             </div>
             <div class="control__customize-checkbox">
@@ -191,7 +202,7 @@
             class="context"
         >
             <canvas
-                id="canvas-1"
+                id="canvas"
             />
         </div>
     </div>
@@ -201,10 +212,14 @@
 import { Delaunay } from 'd3-delaunay';
 
 import {
+    throttle,
+} from 'lodash';
+
+import {
     create,
     range,
     select,
-    pointer,
+    // pointer,
     color,
     hsl,
     polygonCentroid,
@@ -236,6 +251,8 @@ export default {
             hintIsShwon: false,
             shape: 'triangle',
             radius: 2,
+            canvasWidth: 0,
+            canvasHeight: 0,
         };
     },
 
@@ -263,7 +280,8 @@ export default {
     },
 
     mounted() {
-        this.ctx = select('#canvas').node().getContext('2d');
+        this.throttleThreshold = 1000;
+        this.refCtx = select('#reference-image__canvas').node().getContext('2d');
 
         this.init();
         this.$root.$on('reset', this.reset);
@@ -278,25 +296,10 @@ export default {
                 this.$store.commit('canvas/setWidth', newImage.node().width);
                 this.$store.commit('canvas/setHeight', newImage.node().height);
 
-                /*
-                    NEW
-                */
-                const canvasSelection = select(this.$el).select('#canvas-1');
+                this.setupCanvas(newImage);
 
-                canvasSelection.node().width = newImage.node().width * 2;
-                canvasSelection.node().height = newImage.node().height * 2;
-
-                this.canvasWidth = canvasSelection.node().width;
-                this.canvasHeight = canvasSelection.node().height;
-
-                this.context = canvasSelection.node().getContext('2d');
-                this.context.scale(2, 2);
-
-                /*
-                    NEW
-                */
                 this.$nextTick(() => {
-                    this.ctx.drawImage(newImage.node(), 0, 0);
+                    this.refCtx.drawImage(newImage.node(), 0, 0);
                     this.reset();
                 });
             });
@@ -337,20 +340,34 @@ export default {
             }
         },
 
+        updateThrottle: throttle(function _() {
+            this.update();
+        }, 250, {
+            leading: true,
+            trailing: true,
+        }),
+
+        changeColorThrottle: throttle(function _() {
+            this.changeColor();
+        }, 250, {
+            leading: true,
+            trailing: true,
+        }),
+
         updateTriangles() {
             const triangles = this.delaunay.trianglePolygons();
 
-            this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
             for (const triangle of triangles) {
-                this.context.beginPath();
-                this.context.fillStyle = this.setColor(null, i).toString();
-                this.context.strokeStyle = this.setStrokeColor(null, i).toString();
-                this.delaunay.renderTriangle(i, this.context);
-                this.context.fill();
-                this.context.stroke();
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.setColor(null, i).toString();
+                this.ctx.strokeStyle = this.setStrokeColor(null, i).toString();
+                this.delaunay.renderTriangle(i, this.ctx);
+                this.ctx.fill();
+                this.ctx.stroke();
                 i += 1;
             }
         },
@@ -358,17 +375,17 @@ export default {
         updateCells() {
             const cells = this.voronoi.cellPolygons();
 
-            this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-            for (const value of cells) {
-                this.context.beginPath();
-                this.context.fillStyle = this.setColor(null, i).toString();
-                this.context.strokeStyle = this.setStrokeColor(null, i).toString();
-                this.voronoi.renderCell(i, this.context);
-                this.context.stroke();
-                this.context.fill();
+            for (const cell of cells) {
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.setColor(null, i).toString();
+                this.ctx.strokeStyle = this.setStrokeColor(null, i).toString();
+                this.voronoi.renderCell(i, this.ctx);
+                this.ctx.stroke();
+                this.ctx.fill();
                 i += 1;
             }
         },
@@ -445,7 +462,7 @@ export default {
 
         getPixel(x, y) {
             try {
-                return this.ctx.getImageData(x, y, 1, 1).data;
+                return this.refCtx.getImageData(x, y, 1, 1).data;
             } catch (e) {
                 return [0, 0, 0, 1];
             }
@@ -481,8 +498,10 @@ export default {
                             this.$store.commit('canvas/setWidth', newImage.node().width);
                             this.$store.commit('canvas/setHeight', newImage.node().height);
 
+                            this.setupCanvas(newImage);
+
                             this.$nextTick(() => {
-                                this.ctx.drawImage(newImage.node(), 0, 0);
+                                this.refCtx.drawImage(newImage.node(), 0, 0);
                                 this.reset();
 
                                 fileInput.remove();
@@ -495,6 +514,19 @@ export default {
                     fileReader.readAsDataURL(fileToLoad);
                 }
             });
+        },
+
+        setupCanvas(img) {
+            const canvasSelection = select(this.$el).select('#canvas');
+
+            canvasSelection.node().width = img.node().width * 2;
+            canvasSelection.node().height = img.node().height * 2;
+
+            this.canvasWidth = canvasSelection.node().width;
+            this.canvasHeight = canvasSelection.node().height;
+
+            this.ctx = canvasSelection.node().getContext('2d');
+            this.ctx.scale(2, 2);
         },
 
         setStrokeWidth() {
@@ -615,7 +647,7 @@ export default {
     padding: $padding;
 }
 
-#canvas {
+#reference-image__canvas {
     border-radius: $border-radius;
     box-shadow: $box-shadow;
     height: auto;
@@ -729,7 +761,7 @@ export default {
     width: 100%;
 }
 
-#canvas-1 {
+#canvas {
     border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;
@@ -750,7 +782,7 @@ export default {
         box-shadow: $box-shadow;
     }
 
-    #canvas-1 {
+    #canvas {
         max-width: 100%;
     }
 }

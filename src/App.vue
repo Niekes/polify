@@ -53,6 +53,7 @@ export default {
     },
 
     mounted() {
+        this.refCtx = select('#reference-image__canvas').node().getContext('2d');
         this.ctx = select('#canvas').node().getContext('2d');
     },
 
@@ -75,8 +76,19 @@ export default {
                         this.$store.commit('canvas/setWidth', newImage.node().width);
                         this.$store.commit('canvas/setHeight', newImage.node().height);
 
+                        const canvasSelection = select(this.$el).select('#canvas');
+
+                        canvasSelection.node().width = newImage.node().width * 2;
+                        canvasSelection.node().height = newImage.node().height * 2;
+
+                        this.canvasWidth = canvasSelection.node().width;
+                        this.canvasHeight = canvasSelection.node().height;
+
+                        this.ctx = canvasSelection.node().getContext('2d');
+                        this.ctx.scale(2, 2);
+
                         this.$nextTick(() => {
-                            this.ctx.drawImage(newImage.node(), 0, 0);
+                            this.refCtx.drawImage(newImage.node(), 0, 0);
                             this.$root.$emit('reset');
                         });
                     });
