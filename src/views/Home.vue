@@ -393,9 +393,20 @@ export default {
                         );
 
                     const c = rgb(...imageData.data).toString();
-                    const d = this.colorDataMap.get(c);
+                    const index = this.colorDataMap.get(c);
 
-                    console.log(d);
+                    const center = this.getPolygonCentroid(index);
+
+                    this.particales.push(center);
+
+                    this.update(this.particales);
+                });
+
+            select(this.$el).select('#canvas')
+                .on('mousemove', (event) => {
+                    const [x, y] = pointer(event);
+
+                    console.log(x, y);
                 });
         },
 
