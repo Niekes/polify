@@ -408,6 +408,68 @@ export default {
 
                     console.log(x, y);
                 });
+
+            select(this.$el).select('#canvas')
+                .on('mouseenter', (event) => {
+                    if (this.isMobile) return;
+
+                    const [x, y] = pointer(event, document.body);
+
+                    const hint = create('div')
+                        .attr('id', 'hint')
+                        .style('position', 'absolute')
+                        .style('font-family', 'monospace')
+                        .style('font-size', '0.8rem')
+                        .style('font-weight', 'bolder')
+                        .style('width', 'auto')
+                        .style('height', 'auto')
+                        .style('top', `${y - 65}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('text-shadow', '1px 1px 2px rgba(255, 255, 255, 0.5)')
+                        .style('z-index', 1)
+                        .style('left', `${x - 100}px`)
+                        .style('opacity', 1)
+                        .html(this.$t('home.mouseoverHint'));
+
+                    const centroid = create('div')
+                        .attr('id', 'centroid')
+                        .style('position', 'absolute')
+                        .style('background', 'rgba(255, 255, 255, 0.05)')
+                        .style('border', '1px solid rgba(0, 0, 0, 0.5)')
+                        .style('border-radius', '50%')
+                        .style('width', '100px')
+                        .style('height', '100px')
+                        .style('transform', 'scale(0.5)')
+                        .style('top', `${y - 50}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('z-index', 1)
+                        .style('left', `${x - 50}px`)
+                        .style('opacity', 1);
+
+                    document.body.appendChild(centroid.node());
+                    document.body.appendChild(hint.node());
+                })
+                .on('mousemove', (event) => {
+                    if (this.isMobile) return;
+
+                    const [x, y] = pointer(event, document.body);
+
+                    select('#hint')
+                        .style('top', `${y - 65}px`)
+                        .style('left', `${x - 100}px`);
+
+                    select('#centroid')
+                        .style('top', `${y - 50}px`)
+                        .style('left', `${x - 50}px`);
+                })
+                .on('mouseleave', () => {
+                    if (this.isMobile) return;
+
+                    select('#hint').remove();
+                    select('#centroid').remove();
+                });
         },
 
         updateThrottle: throttle(function _() {
