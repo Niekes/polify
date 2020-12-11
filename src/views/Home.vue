@@ -224,10 +224,6 @@
             <canvas
                 id="canvas"
             />
-
-            <canvas
-                id="virtual-canvas"
-            />
         </div>
     </div>
 </template>
@@ -940,10 +936,6 @@ export default {
     &:hover {
         cursor: crosshair;
     }
-}
-
-#virtual-canvas {
-    position: absolute;
 }
 
 @media (max-width: $breakpoint-sm) {
