@@ -239,7 +239,7 @@ import {
     create,
     range,
     select,
-    // pointer,
+    pointer,
     color,
     hsl,
     polygonCentroid,
@@ -362,6 +362,11 @@ export default {
             if (this.shape === 'cell') {
                 this.updateCells();
             }
+
+            select(this.$el).select('#canvas')
+                .on('click', (e) => {
+                    console.log(pointer(e));
+                });
         },
 
         updateThrottle: throttle(function _() {
