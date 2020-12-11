@@ -1,4 +1,5 @@
 import {
+    create,
     select,
 } from 'd3';
 
@@ -16,7 +17,8 @@ export default {
             this.ctx = canvasSelection.node().getContext('2d');
             this.ctx.scale(2, 2);
 
-            this.virtualCanvas = select('#virtual-canvas')
+            this.virtualCanvas = create('canvas')
+                .attr('id', 'virtual-canvas')
                 .attr('height', img.node().height * 2)
                 .attr('width', img.node().width * 2);
 

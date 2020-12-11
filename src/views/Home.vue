@@ -374,6 +374,30 @@ export default {
                 .on('click', (event) => {
                     const [x, y] = pointer(event);
 
+                    const halo = create('div')
+                        .style('position', 'absolute')
+                        .style('background', 'rgba(255, 255, 255, 0.5)')
+                        .style('border', '2px solid rgba(255, 255, 255, 1)')
+                        .style('border-radius', '50%')
+                        .style('width', '100px')
+                        .style('height', '100px')
+                        .style('transform', 'scale(0.25)')
+                        .style('top', `${pointer(event, document.body)[1] - 50}px`)
+                        .style('pointer-events', 'none')
+                        .style('user-select', 'none')
+                        .style('z-index', 1)
+                        .style('left', `${pointer(event, document.body)[0] - 50}px`)
+                        .style('opacity', 1);
+
+                    document.body.appendChild(halo.node());
+
+                    halo
+                        .transition()
+                        .duration(500)
+                        .style('transform', 'scale(1)')
+                        .style('opacity', 0)
+                        .remove();
+
                     const compWidth = Number.parseInt(
                         window.getComputedStyle(event.target).getPropertyValue('width'), 10,
                     );
@@ -911,6 +935,7 @@ export default {
     border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;
+    position: relative;
 
     &:hover {
         cursor: crosshair;
@@ -918,7 +943,6 @@ export default {
 }
 
 #virtual-canvas {
-    display: none;
     position: absolute;
 }
 
