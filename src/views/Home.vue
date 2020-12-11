@@ -365,7 +365,12 @@ export default {
 
             select(this.$el).select('#canvas')
                 .on('click', (e) => {
-                    console.log(pointer(e));
+                    const i = e.indexOf(e.currentTarget);
+                    const center = this.getPolygonCentroid(i);
+
+                    this.particales.push(center);
+
+                    this.update(this.particales);
                 });
         },
 
