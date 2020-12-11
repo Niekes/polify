@@ -224,6 +224,10 @@
             <canvas
                 id="canvas"
             />
+
+            <canvas
+                id="virtual-canvas"
+            />
         </div>
     </div>
 </template>
@@ -370,10 +374,23 @@ export default {
                 .on('click', (event) => {
                     const [x, y] = pointer(event);
 
+                    const compWidth = Number.parseInt(
+                        window.getComputedStyle(event.target).getPropertyValue('width'), 10,
+                    );
+
+                    const compHeight = Number.parseInt(
+                        window.getComputedStyle(event.target).getPropertyValue('height'), 10,
+                    );
+
                     const imageData = this.virtualCanvas
                         .node()
                         .getContext('2d')
-                        .getImageData(x, y, 1, 1);
+                        .getImageData(
+                            x / compWidth * +this.virtualCanvas.attr('width'),
+                            y / compHeight * +this.virtualCanvas.attr('height'),
+                            1,
+                            1,
+                        );
 
                     const c = rgb(...imageData.data).toString();
                     const d = this.colorDataMap.get(c);
@@ -821,6 +838,11 @@ export default {
     border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;
+}
+
+#virtual-canvas {
+    display: none;
+    position: absolute;
 }
 
 @media (max-width: $breakpoint-sm) {
