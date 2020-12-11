@@ -228,6 +228,7 @@ import {
 
 import InputRange from '@/components/InputRange';
 import BaseButton from '@/components/BaseButton';
+import canvasMixin from '@/mixins/canvas-mixin';
 import config from '@/config';
 
 export default {
@@ -237,6 +238,8 @@ export default {
         BaseButton,
         InputRange,
     },
+
+    mixins: [canvasMixin],
 
     data() {
         return {
@@ -514,19 +517,6 @@ export default {
                     fileReader.readAsDataURL(fileToLoad);
                 }
             });
-        },
-
-        setupCanvas(img) {
-            const canvasSelection = select(this.$el).select('#canvas');
-
-            canvasSelection.node().width = img.node().width * 2;
-            canvasSelection.node().height = img.node().height * 2;
-
-            this.canvasWidth = canvasSelection.node().width;
-            this.canvasHeight = canvasSelection.node().height;
-
-            this.ctx = canvasSelection.node().getContext('2d');
-            this.ctx.scale(2, 2);
         },
 
         setStrokeWidth() {

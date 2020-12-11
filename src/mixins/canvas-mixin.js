@@ -1,0 +1,20 @@
+import {
+    select,
+} from 'd3';
+
+export default {
+    methods: {
+        setupCanvas(img) {
+            const canvasSelection = select(this.$el).select('#canvas');
+
+            canvasSelection.node().width = img.node().width * 2;
+            canvasSelection.node().height = img.node().height * 2;
+
+            this.canvasWidth = canvasSelection.node().width;
+            this.canvasHeight = canvasSelection.node().height;
+
+            this.ctx = canvasSelection.node().getContext('2d');
+            this.ctx.scale(2, 2);
+        },
+    },
+};

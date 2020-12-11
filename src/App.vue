@@ -20,6 +20,7 @@
 <script>
 import { select, create } from 'd3';
 import axios from 'axios';
+import canvasMixin from '@/mixins/canvas-mixin';
 import Navigation from '@/components/Navigation';
 
 export default {
@@ -28,6 +29,8 @@ export default {
     components: {
         Navigation,
     },
+
+    mixins: [canvasMixin],
 
     data() {
         return {
@@ -76,16 +79,7 @@ export default {
                         this.$store.commit('canvas/setWidth', newImage.node().width);
                         this.$store.commit('canvas/setHeight', newImage.node().height);
 
-                        const canvasSelection = select(this.$el).select('#canvas');
-
-                        canvasSelection.node().width = newImage.node().width * 2;
-                        canvasSelection.node().height = newImage.node().height * 2;
-
-                        this.canvasWidth = canvasSelection.node().width;
-                        this.canvasHeight = canvasSelection.node().height;
-
-                        this.ctx = canvasSelection.node().getContext('2d');
-                        this.ctx.scale(2, 2);
+                        this.setupCanvas(newImage);
 
                         this.$nextTick(() => {
                             this.refCtx.drawImage(newImage.node(), 0, 0);
