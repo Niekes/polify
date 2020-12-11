@@ -911,6 +911,10 @@ export default {
     border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;
+
+    &:hover {
+        cursor: crosshair;
+    }
 }
 
 #virtual-canvas {
