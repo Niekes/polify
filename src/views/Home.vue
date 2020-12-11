@@ -274,7 +274,7 @@ export default {
             invert: false,
             grayscale: false,
             hintIsShwon: false,
-            shape: 'triangle',
+            shape: 'cell',
             radius: 2,
             canvasWidth: 0,
             canvasHeight: 0,
@@ -414,22 +414,11 @@ export default {
 
                     const c = rgb(...imageData.data).toString();
                     const index = this.colorDataMap.get(c);
-
                     const center = this.getPolygonCentroid(index);
 
                     this.particales.push(center);
-
                     this.update(this.particales);
-                });
-
-            select(this.$el).select('#canvas')
-                .on('mousemove', (event) => {
-                    const [x, y] = pointer(event);
-
-                    console.log(x, y);
-                });
-
-            select(this.$el).select('#canvas')
+                })
                 .on('mouseenter', (event) => {
                     if (this.isMobile) return;
 
@@ -477,7 +466,7 @@ export default {
                     const [x, y] = pointer(event, document.body);
 
                     select('#hint')
-                        .style('top', `${y - 65}px`)
+                        .style('top', `${y - 70}px`)
                         .style('left', `${x - 100}px`);
 
                     select('#centroid')
@@ -512,6 +501,7 @@ export default {
             const triangles = this.delaunay.trianglePolygons();
 
             this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -540,9 +530,12 @@ export default {
         },
 
         updateCells() {
+            this.colorDataMap.clear();
+
             const cells = this.voronoi.cellPolygons();
 
             this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -563,7 +556,7 @@ export default {
 
                 this.virtualContext.beginPath();
                 this.virtualContext.fillStyle = uniqueColor;
-                this.delaunay.renderTriangle(i, this.virtualContext);
+                this.voronoi.renderCell(i, this.virtualContext);
 
                 this.virtualContext.fill();
                 i += 1;
