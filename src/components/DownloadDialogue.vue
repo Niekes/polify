@@ -58,10 +58,6 @@ import {
     select,
 } from 'd3';
 
-import {
-    saveSvgAsPng,
-} from 'save-svg-as-png';
-
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
 import FlashMessageMixin from '@/mixins/flash-message-mixin';
@@ -121,7 +117,18 @@ export default {
         },
 
         downloadAsPng() {
-            saveSvgAsPng(select('#svg').node(), `polify-${new Date().toISOString()}.png`, { scale: 2 });
+            const a = document.createElement('a');
+
+            a.style.display = 'none';
+            a.href = select('#canvas').node().toDataURL('image/png;base64');
+
+            a.setAttribute('download', `polify-${new Date().toISOString()}.png`);
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
         },
 
         async sendImages() {
