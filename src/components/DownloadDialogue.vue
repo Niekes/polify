@@ -159,6 +159,12 @@ export default {
             document.body.removeChild(a);
 
             this.emptySvg();
+
+            this.$gtag.event('file_download', {
+                event_category: 'desktop',
+                event_label: 'download',
+                value: 'svg',
+            });
         },
 
         downloadAsPng() {
@@ -174,6 +180,12 @@ export default {
             a.click();
 
             document.body.removeChild(a);
+
+            this.$gtag.event('file_download', {
+                event_category: 'desktop',
+                event_label: 'download',
+                value: 'png',
+            });
         },
 
         async sendImages() {
@@ -197,6 +209,12 @@ export default {
                         this.recipient = '';
                         this.sendFlashMessage({
                             text: this.$t('downloadDialogue.imageSendSuccess', { recipient: this.sendImagesResponse.data.recipient }),
+                        });
+
+                        this.$gtag.event('file_download', {
+                            event_category: 'mobile',
+                            event_label: 'download',
+                            value: 'png|svg',
                         });
                     }
 
