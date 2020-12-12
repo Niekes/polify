@@ -61,6 +61,8 @@ import {
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
 import FlashMessageMixin from '@/mixins/flash-message-mixin';
+import colorMixin from '@/mixins/color-mixin';
+import canvasMixin from '@/mixins/canvas-mixin';
 
 import config from '@/config';
 
@@ -72,7 +74,7 @@ export default {
         Modal,
     },
 
-    mixins: [FlashMessageMixin],
+    mixins: [canvasMixin, colorMixin, FlashMessageMixin],
 
     data() {
         return {
@@ -89,14 +91,20 @@ export default {
         isEmailValid() {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.recipient);
         },
-        triangles() {
-            return this.$store.getters['canvas/triangles'];
+        delaunay() {
+            return this.$store.getters['canvas/delaunay'];
         },
-        cells() {
-            return this.$store.getters['canvas/cells'];
+        voronoi() {
+            return this.$store.getters['canvas/voronoi'];
         },
         shape() {
             return this.$store.state.shape.shape;
+        },
+        fillOpacity() {
+            return this.$store.state.canvas.fillOpacity;
+        },
+        strokeOpacity() {
+            return this.$store.state.canvas.strokeOpacity;
         },
     },
 
@@ -106,12 +114,25 @@ export default {
 
     methods: {
         downloadAsSvg() {
-            console.log(this.shape);
-            console.log(this.cells);
-            console.log(this.triangles);
+            const data = this.shape === 'cell'
+                ? this.voronoi.cellPolygons()
+                : this.delaunay.trianglePolygons();
 
-            /* eslint-disable */
-            return;
+            select('#svg')
+                .selectAll('path')
+                .data(data)
+                .enter()
+                .append('path')
+                .attr('fill', (d, i) => this.setColor(i, this.fillOpacity).toString())
+                .attr('stroke', (d, i) => this.setColor(i, this.strokeOpacity).toString())
+                .attr('stroke-width', 1)
+                .attr('d', (d, i) => {
+                    if (this.shape === 'cell') {
+                        return this.voronoi.renderCell(i);
+                    }
+
+                    return this.delaunay.renderTriangle(i);
+                });
 
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
@@ -130,6 +151,8 @@ export default {
             a.click();
 
             document.body.removeChild(a);
+
+            select('#svg').selectAll('path').remove();
         },
 
         downloadAsPng() {

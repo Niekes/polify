@@ -240,16 +240,14 @@ import {
     range,
     select,
     pointer,
-    color,
-    hsl,
     rgb,
-    polygonCentroid,
     randomInt,
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
 import BaseButton from '@/components/BaseButton';
 import canvasMixin from '@/mixins/canvas-mixin';
+import colorMixin from '@/mixins/color-mixin';
 import config from '@/config';
 
 const AMOUNT = 100;
@@ -262,19 +260,11 @@ export default {
         InputRange,
     },
 
-    mixins: [canvasMixin],
+    mixins: [colorMixin, canvasMixin],
 
     data() {
         return {
             amount: AMOUNT,
-            hue: 0,
-            contrast: 0,
-            saturation: 100,
-            lightness: 100,
-            fillOpacity: 100,
-            strokeOpacity: 100,
-            invert: false,
-            grayscale: false,
             hintIsShwon: false,
             radius: 2,
             canvasWidth: 0,
@@ -290,6 +280,70 @@ export default {
             },
             set(value) {
                 this.$store.commit('shape/set', value);
+            },
+        },
+        fillOpacity: {
+            get() {
+                return this.$store.state.canvas.fillOpacity;
+            },
+            set(value) {
+                this.$store.commit('canvas/setFillOpacity', value);
+            },
+        },
+        strokeOpacity: {
+            get() {
+                return this.$store.state.canvas.strokeOpacity;
+            },
+            set(value) {
+                this.$store.commit('canvas/setStrokeOpacity', value);
+            },
+        },
+        grayscale: {
+            get() {
+                return this.$store.state.canvas.grayscale;
+            },
+            set(value) {
+                this.$store.commit('canvas/setGrayscale', value);
+            },
+        },
+        invert: {
+            get() {
+                return this.$store.state.canvas.invert;
+            },
+            set(value) {
+                this.$store.commit('canvas/setInvert', value);
+            },
+        },
+        hue: {
+            get() {
+                return this.$store.state.canvas.hue;
+            },
+            set(value) {
+                this.$store.commit('canvas/setHue', value);
+            },
+        },
+        lightness: {
+            get() {
+                return this.$store.state.canvas.lightness;
+            },
+            set(value) {
+                this.$store.commit('canvas/setLightness', value);
+            },
+        },
+        contrast: {
+            get() {
+                return this.$store.state.canvas.contrast;
+            },
+            set(value) {
+                this.$store.commit('canvas/setContrast', value);
+            },
+        },
+        saturation: {
+            get() {
+                return this.$store.state.canvas.saturation;
+            },
+            set(value) {
+                this.$store.commit('canvas/setSaturation', value);
             },
         },
         isMobile() {
@@ -378,8 +432,8 @@ export default {
                 this.updateCells();
             }
 
-            this.$store.commit('canvas/setTriangles', this.delaunay.trianglePolygons());
-            this.$store.commit('canvas/setCells', this.voronoi.cellPolygons());
+            this.$store.commit('canvas/setVoronoi', this.voronoi);
+            this.$store.commit('canvas/setDelaunay', this.delaunay);
 
             select(this.$el).select('#canvas')
                 .on('click', (event) => {
@@ -587,71 +641,6 @@ export default {
             if (this.shape === 'cell') {
                 this.updateCells();
             }
-        },
-
-        setColor(i, opacity) {
-            const [x, y] = this.getPolygonCentroid(i);
-            const pixel = this.getPixel(x, y);
-            const colorHsl = pixel[3] === 0
-                ? hsl(0, 0, 1)
-                : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
-
-            const c = (this.contrast / 100) + 1;
-            const intercept = 128 * (1 - c);
-
-            colorHsl.h += this.hue;
-            colorHsl.s *= this.saturation / 100;
-            colorHsl.l *= this.lightness / 100;
-            colorHsl.opacity = opacity / 100;
-
-            const rgbColor = colorHsl.rgb();
-
-            rgbColor.r = rgbColor.r * c + intercept;
-            rgbColor.g = rgbColor.g * c + intercept;
-            rgbColor.b = rgbColor.b * c + intercept;
-
-            if (this.invert) {
-                rgbColor.r = 255 - rgbColor.r;
-                rgbColor.g = 255 - rgbColor.g;
-                rgbColor.b = 255 - rgbColor.b;
-            }
-
-            if (this.grayscale) {
-                const gs = (rgbColor.r + rgbColor.g + rgbColor.b) / 3;
-                rgbColor.r = gs;
-                rgbColor.g = gs;
-                rgbColor.b = gs;
-            }
-
-            return rgbColor;
-        },
-
-        getUniqueColorByInt(index) {
-            return rgb(
-                // eslint-disable-next-line no-bitwise
-                (index & 0b111111110000000000000000) >> 16,
-                // eslint-disable-next-line no-bitwise
-                (index & 0b000000001111111100000000) >> 8,
-                // eslint-disable-next-line no-bitwise
-                (index & 0b000000000000000011111111),
-            )
-                .toString();
-        },
-
-        getPixel(x, y) {
-            try {
-                return this.refCtx.getImageData(x, y, 1, 1).data;
-            } catch (e) {
-                return [0, 0, 0, 1];
-            }
-        },
-
-        getPolygonCentroid(i) {
-            if (this.shape === 'cell') {
-                return polygonCentroid(this.voronoi.cellPolygon(i));
-            }
-
-            return polygonCentroid(this.delaunay.trianglePolygon(i));
         },
 
         upload() {

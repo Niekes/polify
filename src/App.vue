@@ -7,6 +7,14 @@
     >
         <navigation />
         <router-view />
+        <svg
+            id="svg"
+            :viewBox="viewBox"
+            preserveAspectRatio="xMidYMin"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+        />
         <div
             :class="{
                 'drop-it--show': showDropItOverlay === true,
@@ -37,6 +45,19 @@ export default {
             isMobileReponse: null,
             showDropItOverlay: false,
         };
+    },
+
+    computed: {
+        height() {
+            return this.$store.getters['canvas/height'];
+        },
+
+        width() {
+            return this.$store.getters['canvas/width'];
+        },
+        viewBox() {
+            return `0 0 ${this.width} ${this.height}`;
+        },
     },
 
     async created() {
@@ -133,6 +154,17 @@ body {
 #app {
     padding: 0;
     position: relative;
+}
+
+#svg {
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -$z-index-popover;
 }
 
 .drop-it {

@@ -5,8 +5,16 @@ const s = {
     ctx: null,
     height: 0,
     width: 0,
-    triangles: 0,
-    cells: 0,
+    delaunay: null,
+    voronoi: null,
+    fillOpacity: 100,
+    strokeOpacity: 100,
+    grayscale: false,
+    invert: false,
+    hue: 0,
+    contrast: 0,
+    saturation: 100,
+    lightness: 100,
 };
 
 /*
@@ -16,8 +24,8 @@ const getters = {
     ctx: state => state.ctx,
     height: state => state.height,
     width: state => state.width,
-    triangles: state => state.triangles,
-    cells: state => state.cells,
+    delaunay: state => state.delaunay,
+    voronoi: state => state.voronoi,
 };
 
 /*
@@ -40,14 +48,54 @@ const mutations = {
         state.height = height;
     },
 
-    setTriangles: (st, triangles) => {
+    setDelaunay: (st, delaunay) => {
         const state = st;
-        state.triangles = triangles;
+        state.delaunay = delaunay;
     },
 
-    setCells: (st, cells) => {
+    setVoronoi: (st, voronoi) => {
         const state = st;
-        state.cells = cells;
+        state.voronoi = voronoi;
+    },
+
+    setFillOpacity: (st, opacity) => {
+        const state = st;
+        state.fillOpacity = opacity;
+    },
+
+    setStrokeOpacity: (st, opacity) => {
+        const state = st;
+        state.strokeOpacity = opacity;
+    },
+
+    setGrayscale: (st, grayscale) => {
+        const state = st;
+        state.grayscale = grayscale;
+    },
+
+    setInvert: (st, invert) => {
+        const state = st;
+        state.invert = invert;
+    },
+
+    setHue: (st, hue) => {
+        const state = st;
+        state.hue = hue;
+    },
+
+    setLightness: (st, lightness) => {
+        const state = st;
+        state.lightness = lightness;
+    },
+
+    setContrast: (st, contrast) => {
+        const state = st;
+        state.contrast = contrast;
+    },
+
+    setSaturation: (st, saturation) => {
+        const state = st;
+        state.saturation = saturation;
     },
 
 };

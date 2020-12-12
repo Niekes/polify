@@ -103,7 +103,9 @@ export default {
 
 .navigation__bg {
     height: 100%;
+    pointer-events: none;
     position: absolute;
+    user-select: none;
     width: 100%;
     z-index: 1;
 }

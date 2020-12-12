@@ -1,6 +1,7 @@
 import {
     create,
     select,
+    polygonCentroid,
 } from 'd3';
 
 export default {
@@ -24,6 +25,20 @@ export default {
 
             this.virtualContext = this.virtualCanvas.node().getContext('2d');
             this.virtualContext.scale(2, 2);
+        },
+        getPolygonCentroid(i) {
+            if (this.shape === 'cell') {
+                return polygonCentroid(this.voronoi.cellPolygon(i));
+            }
+
+            return polygonCentroid(this.delaunay.trianglePolygon(i));
+        },
+        getPixel(x, y) {
+            try {
+                return select('#reference-image__canvas').node().getContext('2d').getImageData(x, y, 1, 1).data;
+            } catch (e) {
+                return [0, 0, 0, 1];
+            }
         },
     },
 };
