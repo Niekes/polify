@@ -113,7 +113,7 @@ export default {
     },
 
     methods: {
-        downloadAsSvg() {
+        createSvg() {
             const data = this.shape === 'cell'
                 ? this.voronoi.cellPolygons()
                 : this.delaunay.trianglePolygons();
@@ -133,6 +133,12 @@ export default {
 
                     return this.delaunay.renderTriangle(i);
                 });
+        },
+        emptySvg() {
+            select('#svg').selectAll('path').remove();
+        },
+        downloadAsSvg() {
+            this.createSvg();
 
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
@@ -152,7 +158,7 @@ export default {
 
             document.body.removeChild(a);
 
-            select('#svg').selectAll('path').remove();
+            this.emptySvg();
         },
 
         downloadAsPng() {
@@ -173,6 +179,7 @@ export default {
         async sendImages() {
             if (this.isEmailValid) {
                 this.isLoading = true;
+                this.createSvg();
 
                 try {
                     this.sendImagesResponse = await axios({
@@ -200,6 +207,7 @@ export default {
                     }
 
                     this.isLoading = false;
+                    this.emptySvg();
                 }
             }
         },
