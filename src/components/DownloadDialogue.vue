@@ -13,24 +13,6 @@
                 />
             </div>
             <div
-                v-if="!isMobile"
-                class="download-dialogue__control"
-            >
-                <base-button
-                    class="control__button"
-                    :variant="2"
-                    :text="$t('downloadDialogue.downloadAsPng')"
-                    @click.native="downloadAsPng"
-                />
-                <base-button
-                    class="control__button"
-                    :variant="2"
-                    :text="$t('downloadDialogue.downloadAsSvg')"
-                    @click.native="downloadAsSvg"
-                />
-            </div>
-            <div
-                v-if="isMobile"
                 class="download-dialogue__control--mobile"
             >
                 <input
@@ -137,56 +119,6 @@ export default {
         emptySvg() {
             select('#svg').selectAll('path').remove();
         },
-        downloadAsSvg() {
-            this.createSvg();
-
-            let source = new XMLSerializer().serializeToString(select('#svg').node());
-
-            source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;
-
-            const image = `data:image/svg+xml;charset=utf-8,${window.encodeURIComponent(source)}`;
-            const a = document.createElement('a');
-
-            a.style.display = 'none';
-            a.href = image;
-
-            a.setAttribute('download', `polify-${new Date().toISOString()}.svg`);
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            document.body.removeChild(a);
-
-            this.emptySvg();
-
-            this.$gtag.event('download', {
-                event_category: 'desktop',
-                event_label: 'download',
-                value: 'svg',
-            });
-        },
-
-        downloadAsPng() {
-            const a = document.createElement('a');
-
-            a.style.display = 'none';
-            a.href = select('#canvas').node().toDataURL('image/png;base64');
-
-            a.setAttribute('download', `polify-${new Date().toISOString()}.png`);
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            document.body.removeChild(a);
-
-            this.$gtag.event('download', {
-                event_category: 'desktop',
-                event_label: 'download',
-                value: 'png',
-            });
-        },
 
         async sendImages() {
             if (this.isEmailValid) {
@@ -212,7 +144,7 @@ export default {
                         });
 
                         this.$gtag.event('download', {
-                            event_category: 'mobile',
+                            event_category: this.isMobile ? 'mobile' : 'desktop',
                             event_label: 'download',
                             value: 'png|svg',
                         });
