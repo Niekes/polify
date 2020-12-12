@@ -145,7 +145,7 @@ export default {
 
                         this.$gtag.event('download', {
                             event_category: this.isMobile ? 'mobile' : 'desktop',
-                            event_label: 'download',
+                            event_label: 'success',
                             value: 'png|svg',
                         });
                     }
@@ -153,6 +153,12 @@ export default {
                     if (this.sendImagesResponse.status !== 201) {
                         this.sendFlashMessage({
                             text: this.$t('downloadDialogue.imageSendError'),
+                        });
+
+                        this.$gtag.event('download', {
+                            event_category: this.isMobile ? 'mobile' : 'desktop',
+                            event_label: 'error',
+                            value: 'png|svg',
                         });
                     }
 
