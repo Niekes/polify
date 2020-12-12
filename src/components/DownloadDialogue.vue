@@ -160,7 +160,7 @@ export default {
 
             this.emptySvg();
 
-            this.$gtag.event('file_download', {
+            this.$gtag.event('download', {
                 event_category: 'desktop',
                 event_label: 'download',
                 value: 'svg',
@@ -181,7 +181,7 @@ export default {
 
             document.body.removeChild(a);
 
-            this.$gtag.event('file_download', {
+            this.$gtag.event('download', {
                 event_category: 'desktop',
                 event_label: 'download',
                 value: 'png',
@@ -211,7 +211,7 @@ export default {
                             text: this.$t('downloadDialogue.imageSendSuccess', { recipient: this.sendImagesResponse.data.recipient }),
                         });
 
-                        this.$gtag.event('file_download', {
+                        this.$gtag.event('download', {
                             event_category: 'mobile',
                             event_label: 'download',
                             value: 'png|svg',
