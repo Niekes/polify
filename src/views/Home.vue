@@ -225,6 +225,11 @@
         >
             <canvas
                 id="canvas"
+                @contextmenu.prevent.stop
+                @click="addPoint"
+                @mouseenter="createHalo"
+                @mousemove="offsetHalo"
+                @mouseleave="removeHalo"
             />
         </div>
     </div>
@@ -439,134 +444,18 @@ export default {
             this.$store.commit('canvas/setDelaunay', this.delaunay);
 
             this.updateVirtualCanvas();
-
-            select(this.$el).select('#canvas')
-                .on('click', (event) => {
-                    const [docX, docY] = pointer(event, document.body);
-                    const [x, y] = pointer(event);
-
-                    const halo = create('div')
-                        .style('position', 'absolute')
-                        .style('background', 'rgba(255, 255, 255, 0.5)')
-                        .style('border', '2px solid rgba(255, 255, 255, 1)')
-                        .style('border-radius', '50%')
-                        .style('width', '100px')
-                        .style('height', '100px')
-                        .style('transform', 'scale(0.25)')
-                        .style('left', `${docX - 50}px`)
-                        .style('top', `${docY - 50}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('z-index', 1)
-                        .style('opacity', 1);
-
-                    document.body.appendChild(halo.node());
-
-                    halo
-                        .transition()
-                        .duration(500)
-                        .style('transform', 'scale(1)')
-                        .style('opacity', 0)
-                        .remove();
-
-                    const compWidth = Number.parseInt(
-                        window.getComputedStyle(event.target).getPropertyValue('width'), 10,
-                    );
-
-                    const compHeight = Number.parseInt(
-                        window.getComputedStyle(event.target).getPropertyValue('height'), 10,
-                    );
-
-                    const imageData = this.virtualCanvas
-                        .node()
-                        .getContext('2d')
-                        .getImageData(
-                            x / compWidth * +this.virtualCanvas.attr('width'),
-                            y / compHeight * +this.virtualCanvas.attr('height'),
-                            1,
-                            1,
-                        );
-
-                    const c = rgb(...imageData.data).toString();
-                    const index = this.colorDataMap.get(c);
-                    const center = this.getPolygonCentroid(index);
-
-                    this.particales.push(center);
-                    this.update(this.particales);
-                })
-                .on('mouseenter', (event) => {
-                    if (this.isMobile) return;
-
-                    const [x, y] = pointer(event, document.body);
-
-                    const hint = create('div')
-                        .attr('id', 'hint')
-                        .style('position', 'absolute')
-                        .style('color', 'white')
-                        .style('font-family', 'monospace')
-                        .style('font-size', '0.8rem')
-                        .style('font-weight', 'bolder')
-                        .style('width', 'auto')
-                        .style('height', 'auto')
-                        .style('top', `${y - 65}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('text-shadow', '-1px -1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5), -1px 1px 1px rgba(0, 0, 0, 0.5), 1px -1px 1px rgba(0, 0, 0, 0.5)')
-                        .style('z-index', 1)
-                        .style('left', `${x - 100}px`)
-                        .style('opacity', 1)
-                        .html(this.$t('home.mouseoverHint'));
-
-                    const centroid = create('div')
-                        .attr('id', 'centroid')
-                        .style('position', 'absolute')
-                        .style('background', 'rgba(255, 255, 255, 0.05)')
-                        .style('border', '1px solid rgba(0, 0, 0, 0.5)')
-                        .style('border-radius', '50%')
-                        .style('width', '100px')
-                        .style('height', '100px')
-                        .style('transform', 'scale(0.5)')
-                        .style('top', `${y - 50}px`)
-                        .style('pointer-events', 'none')
-                        .style('user-select', 'none')
-                        .style('z-index', 1)
-                        .style('left', `${x - 50}px`)
-                        .style('opacity', 1);
-
-                    document.body.appendChild(centroid.node());
-                    document.body.appendChild(hint.node());
-                })
-                .on('mousemove', (event) => {
-                    if (this.isMobile) return;
-
-                    const [docX, docY] = pointer(event, document.body);
-
-                    select('#hint')
-                        .style('top', `${docY - 70}px`)
-                        .style('left', `${docX - 100}px`);
-
-                    select('#centroid')
-                        .style('top', `${docY - 50}px`)
-                        .style('left', `${docX - 50}px`);
-                })
-                .on('mouseleave', () => {
-                    if (this.isMobile) return;
-
-                    select('#hint').remove();
-                    select('#centroid').remove();
-                });
         },
 
         updateThrottle: throttle(function _() {
             this.update();
-        }, 250, {
+        }, 350, {
             leading: true,
             trailing: true,
         }),
 
         changeColorThrottle: throttle(function _() {
             this.changeColor();
-        }, 250, {
+        }, 350, {
             leading: true,
             trailing: true,
         }),
@@ -701,6 +590,123 @@ export default {
                     fileReader.readAsDataURL(fileToLoad);
                 }
             });
+        },
+
+        addPoint(event) {
+            const [docX, docY] = pointer(event, document.body);
+            const [x, y] = pointer(event);
+
+            const halo = create('div')
+                .style('position', 'absolute')
+                .style('background', 'rgba(255, 255, 255, 0.5)')
+                .style('border', '2px solid rgba(255, 255, 255, 1)')
+                .style('border-radius', '50%')
+                .style('width', '100px')
+                .style('height', '100px')
+                .style('transform', 'scale(0.25)')
+                .style('left', `${docX - 50}px`)
+                .style('top', `${docY - 50}px`)
+                .style('pointer-events', 'none')
+                .style('user-select', 'none')
+                .style('z-index', 1)
+                .style('opacity', 1);
+
+            document.body.appendChild(halo.node());
+
+            halo
+                .transition()
+                .duration(500)
+                .style('transform', 'scale(1)')
+                .style('opacity', 0)
+                .remove();
+
+            const compWidth = Number.parseInt(
+                window.getComputedStyle(event.target).getPropertyValue('width'), 10,
+            );
+
+            const compHeight = Number.parseInt(
+                window.getComputedStyle(event.target).getPropertyValue('height'), 10,
+            );
+
+            const imageData = this.virtualCanvas
+                .node()
+                .getContext('2d')
+                .getImageData(
+                    x / compWidth * +this.virtualCanvas.attr('width'),
+                    y / compHeight * +this.virtualCanvas.attr('height'),
+                    1,
+                    1,
+                );
+
+            const c = rgb(...imageData.data).toString();
+            const index = this.colorDataMap.get(c);
+            const center = this.getPolygonCentroid(index);
+
+            this.particales.push(center);
+            this.update(this.particales);
+        },
+
+        createHalo(event) {
+            if (this.isMobile) return;
+
+            const [x, y] = pointer(event, document.body);
+
+            const hint = create('div')
+                .attr('id', 'hint')
+                .style('position', 'absolute')
+                .style('color', 'white')
+                .style('font-family', 'monospace')
+                .style('font-size', '0.8rem')
+                .style('font-weight', 'bolder')
+                .style('width', 'auto')
+                .style('height', 'auto')
+                .style('top', `${y - 65}px`)
+                .style('pointer-events', 'none')
+                .style('user-select', 'none')
+                .style('text-shadow', '-1px -1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5), -1px 1px 1px rgba(0, 0, 0, 0.5), 1px -1px 1px rgba(0, 0, 0, 0.5)')
+                .style('z-index', 1)
+                .style('left', `${x - 100}px`)
+                .style('opacity', 1)
+                .html(this.$t('home.mouseoverHint'));
+
+            const centroid = create('div')
+                .attr('id', 'centroid')
+                .style('position', 'absolute')
+                .style('background', 'rgba(255, 255, 255, 0.05)')
+                .style('border', '1px solid rgba(0, 0, 0, 0.5)')
+                .style('border-radius', '50%')
+                .style('width', '100px')
+                .style('height', '100px')
+                .style('transform', 'scale(0.5)')
+                .style('top', `${y - 50}px`)
+                .style('pointer-events', 'none')
+                .style('user-select', 'none')
+                .style('z-index', 1)
+                .style('left', `${x - 50}px`)
+                .style('opacity', 1);
+
+            document.body.appendChild(centroid.node());
+            document.body.appendChild(hint.node());
+        },
+
+        offsetHalo(event) {
+            if (this.isMobile) return;
+
+            const [docX, docY] = pointer(event, document.body);
+
+            select('#hint')
+                .style('top', `${docY - 70}px`)
+                .style('left', `${docX - 100}px`);
+
+            select('#centroid')
+                .style('top', `${docY - 50}px`)
+                .style('left', `${docX - 50}px`);
+        },
+        removeHalo() {
+            if (this.isMobile) return;
+
+            select('#hint').remove();
+            select('#centroid').remove();
         },
 
         reset() {
