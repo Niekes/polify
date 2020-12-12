@@ -89,6 +89,15 @@ export default {
         isEmailValid() {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.recipient);
         },
+        triangles() {
+            return this.$store.getters['canvas/triangles'];
+        },
+        cells() {
+            return this.$store.getters['canvas/cells'];
+        },
+        shape() {
+            return this.$store.state.shape.shape;
+        },
     },
 
     created() {
@@ -97,6 +106,13 @@ export default {
 
     methods: {
         downloadAsSvg() {
+            console.log(this.shape);
+            console.log(this.cells);
+            console.log(this.triangles);
+
+            /* eslint-disable */
+            return;
+
             let source = new XMLSerializer().serializeToString(select('#svg').node());
 
             source = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n${source}`;

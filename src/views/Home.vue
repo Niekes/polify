@@ -182,7 +182,7 @@
                 <base-button
                     class="reset-btn"
                     :icon="'#reset'"
-                    :disabled="!(amount !== 100
+                    :disabled="!(amount !== AMOUNT
                         || invert !== false
                         || grayscale !== false
                         || hue !== 0
@@ -252,6 +252,8 @@ import BaseButton from '@/components/BaseButton';
 import canvasMixin from '@/mixins/canvas-mixin';
 import config from '@/config';
 
+const AMOUNT = 100;
+
 export default {
     name: 'Home',
 
@@ -264,7 +266,7 @@ export default {
 
     data() {
         return {
-            amount: 100,
+            amount: AMOUNT,
             hue: 0,
             contrast: 0,
             saturation: 100,
@@ -274,7 +276,6 @@ export default {
             invert: false,
             grayscale: false,
             hintIsShwon: false,
-            shape: 'triangle',
             radius: 2,
             canvasWidth: 0,
             canvasHeight: 0,
@@ -283,6 +284,14 @@ export default {
     },
 
     computed: {
+        shape: {
+            get() {
+                return this.$store.state.shape.shape;
+            },
+            set(value) {
+                this.$store.commit('shape/set', value);
+            },
+        },
         isMobile() {
             return this.$store.getters['mobile/isMobile'];
         },
@@ -302,7 +311,10 @@ export default {
         referenceImages() {
             return config.images;
         },
+    },
 
+    created() {
+        this.AMOUNT = AMOUNT;
     },
 
     mounted() {
@@ -366,8 +378,12 @@ export default {
                 this.updateCells();
             }
 
+            this.$store.commit('canvas/setTriangles', this.delaunay.trianglePolygons());
+            this.$store.commit('canvas/setCells', this.voronoi.cellPolygons());
+
             select(this.$el).select('#canvas')
                 .on('click', (event) => {
+                    const [docX, docY] = pointer(event, document.body);
                     const [x, y] = pointer(event);
 
                     const halo = create('div')
@@ -378,11 +394,11 @@ export default {
                         .style('width', '100px')
                         .style('height', '100px')
                         .style('transform', 'scale(0.25)')
-                        .style('top', `${pointer(event, document.body)[1] - 50}px`)
+                        .style('left', `${docX - 50}px`)
+                        .style('top', `${docY - 50}px`)
                         .style('pointer-events', 'none')
                         .style('user-select', 'none')
                         .style('z-index', 1)
-                        .style('left', `${pointer(event, document.body)[0] - 50}px`)
                         .style('opacity', 1);
 
                     document.body.appendChild(halo.node());
@@ -463,15 +479,15 @@ export default {
                 .on('mousemove', (event) => {
                     if (this.isMobile) return;
 
-                    const [x, y] = pointer(event, document.body);
+                    const [docX, docY] = pointer(event, document.body);
 
                     select('#hint')
-                        .style('top', `${y - 70}px`)
-                        .style('left', `${x - 100}px`);
+                        .style('top', `${docY - 70}px`)
+                        .style('left', `${docX - 100}px`);
 
                     select('#centroid')
-                        .style('top', `${y - 50}px`)
-                        .style('left', `${x - 50}px`);
+                        .style('top', `${docY - 50}px`)
+                        .style('left', `${docX - 50}px`);
                 })
                 .on('mouseleave', () => {
                     if (this.isMobile) return;
@@ -678,10 +694,6 @@ export default {
             });
         },
 
-        setStrokeWidth() {
-            return 1;
-        },
-
         reset() {
             this.resetAmount();
             this.resetHue();
@@ -696,7 +708,7 @@ export default {
         },
 
         resetAmount() {
-            this.amount = 100;
+            this.amount = this.AMOUNT;
         },
 
         resetHue() {
