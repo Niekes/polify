@@ -274,7 +274,7 @@ export default {
             invert: false,
             grayscale: false,
             hintIsShwon: false,
-            shape: 'cell',
+            shape: 'triangle',
             radius: 2,
             canvasWidth: 0,
             canvasHeight: 0,

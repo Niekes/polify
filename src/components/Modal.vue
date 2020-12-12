@@ -85,7 +85,7 @@ export default {
 .modal__container {
     background: $white;
     border-radius: $border-radius;
-    box-shadow: 0 -50px 20px 30px $black-20;
+    box-shadow: 0 0 20px 30px $black-10;
     cursor: default;
     display: grid;
     gap: $margin-y * 2 0;
