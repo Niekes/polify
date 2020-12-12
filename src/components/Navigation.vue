@@ -2,7 +2,7 @@
     <div class="navigation">
         <svg-icon
             class="navigation__bg"
-            :xlink="'#navigation-bg'"
+            :xlink="'#pattern'"
         />
 
         <svg-icon

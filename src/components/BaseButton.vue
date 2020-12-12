@@ -75,15 +75,9 @@ export default {
     }
 
     &--variant-2 {
-        background:
-            linear-gradient(
-                90deg,
-                $primary 0%,
-                $tertiary 50%,
-                $primary 100%,
-            );
+        background: url('~@/assets/svg/pattern.svg') no-repeat;
         background-position: center center;
-        background-size: 100%;
+        background-size: 150%;
         border: $border-width * 2 solid $white-20;
         border-radius: $border-radius;
         box-shadow: $box-shadow;
@@ -104,7 +98,7 @@ export default {
             text-shadow $transition-duration $transition-timing-function;
 
         &:hover {
-            background-size: 110%;
+            background-size: 175%;
             text-shadow:
                 2px 2px 3px $black-40,
                 -2px -2px 3px $black-40,
