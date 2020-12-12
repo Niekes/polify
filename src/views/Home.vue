@@ -939,7 +939,7 @@ export default {
         grid-template-areas: "context" "control";
         grid-template-columns: 1fr;
         grid-template-rows: min-content minmax(0, 1fr);
-        min-height: calc(100% - 80px);
+        min-height: calc(100% - 74px);
     }
 
     .context {
@@ -949,6 +949,7 @@ export default {
     }
 
     #canvas {
+        max-height: 90%;
         max-width: 100%;
     }
 }

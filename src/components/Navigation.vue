@@ -12,7 +12,6 @@
         />
 
         <div
-            v-if="!isMobile"
             class="navigation__items"
         >
             <router-link
@@ -92,7 +91,6 @@ export default {
     background-size: 100%, 100%;
     box-shadow: $box-shadow;
     display: grid;
-    grid-area: navigation;
     grid-template-areas: "logo items";
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
@@ -127,21 +125,41 @@ export default {
     justify-content: flex-end;
     z-index: 2;
 
-    .item__link,
-    .item__sponsor {
-        margin-left: $margin-x * 2;
-        text-shadow: $text-shadow;
-    }
-
     .item__link {
         color: $white-80;
         font-size: $font-size * 0.75;
         text-decoration: none;
+        text-shadow: $text-shadow;
+
+        &:not(:first-child) {
+            margin-left: $margin-x * 2;
+        }
     }
 
     .item__sponsor {
         color: $white;
         font-weight: bolder;
+        margin-left: $margin-x * 2;
+        text-shadow: $text-shadow;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .navigation {
+        grid-gap: $margin-y 0;
+        grid-template-areas: "logo" "items";
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr min-content;
+        padding: $padding-y $padding-x;
+    }
+
+    .navigation__logo {
+        height: 2rem;
+        width: 12rem;
+    }
+
+    .navigation__items {
+        justify-content: flex-start;
     }
 }
 </style>
