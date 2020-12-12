@@ -21,7 +21,9 @@
                     :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
                     @dblclick.native="resetAmount(); update()"
-                    @input.native="amount > throttleThreshold ? updateThrottle() : update()"
+                    @input.native="amount > throttleThreshold
+                        ? updateThrottle()
+                        : update()"
                 />
 
                 <input-range
@@ -232,6 +234,7 @@
 import { Delaunay } from 'd3-delaunay';
 
 import {
+    debounce,
     throttle,
 } from 'lodash';
 
@@ -435,6 +438,8 @@ export default {
             this.$store.commit('canvas/setVoronoi', this.voronoi);
             this.$store.commit('canvas/setDelaunay', this.delaunay);
 
+            this.updateVirtualCanvas();
+
             select(this.$el).select('#canvas')
                 .on('click', (event) => {
                     const [docX, docY] = pointer(event, document.body);
@@ -567,12 +572,9 @@ export default {
         }),
 
         updateTriangles() {
-            this.colorDataMap.clear();
-
             const triangles = this.delaunay.trianglePolygons();
 
             this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -583,30 +585,14 @@ export default {
                 this.delaunay.renderTriangle(i, this.ctx);
                 this.ctx.fill();
                 this.ctx.stroke();
-
-                /*
-                    Draw to virtual context
-                */
-                const uniqueColor = this.getUniqueColorByInt(i);
-
-                this.colorDataMap.set(uniqueColor, i);
-
-                this.virtualContext.beginPath();
-                this.virtualContext.fillStyle = uniqueColor;
-                this.delaunay.renderTriangle(i, this.virtualContext);
-
-                this.virtualContext.fill();
                 i += 1;
             }
         },
 
         updateCells() {
-            this.colorDataMap.clear();
-
             const cells = this.voronoi.cellPolygons();
 
             this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -617,22 +603,55 @@ export default {
                 this.voronoi.renderCell(i, this.ctx);
                 this.ctx.stroke();
                 this.ctx.fill();
-
-                /*
-                    Draw to virtual context
-                */
-                const uniqueColor = this.getUniqueColorByInt(i);
-
-                this.colorDataMap.set(uniqueColor, i);
-
-                this.virtualContext.beginPath();
-                this.virtualContext.fillStyle = uniqueColor;
-                this.voronoi.renderCell(i, this.virtualContext);
-
-                this.virtualContext.fill();
                 i += 1;
             }
         },
+
+        updateVirtualCanvas: debounce(function _() {
+            this.colorDataMap.clear();
+
+            if (this.shape === 'cell') {
+                const cells = this.voronoi.cellPolygons();
+
+                this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+                let i = 0;
+                // eslint-disable-next-line no-restricted-syntax, no-unused-vars
+                for (const cell of cells) {
+                    const uniqueColor = this.getUniqueColorByInt(i);
+
+                    this.colorDataMap.set(uniqueColor, i);
+
+                    this.virtualContext.beginPath();
+                    this.virtualContext.fillStyle = uniqueColor;
+                    this.voronoi.renderCell(i, this.virtualContext);
+
+                    this.virtualContext.fill();
+                    i += 1;
+                }
+            }
+
+            if (this.shape === 'triangle') {
+                const triangles = this.delaunay.trianglePolygons();
+
+                this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+                let i = 0;
+                // eslint-disable-next-line no-restricted-syntax, no-unused-vars
+                for (const triangle of triangles) {
+                    const uniqueColor = this.getUniqueColorByInt(i);
+
+                    this.colorDataMap.set(uniqueColor, i);
+
+                    this.virtualContext.beginPath();
+                    this.virtualContext.fillStyle = uniqueColor;
+                    this.delaunay.renderTriangle(i, this.virtualContext);
+
+                    this.virtualContext.fill();
+                    i += 1;
+                }
+            }
+        }, 500),
 
         changeColor() {
             if (this.shape === 'triangle') {
