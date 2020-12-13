@@ -100,7 +100,8 @@ export default {
                         this.$store.commit('canvas/setWidth', newImage.node().width);
                         this.$store.commit('canvas/setHeight', newImage.node().height);
 
-                        this.setupCanvas(newImage);
+                        this.setupCanvas();
+                        this.updateVirtualCanvas();
 
                         this.$nextTick(() => {
                             this.refCtx.drawImage(newImage.node(), 0, 0);

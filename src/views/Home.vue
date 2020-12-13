@@ -275,8 +275,6 @@ export default {
             amount: AMOUNT,
             hintIsShwon: false,
             radius: 2,
-            canvasWidth: 0,
-            canvasHeight: 0,
             virtualCanvas: null,
         };
     },
@@ -397,7 +395,8 @@ export default {
                 this.$store.commit('canvas/setWidth', newImage.node().width);
                 this.$store.commit('canvas/setHeight', newImage.node().height);
 
-                this.setupCanvas(newImage);
+                this.setupCanvas();
+                this.updateVirtualCanvas();
 
                 this.$nextTick(() => {
                     this.refCtx.drawImage(newImage.node(), 0, 0);
@@ -463,7 +462,7 @@ export default {
         updateTriangles() {
             const triangles = this.delaunay.trianglePolygons();
 
-            this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.ctx.clearRect(0, 0, this.width * 2, this.height * 2);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -481,7 +480,7 @@ export default {
         updateCells() {
             const cells = this.voronoi.cellPolygons();
 
-            this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.ctx.clearRect(0, 0, this.width * 2, this.height * 2);
 
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
@@ -495,52 +494,6 @@ export default {
                 i += 1;
             }
         },
-
-        updateVirtualCanvas: debounce(function _() {
-            this.colorDataMap.clear();
-
-            if (this.shape === 'cell') {
-                const cells = this.voronoi.cellPolygons();
-
-                this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-                let i = 0;
-                // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-                for (const cell of cells) {
-                    const uniqueColor = this.getUniqueColorByInt(i);
-
-                    this.colorDataMap.set(uniqueColor, i);
-
-                    this.virtualContext.beginPath();
-                    this.virtualContext.fillStyle = uniqueColor;
-                    this.voronoi.renderCell(i, this.virtualContext);
-
-                    this.virtualContext.fill();
-                    i += 1;
-                }
-            }
-
-            if (this.shape === 'triangle') {
-                const triangles = this.delaunay.trianglePolygons();
-
-                this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-                let i = 0;
-                // eslint-disable-next-line no-restricted-syntax, no-unused-vars
-                for (const triangle of triangles) {
-                    const uniqueColor = this.getUniqueColorByInt(i);
-
-                    this.colorDataMap.set(uniqueColor, i);
-
-                    this.virtualContext.beginPath();
-                    this.virtualContext.fillStyle = uniqueColor;
-                    this.delaunay.renderTriangle(i, this.virtualContext);
-
-                    this.virtualContext.fill();
-                    i += 1;
-                }
-            }
-        }, 500),
 
         changeColor() {
             if (this.shape === 'triangle') {
@@ -574,7 +527,8 @@ export default {
                             this.$store.commit('canvas/setWidth', newImage.node().width);
                             this.$store.commit('canvas/setHeight', newImage.node().height);
 
-                            this.setupCanvas(newImage);
+                            this.setupCanvas();
+                            this.updateVirtualCanvas();
 
                             this.$nextTick(() => {
                                 this.refCtx.drawImage(newImage.node(), 0, 0);
@@ -627,6 +581,9 @@ export default {
             const compHeight = Number.parseInt(
                 window.getComputedStyle(event.target).getPropertyValue('height'), 10,
             );
+
+            console.log(x / compWidth * +this.virtualCanvas.attr('width'));
+            console.log(y / compHeight * +this.virtualCanvas.attr('height'));
 
             const imageData = this.virtualCanvas
                 .node()
