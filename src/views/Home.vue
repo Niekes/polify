@@ -582,9 +582,6 @@ export default {
                 window.getComputedStyle(event.target).getPropertyValue('height'), 10,
             );
 
-            console.log(x / compWidth * +this.virtualCanvas.attr('width'));
-            console.log(y / compHeight * +this.virtualCanvas.attr('height'));
-
             const imageData = this.virtualCanvas
                 .node()
                 .getContext('2d')
