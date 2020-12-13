@@ -239,7 +239,6 @@
 import { Delaunay } from 'd3-delaunay';
 
 import {
-    debounce,
     throttle,
 } from 'lodash';
 
