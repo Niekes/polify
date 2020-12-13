@@ -65,7 +65,9 @@ file_put_contents($fileSvg, $data['image']);
 */
 $imagick = new Imagick();
 $imagick->readImageBlob(file_get_contents($fileSvg));
-$imagick->setImageFormat("png24");
+$imagick->getImageWidth();
+$imagick->setImageFormat('png24');
+$imagick->resizeImage($imagick->getImageWidth() * 2, $imagick->getImageheight() * 2, imagick::FILTER_LANCZOS, 1);
 $imagick->writeImage($filePng);
 
 /*
