@@ -1,5 +1,4 @@
 <?php
-
 if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
     http_response_code(403);
     echo "";
@@ -9,6 +8,7 @@ if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
 require_once './MobileDetect.php';
 $detect = new Mobile_Detect;
 
+$response = new \stdClass();
 $response->isMobile = $detect->isMobile();
 $response->isTablet = $detect->isTablet();
 $response->isiOS = $detect->isiOS();

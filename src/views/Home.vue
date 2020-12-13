@@ -777,7 +777,6 @@ export default {
     grid-template-areas: "control context";
     grid-template-columns: minmax(0, 24rem) 1fr;
     grid-template-rows: minmax(0, 1fr);
-    height: calc(100% - 80px);
 }
 
 .control {
@@ -941,7 +940,6 @@ export default {
     box-shadow: inset 0 0 10px $black-50;
     display: flex;
     grid-area: context;
-    height: 100%;
     justify-content: center;
     position: relative;
     width: 100%;
@@ -963,8 +961,7 @@ export default {
         display: grid;
         grid-template-areas: "context" "control";
         grid-template-columns: 1fr;
-        grid-template-rows: min-content minmax(0, 1fr);
-        min-height: calc(100% - 74px);
+        grid-template-rows: minmax(0, 1fr) minmax(0, 3fr);
     }
 
     .context {
@@ -975,7 +972,7 @@ export default {
 
     #canvas {
         max-height: 90%;
-        max-width: 100%;
+        max-width: 90%;
     }
 }
 </style>

@@ -5,8 +5,8 @@
         @dragover.prevent="showDropItOverlay = true"
         @mouseleave="handleMouseLeave"
     >
-        <navigation />
-        <router-view />
+        <navigation id="nav" />
+        <router-view id="content" />
         <svg
             id="svg"
             :viewBox="viewBox"
@@ -134,6 +134,8 @@ html,
 body,
 #app {
     height: 100%;
+    max-height: 100%;
+    min-height: 100%;
 }
 
 body {
@@ -152,8 +154,23 @@ body {
 }
 
 #app {
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
     padding: 0;
     position: relative;
+}
+
+#nav {
+    height: 70px;
+    max-height: 70px;
+    min-height: 70px;
+}
+
+#content {
+    height: calc(100% - 70px);
+    max-height: calc(100% - 70px);
+    min-height: calc(100% - 70px);
 }
 
 #svg {
@@ -185,6 +202,20 @@ body {
 
     &--show {
         display: flex;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    #nav {
+        height: 50px;
+        max-height: 50px;
+        min-height: 50px;
+    }
+
+    #content {
+        height: calc(100% - 50px);
+        max-height: calc(100% - 50px);
+        min-height: calc(100% - 50px);
     }
 }
 </style>

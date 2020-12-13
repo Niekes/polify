@@ -1,4 +1,9 @@
 <?php
+if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
+    http_response_code(403);
+    echo "";
+    return;
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -6,12 +11,6 @@ use PHPMailer\PHPMailer\Exception;
 require './Exception.php';
 require './PHPMailer.php';
 require './SMTP.php';
-
-if ($_SERVER["HTTP_REFERER"] !== "https://polify.niekes.com/") {
-    http_response_code(403);
-    echo "";
-    return;
-}
 
 /*
     Define upload directory
@@ -92,6 +91,7 @@ $send = $email->Send();
 if ($send) {
     http_response_code(201);
 
+    $response = new \stdClass();
     $response->recipient = $data["recipient"];
     $response_json = json_encode($response);
 

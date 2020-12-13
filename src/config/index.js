@@ -3,6 +3,7 @@ export default {
     title: process.env.VUE_APP_TITLE,
     url: process.env.VUE_APP_URL,
     version: process.env.VUE_APP_VERSION,
+    api: process.env.VUE_APP_API_URL,
     links: {
         buymeacoffee: 'https://www.buymeacoffee.com/niekes',
     },
