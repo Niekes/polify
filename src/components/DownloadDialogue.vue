@@ -205,9 +205,10 @@ export default {
 
     &__hint {
         align-items: center;
+        background: rgba($secondary, 0.9);
         border: $border-width solid rgba($primary, 0.75);
         border-radius: $border-radius;
-        color: rgba($primary, 0.75);
+        color: $white;
         display: flex;
         grid-area: hint;
         justify-content: center;
@@ -216,14 +217,15 @@ export default {
     }
 
     &__recipient {
-        border: $border-width * 3 solid $black-50;
+        background: rgba($secondary, 0.1);
+        border: $border-width * 2 solid rgba($primary, 0.5);
         border-radius: $border-radius;
         grid-area: recipient;
         padding: $padding-y * 2 $padding-x * 2;
         transition: border $transition-duration $transition-timing-function;
 
         &:focus {
-            border: $border-width * 3 solid $black;
+            border: $border-width * 2 solid $primary;
             outline: none;
         }
     }
