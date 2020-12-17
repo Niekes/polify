@@ -92,11 +92,7 @@ export default {
             return polygonCentroid(this.delaunay.trianglePolygon(i));
         },
         getPixel(x, y) {
-            try {
-                return select('#reference-image__canvas').node().getContext('2d').getImageData(x, y, 1, 1).data;
-            } catch (e) {
-                return [0, 0, 0, 1];
-            }
+            return select('#reference-image__canvas').node().getContext('2d').getImageData(x, y, 1, 1).data;
         },
     },
 };
