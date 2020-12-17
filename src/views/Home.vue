@@ -223,6 +223,11 @@
         <div
             class="context"
         >
+            <div
+                v-if="width < 1000 && height < 1000"
+                class="context__resolution-hint"
+                v-text="$t('home.resolutionHint')"
+            />
             <canvas
                 id="canvas"
                 @contextmenu.prevent.stop
@@ -896,6 +901,20 @@ export default {
     justify-content: center;
     position: relative;
     width: 100%;
+}
+
+.context__resolution-hint {
+    color: crimson;
+    font-size: $font-size * 0.75;
+    font-weight: bolder;
+    left: 0;
+    margin: 0 auto;
+    padding: $padding;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 1;
 }
 
 #canvas {

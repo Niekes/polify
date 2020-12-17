@@ -28,6 +28,7 @@ export default {
         cell: 'Cell',
         triangle: 'Triangle',
         upload: 'Upload',
+        resolutionHint: 'Resolution is too low. Optimal resultion is at least 1600 x 900.',
     },
     downloadDialogue: {
         pleaseConsider: 'Please consider to buy me coffee',
