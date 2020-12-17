@@ -508,7 +508,7 @@ export default {
             const fileInput = create('input')
                 .attr('id', 'file')
                 .attr('type', 'file')
-                .attr('accept', 'image/x-png,image/jpeg');
+                .attr('accept', 'image/png,image/x-png,image/jpeg,image/jpg');
 
             fileInput.node().click();
 

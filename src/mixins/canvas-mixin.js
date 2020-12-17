@@ -23,11 +23,14 @@ export default {
         setupCanvas() {
             const canvasSelection = select(this.$el).select('#canvas');
 
-            canvasSelection.node().width = this.width * 2;
-            canvasSelection.node().height = this.height * 2;
+            /*
+                TODO Check for size
+                Canvas area exceeds the maximum limit (width * height > 16777216).
+            */
+            canvasSelection.node().width = this.width;
+            canvasSelection.node().height = this.height;
 
             this.ctx = canvasSelection.node().getContext('2d');
-            this.ctx.scale(2, 2);
         },
 
         updateVirtualCanvas: debounce(function _() {
@@ -35,11 +38,10 @@ export default {
 
             this.virtualCanvas = create('canvas')
                 .attr('id', 'virtual-canvas')
-                .attr('height', this.height * 2)
-                .attr('width', this.width * 2);
+                .attr('height', this.height)
+                .attr('width', this.width);
 
             this.virtualContext = this.virtualCanvas.node().getContext('2d');
-            this.virtualContext.scale(2, 2);
 
             this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
