@@ -67,7 +67,8 @@ $imagick = new Imagick();
 $imagick->readImageBlob(file_get_contents($fileSvg));
 $imagick->getImageWidth();
 $imagick->setImageFormat('png24');
-$imagick->resizeImage($imagick->getImageWidth() * 2, $imagick->getImageheight() * 2, imagick::FILTER_LANCZOS, 1);
+$factor = 3200 / max($imagick->getImageheight(), $imagick->getImageWidth());
+$imagick->resizeImage($imagick->getImageWidth() * $factor, $imagick->getImageheight() * $factor, imagick::FILTER_LANCZOS, 1);
 $imagick->writeImage($filePng);
 
 /*
