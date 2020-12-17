@@ -18,53 +18,30 @@ export default {
         width() {
             return this.$store.getters['canvas/width'];
         },
-        isMobile() {
-            return this.$store.getters['mobile/isMobile'];
-        },
     },
     methods: {
         setupCanvas() {
             const canvasSelection = select(this.$el).select('#canvas');
 
-            if (this.isMobile) {
-                canvasSelection.node().width = this.width;
-                canvasSelection.node().height = this.height;
-            }
-
-            if (!this.isMobile) {
-                canvasSelection.node().width = this.width * 2;
-                canvasSelection.node().height = this.height * 2;
-            }
+            /*
+                TODO Check for size
+                Canvas area exceeds the maximum limit (width * height > 16777216).
+            */
+            canvasSelection.node().width = this.width;
+            canvasSelection.node().height = this.height;
 
             this.ctx = canvasSelection.node().getContext('2d');
-
-            if (!this.mobile) {
-                this.ctx.scale(2, 2);
-            }
         },
 
         updateVirtualCanvas: debounce(function _() {
             this.colorDataMap.clear();
 
-            if (this.isMobile) {
-                this.virtualCanvas = create('canvas')
-                    .attr('id', 'virtual-canvas')
-                    .attr('height', this.height)
-                    .attr('width', this.width);
-            }
-
-            if (!this.isMobile) {
-                this.virtualCanvas = create('canvas')
-                    .attr('id', 'virtual-canvas')
-                    .attr('height', this.height * 2)
-                    .attr('width', this.width * 2);
-            }
+            this.virtualCanvas = create('canvas')
+                .attr('id', 'virtual-canvas')
+                .attr('height', this.height)
+                .attr('width', this.width);
 
             this.virtualContext = this.virtualCanvas.node().getContext('2d');
-
-            if (!this.isMobile) {
-                this.virtualContext.scale(2, 2);
-            }
 
             this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
