@@ -109,8 +109,8 @@ export default {
                 .data(data)
                 .enter()
                 .append('path')
-                .attr('fill', (d, i) => this.setColor(i, this.fillOpacity).toString())
-                .attr('stroke', (d, i) => this.setColor(i, this.strokeOpacity).toString())
+                .attr('fill', (d, i) => this.setColor(i).fill)
+                .attr('stroke', (d, i) => this.setColor(i).stroke)
                 .attr('stroke-width', 1)
                 .attr('d', (d, i) => {
                     if (this.shape === 'cell') {

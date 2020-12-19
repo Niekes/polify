@@ -21,9 +21,18 @@
                     :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
                     @dblclick.native="resetAmount(); update()"
-                    @input.native="amount > throttleThreshold
-                        ? updateThrottle()
-                        : update()"
+                    @input.native="update()"
+                />
+
+                <input-range
+                    v-model.number="vibration"
+                    class="sliders__input"
+                    :min="1"
+                    :max="250"
+                    :step="1"
+                    :label="$tc('home.vibration', Math.round(vibration / 250 * 100))"
+                    @dblclick.native="resetVibration(); update()"
+                    @input.native="update()"
                 />
 
                 <input-range
@@ -34,10 +43,7 @@
                     :step="0.01"
                     :label="$tc('home.hue', hue)"
                     @dblclick.native="resetHue(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -48,10 +54,7 @@
                     :step="0.01"
                     :label="$tc('home.saturation', saturation)"
                     @dblclick.native="resetSaturation(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -62,10 +65,7 @@
                     :step="0.01"
                     :label="$tc('home.lightness', lightness)"
                     @dblclick.native="resetLightness(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -77,10 +77,7 @@
                     :center="50"
                     :label="$tc('home.contrast', contrast)"
                     @dblclick.native="resetContrast(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -91,10 +88,7 @@
                     :step="0.01"
                     :label="$tc('home.fillOpacity', fillOpacity)"
                     @dblclick.native="resetFillOpacity(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
 
                 <input-range
@@ -105,10 +99,7 @@
                     :step="0.01"
                     :label="$tc('home.strokeOpacity', strokeOpacity)"
                     @dblclick.native="resetStrokeOpacity(); changeColor()"
-                    @input.native="amount > throttleThreshold
-                        ? changeColorThrottle()
-                        : changeColor()
-                    "
+                    @input.native="changeColor()"
                 />
             </div>
             <div class="control__customize-checkbox">
@@ -188,6 +179,7 @@
                         || invert !== false
                         || grayscale !== false
                         || hue !== 0
+                        || vibration !== 125
                         || saturation !== 100
                         || lightness !== 100
                         || fillOpacity !== 100
@@ -223,8 +215,9 @@
         <div
             class="context"
         >
+            <!-- TODO Canvas area exceeds the maximum limit (width * height > 16777216). -->
             <div
-                v-if="width < 1000 && height < 1000"
+                v-if="width * height < 1000000"
                 class="context__resolution-hint"
                 v-text="$t('home.resolutionHint')"
             />
@@ -240,20 +233,15 @@
 import { Delaunay } from 'd3-delaunay';
 
 import {
-    throttle,
-} from 'lodash';
-
-import {
     create,
-    range,
     select,
-    randomInt,
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
 import BaseButton from '@/components/BaseButton';
 import canvasMixin from '@/mixins/canvas-mixin';
 import colorMixin from '@/mixins/color-mixin';
+import gridMixin from '@/mixins/grid-mixin';
 import config from '@/config';
 
 const AMOUNT = 100;
@@ -266,13 +254,13 @@ export default {
         InputRange,
     },
 
-    mixins: [colorMixin, canvasMixin],
+    mixins: [colorMixin, canvasMixin, gridMixin],
 
     data() {
         return {
             amount: AMOUNT,
+            vibration: 125,
             hintIsShwon: false,
-            radius: 2,
             virtualCanvas: null,
         };
     },
@@ -377,7 +365,6 @@ export default {
 
     mounted() {
         this.colorDataMap = new Map();
-        this.throttleThreshold = 1000;
         this.refCtx = select('#reference-image__canvas').node().getContext('2d');
 
         this.init();
@@ -404,29 +391,8 @@ export default {
 
             newImage.node().src = this.referenceImages.get(imageReference).src;
         },
-        update(p) {
-            this.particales = p || (this.shape === 'triangle'
-                ? range(this.amount - 8).map(() => [
-                    randomInt(0, this.width)(),
-                    randomInt(0, this.height)(),
-                ])
-                : range(this.amount).map(() => [
-                    Math.random() * (this.width - this.radius * 2) + this.radius,
-                    Math.random() * (this.height - this.radius * 2) + this.radius,
-                ]));
-
-            if (!p && this.shape === 'triangle') {
-                this.particales.push(
-                    [0, 0],
-                    [0, this.height],
-                    [0, this.height / 2],
-                    [this.width, this.height],
-                    [this.width, this.height / 2],
-                    [this.width / 2, this.height],
-                    [this.width, 0],
-                    [this.width / 2, 0],
-                );
-            }
+        update() {
+            this.particales = this.processGrid();
 
             this.delaunay = Delaunay.from(this.particales);
 
@@ -447,20 +413,6 @@ export default {
             this.updateVirtualCanvas();
         },
 
-        updateThrottle: throttle(function _() {
-            this.update();
-        }, 350, {
-            leading: true,
-            trailing: true,
-        }),
-
-        changeColorThrottle: throttle(function _() {
-            this.changeColor();
-        }, 350, {
-            leading: true,
-            trailing: true,
-        }),
-
         updateTriangles() {
             const triangles = this.delaunay.trianglePolygons();
 
@@ -469,9 +421,11 @@ export default {
             let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
             for (const triangle of triangles) {
+                const color = this.setColor(i);
+
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.setColor(i, this.fillOpacity).toString();
-                this.ctx.strokeStyle = this.setColor(i, this.strokeOpacity).toString();
+                this.ctx.fillStyle = color.fill;
+                this.ctx.strokeStyle = color.stroke;
                 this.delaunay.renderTriangle(i, this.ctx);
                 this.ctx.fill();
                 this.ctx.stroke();
@@ -484,16 +438,16 @@ export default {
 
             this.ctx.clearRect(0, 0, this.width * 2, this.height * 2);
 
-            let i = 0;
             // eslint-disable-next-line no-restricted-syntax, no-unused-vars
             for (const cell of cells) {
+                const color = this.setColor(cell.index);
+
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.setColor(i, this.fillOpacity).toString();
-                this.ctx.strokeStyle = this.setColor(i, this.strokeOpacity).toString();
-                this.voronoi.renderCell(i, this.ctx);
+                this.ctx.fillStyle = color.fill;
+                this.ctx.strokeStyle = color.stroke;
+                this.voronoi.renderCell(cell.index, this.ctx);
                 this.ctx.stroke();
                 this.ctx.fill();
-                i += 1;
             }
         },
 
@@ -550,6 +504,7 @@ export default {
 
         reset() {
             this.resetAmount();
+            this.resetVibration();
             this.resetHue();
             this.resetSaturation();
             this.resetLightness();
@@ -563,6 +518,10 @@ export default {
 
         resetAmount() {
             this.amount = this.AMOUNT;
+        },
+
+        resetVibration() {
+            this.vibration = 125;
         },
 
         resetHue() {

@@ -26,9 +26,10 @@ export default {
         },
     },
     methods: {
-        setColor(i, opacity) {
+        setColor(i) {
             const [x, y] = this.getPolygonCentroid(i);
             const pixel = this.getPixel(x, y);
+
             const colorHsl = pixel[3] === 0
                 ? hsl(0, 0, 1)
                 : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
@@ -39,7 +40,7 @@ export default {
             colorHsl.h += this.hue;
             colorHsl.s *= this.saturation / 100;
             colorHsl.l *= this.lightness / 100;
-            colorHsl.opacity = opacity / 100;
+            colorHsl.opacity = this.fillOpacity / 100;
 
             const rgbColor = colorHsl.rgb();
 
@@ -60,7 +61,10 @@ export default {
                 rgbColor.b = gs;
             }
 
-            return rgbColor;
+            return {
+                fill: rgbColor.toString(),
+                stroke: rgbColor.copy({ opacity: this.strokeOpacity / 100 }).toString(),
+            };
         },
 
         getUniqueColorByInt(index) {

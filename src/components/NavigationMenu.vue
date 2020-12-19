@@ -74,7 +74,7 @@ export default {
 }
 
 .item__link {
-    background: transparent;
+    background: rgba($primary, 0.05);
     border: none;
     cursor: pointer;
     font-size: $font-size;
@@ -96,6 +96,7 @@ export default {
     display: flex;
     font-weight: bolder;
     justify-content: center;
+    margin-top: $margin-y;
     padding: $padding;
     text-decoration: none;
     text-shadow: $text-shadow;

@@ -12,6 +12,7 @@ export default {
         title: 'home',
         referenceImage: 'Reference image',
         amountOfPoints: 'Amount of points: {n}',
+        vibration: 'Vibration: {n}%',
         hue: 'Hue: {n}°',
         contrast: 'Contrast: {n}%',
         fillOpacity: 'Fill Opacity: {n}%',
