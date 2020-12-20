@@ -632,7 +632,7 @@ export default {
         display: flex;
 
         input {
-            appearance: none;
+            display: none;
 
             &:checked + label::after {
                 transform: scale(1);
@@ -701,7 +701,7 @@ export default {
         }
 
         input {
-            appearance: none;
+            display: none;
 
             &:checked + label {
                 &::after {
