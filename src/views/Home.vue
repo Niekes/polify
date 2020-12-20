@@ -1,10 +1,6 @@
 <template>
     <div class="home">
         <div class="control">
-            <div
-                class="control__hint"
-                v-text="$t('home.referenceImage')"
-            />
             <div class="control__reference-image">
                 <canvas
                     id="reference-image__canvas"
@@ -582,7 +578,6 @@ export default {
     display: grid;
     gap: $margin-y * 2 0;
     grid-template-areas:
-        "reference-hint"
         "reference-image"
         "sliders"
         "checkbox"
@@ -595,24 +590,10 @@ export default {
         min-content
         min-content
         min-content
-        min-content
         1fr;
     max-height: 100%;
     overflow: auto;
     padding: $padding-y * 2 $padding-x * 2 0 $padding-y * 2;
-}
-
-.control__hint {
-    align-items: flex-end;
-    color: $primary;
-    display: flex;
-    font-size: $font-size * 0.75;
-    font-weight: bolder;
-    grid-area: reference-hint;
-    justify-content: space-between;
-    text-transform: uppercase;
-    width: 100%;
-    z-index: 1;
 }
 
 .control__reference-image {
@@ -650,15 +631,57 @@ export default {
         align-items: center;
         display: flex;
 
+        input {
+            appearance: none;
+
+            &:checked + label::after {
+                transform: scale(1);
+            }
+        }
+
         &__label {
             color: $primary;
             cursor: pointer;
             font-size: $font-size * 0.7;
             font-weight: bolder;
-            margin-left: $margin-x / 2;
+            padding-left: $font-size * 0.7 + $padding-x;
+            position: relative;
             text-transform: uppercase;
             white-space: nowrap;
             z-index: 1;
+
+            &::before {
+                border: $border-width solid;
+                border-color: $primary;
+                border-radius: $border-radius;
+                bottom: 0;
+                content: '';
+                height: $font-size * 0.9;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                width: $font-size * 0.9;
+            }
+
+            &::after {
+                background: transparent;
+                background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"><path fill="%231c243f" d="M19.343,4.739l2.261,2.261l-12.424,12.424l-6.784,-6.784l2.261,-2.262l4.523,4.523l10.163,-10.162Z"/></svg>');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 100%;
+                border-radius: $border-radius;
+                bottom: 0;
+                content: '';
+                height: $font-size * 0.9;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                transform: scale(0);
+                transition: transform $transition-duration / 2 ease-in-out;
+                width: $font-size * 0.9;
+            }
         }
     }
 }
@@ -677,15 +700,57 @@ export default {
             margin-bottom: $margin-y / 2;
         }
 
+        input {
+            appearance: none;
+
+            &:checked + label {
+                &::after {
+                    background: $primary;
+                    transform: scale(0.65);
+                }
+            }
+        }
+
         &__label {
             color: $primary;
             cursor: pointer;
             font-size: $font-size * 0.7;
             font-weight: bolder;
-            margin-left: $margin-x / 2;
+            padding-left: $font-size * 0.7 + $padding-x;
+            position: relative;
             text-transform: uppercase;
             white-space: nowrap;
             z-index: 1;
+
+            &::before {
+                border: $border-width solid;
+                border-color: $primary;
+                border-radius: 50%;
+                bottom: 0;
+                content: '';
+                height: $font-size * 0.9;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                width: $font-size * 0.9;
+            }
+
+            &::after {
+                border-radius: 50%;
+                bottom: 0;
+                content: '';
+                height: $font-size * 0.9;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                transform: scale(0);
+                transition:
+                    background $transition-duration / 2 $transition-timing-function,
+                    transform $transition-duration / 2 $transition-timing-function;
+                width: $font-size * 0.9;
+            }
         }
     }
 }

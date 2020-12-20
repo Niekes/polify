@@ -83,7 +83,7 @@ export default {
     }
 }
 
-@media (max-width: $breakpoint-sm) {
+@media (max-width: $breakpoint-md) {
     .image-gallery__images {
         grid-template-columns: repeat(1, 1fr);
     }

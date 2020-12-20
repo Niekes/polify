@@ -10,7 +10,6 @@ export default {
     },
     home: {
         title: 'home',
-        referenceImage: 'Reference image',
         amountOfPoints: 'Amount of points: {n}',
         vibration: 'Vibration: {n}%',
         hue: 'Hue: {n}°',
