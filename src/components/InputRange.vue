@@ -1,5 +1,13 @@
 <template>
     <div class="range">
+        <span
+            class="range__subtract"
+            @click="value > min ? $emit('subtract', step) : null"
+        >
+            <svg-icon
+                :xlink="'#minus'"
+            />
+        </span>
         <label
             class="range__label"
             v-text="label"
@@ -13,6 +21,14 @@
             type="range"
             @input="handleInput"
         >
+        <span
+            class="range__add"
+            @click="value < max ? $emit('add', step) : null"
+        >
+            <svg-icon
+                :xlink="'#plus'"
+            />
+        </span>
     </div>
 </template>
 
@@ -22,8 +38,17 @@ import {
     scaleLinear,
 } from 'd3';
 
+import SvgIcon from '@/components/SvgIcon';
+
+// eslint-disable-next-line import/extensions
+import localstyles from 'localstyles';
+
 export default {
     name: 'InputRange',
+
+    components: {
+        SvgIcon,
+    },
 
     props: {
         label: {
@@ -77,7 +102,7 @@ export default {
             this.p = this.scale(this.value) * 100;
 
             this.slider
-                .style('background', `linear-gradient(90deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.20) ${this.p}%, white ${this.p}%)`);
+                .style('background', `linear-gradient(90deg, rgba(0, 0, 0, 0.10) 0%, ${localstyles.secondary} ${this.p}%, white ${this.p}%)`);
         },
     },
 };
@@ -85,22 +110,78 @@ export default {
 
 <style lang="scss" scoped>
 .range {
-    display: flex;
-    flex-direction: column;
-}
+    display: grid;
+    gap: 0 $margin-x / 2;
+    grid-template-areas:
+        "label label label label"
+        "subtract input input add";
+    grid-template-columns: min-content 1fr 1fr min-content;
+    grid-template-rows: 1fr 1fr;
 
-.range__label {
-    color: $primary;
-    font-size: $font-size * 0.7;
-    font-weight: bolder;
-    margin-bottom: $margin-y / 2;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 1;
-}
+    &__subtract,
+    &__add,
+    &__label {
+        align-items: center;
+        display: flex;
+    }
 
-.range__input {
-    @include input-type-range;
+    &__subtract,
+    &__add {
+        background-color: $white;
+        border-radius: $border-radius;
+        cursor: pointer;
+        padding: 0 $padding-x;
+
+        svg {
+            color: $black-75;
+            height: 0.4rem;
+            width: 0.4rem;
+        }
+    }
+
+    &__subtract {
+        grid-area: subtract;
+        justify-content: flex-start;
+
+        &:hover {
+            background: $white-75;
+        }
+
+        &:active:hover {
+            background: $black-10;
+        }
+    }
+
+    &__add {
+        grid-area: add;
+        justify-content: flex-end;
+
+        &:hover {
+            background: $white-75;
+        }
+
+        &:active:hover {
+            background: $black-10;
+        }
+    }
+
+    &__label {
+        color: $primary;
+        font-size: $font-size * 0.7;
+        font-weight: bolder;
+        grid-area: label;
+        justify-content: center;
+        text-transform: uppercase;
+        user-select: none;
+        white-space: nowrap;
+        z-index: 1;
+    }
+
+    &__input {
+        grid-area: input;
+
+        @include input-type-range;
+    }
 }
 
 @media (max-width: $breakpoint-sm) {

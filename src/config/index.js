@@ -7,6 +7,12 @@ export default {
     links: {
         buymeacoffee: 'https://www.buymeacoffee.com/niekes',
     },
+    format: {
+        float: '.2~f',
+        standard: '.4~s',
+        currency: '$.3~s',
+        percent: '.1~%',
+    },
     images: new Map([
         /* eslint-disable global-require */
         [0, { src: require('@/assets/img/default-0.jpg') }],

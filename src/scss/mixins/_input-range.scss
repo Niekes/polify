@@ -1,7 +1,9 @@
 @mixin input-type-range ($thumbColor: $white, $thumbWidth: 1.25rem, $thumbHeight: 1.25rem, $trackWidth: 100%, $trackHeight: 1rem, $borderRadius: $border-radius) {
     appearance: none;
-    border: $border-width solid $white-70;
+    background: $black-10;
+    border: 0 solid transparent;
     border-radius: $borderRadius;
+    cursor: pointer;
     height: $trackHeight;
     margin: 0;
     outline: none;
@@ -39,7 +41,7 @@
         border: $border-width solid $black-30;
         border-radius: $borderRadius;
         box-shadow: 0 0 1px $black-50;
-        cursor: pointer;
+        cursor: ew-resize;
         height: $thumbHeight;
         transition: transform $transition-duration / 2 $transition-timing-function;
         width: $thumbWidth;
@@ -58,7 +60,7 @@
         border: $border-width solid $black-30;
         border-radius: $borderRadius;
         box-shadow: 0 0 1px $black-50;
-        cursor: pointer;
+        cursor: ew-resize;
         height: $thumbHeight;
         width: $thumbWidth;
 

@@ -16,19 +16,21 @@
                     :max="2000"
                     :step="10"
                     :label="$tc('home.amountOfPoints', amount)"
-                    @dblclick.native="resetAmount(); update()"
                     @input.native="update()"
+                    @add="(step) => { amount += step; update()}"
+                    @subtract="(step) => { amount -= step; update()}"
                 />
 
                 <input-range
                     v-model.number="vibration"
                     class="sliders__input"
-                    :min="1"
-                    :max="250"
+                    :min="0"
+                    :max="125"
                     :step="1"
-                    :label="$tc('home.vibration', Math.round(vibration / 250 * 100))"
-                    @dblclick.native="resetVibration(); update()"
+                    :label="$tc('home.vibration', format(f.percent)(vibration / 125))"
                     @input.native="update()"
+                    @add="(step) => { vibration += step; update()}"
+                    @subtract="(step) => { vibration -= step; update()}"
                 />
 
                 <input-range
@@ -36,66 +38,72 @@
                     class="sliders__input"
                     :min="0"
                     :max="360"
-                    :step="0.01"
-                    :label="$tc('home.hue', hue)"
-                    @dblclick.native="resetHue(); changeColor()"
+                    :step="0.1"
+                    :label="$tc('home.hue', format(f.float)(hue))"
                     @input.native="changeColor()"
+                    @add="(step) => { hue += step; changeColor()}"
+                    @subtract="(step) => { hue -= step; changeColor()}"
                 />
 
                 <input-range
                     v-model.number="saturation"
                     class="sliders__input"
                     :min="0"
-                    :max="200"
+                    :max="2"
                     :step="0.01"
-                    :label="$tc('home.saturation', saturation)"
-                    @dblclick.native="resetSaturation(); changeColor()"
+                    :label="$tc('home.saturation', format(f.percent)(saturation))"
                     @input.native="changeColor()"
+                    @add="(step) => { saturation += step; changeColor()}"
+                    @subtract="(step) => { saturation -= step; changeColor()}"
                 />
 
                 <input-range
                     v-model.number="lightness"
                     class="sliders__input"
                     :min="0"
-                    :max="200"
+                    :max="2"
                     :step="0.01"
-                    :label="$tc('home.lightness', lightness)"
-                    @dblclick.native="resetLightness(); changeColor()"
+                    :label="$tc('home.lightness', format(f.percent)(lightness))"
                     @input.native="changeColor()"
+                    @add="(step) => { lightness += step; changeColor()}"
+                    @subtract="(step) => { lightness -= step; changeColor()}"
                 />
 
                 <input-range
                     v-model.number="contrast"
                     class="sliders__input"
-                    :min="-100"
-                    :max="100"
+                    :min="-1"
+                    :max="1"
                     :step="0.01"
                     :center="50"
-                    :label="$tc('home.contrast', contrast)"
-                    @dblclick.native="resetContrast(); changeColor()"
+                    :label="$tc('home.contrast', format(f.percent)(contrast))"
                     @input.native="changeColor()"
+                    @add="(step) => { contrast += step; changeColor()}"
+                    @subtract="(step) => { contrast -= step; changeColor()}"
                 />
 
                 <input-range
                     v-model.number="fillOpacity"
                     class="sliders__input"
                     :min="0"
-                    :max="100"
+                    :max="1"
                     :step="0.01"
-                    :label="$tc('home.fillOpacity', fillOpacity)"
-                    @dblclick.native="resetFillOpacity(); changeColor()"
+                    :label="$tc('home.fillOpacity', format(f.percent)(fillOpacity))"
                     @input.native="changeColor()"
+                    @add="(step) => { fillOpacity += step; changeColor()}"
+                    @subtract="(step) => { fillOpacity -= step; changeColor()}"
                 />
 
                 <input-range
                     v-model.number="strokeOpacity"
                     class="sliders__input"
                     :min="0"
-                    :max="100"
+                    :max="1"
                     :step="0.01"
-                    :label="$tc('home.strokeOpacity', strokeOpacity)"
-                    @dblclick.native="resetStrokeOpacity(); changeColor()"
+                    :label="$tc('home.strokeOpacity', format(f.percent)(strokeOpacity))"
                     @input.native="changeColor()"
+                    @add="(step) => { strokeOpacity += step; changeColor()}"
+                    @subtract="(step) => { strokeOpacity -= step; changeColor()}"
                 />
             </div>
             <div class="control__customize-checkbox">
@@ -175,11 +183,11 @@
                         || invert !== false
                         || grayscale !== false
                         || hue !== 0
-                        || vibration !== 125
-                        || saturation !== 100
-                        || lightness !== 100
-                        || fillOpacity !== 100
-                        || strokeOpacity !== 100
+                        || vibration !== 62.5
+                        || saturation !== 1
+                        || lightness !== 1
+                        || fillOpacity !== 1
+                        || strokeOpacity !== 1
                         || contrast !== 0)"
                     :text="$t('home.reset')"
                     @click.native="reset"
@@ -230,6 +238,7 @@ import {
     Delaunay,
     create,
     select,
+    format,
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
@@ -238,6 +247,11 @@ import canvasMixin from '@/mixins/canvas-mixin';
 import colorMixin from '@/mixins/color-mixin';
 import gridMixin from '@/mixins/grid-mixin';
 import config from '@/config';
+
+const {
+    images: referenceImages,
+    format: f,
+} = config;
 
 const AMOUNT = 100;
 
@@ -254,7 +268,7 @@ export default {
     data() {
         return {
             amount: AMOUNT,
-            vibration: 125,
+            vibration: 62.5,
             hintIsShwon: false,
             virtualCanvas: null,
         };
@@ -350,11 +364,12 @@ export default {
         },
 
         referenceImages() {
-            return config.images;
+            return referenceImages;
         },
     },
 
     created() {
+        this.f = f;
         this.AMOUNT = AMOUNT;
     },
 
@@ -516,7 +531,7 @@ export default {
         },
 
         resetVibration() {
-            this.vibration = 125;
+            this.vibration = 62.5;
         },
 
         resetHue() {
@@ -524,19 +539,19 @@ export default {
         },
 
         resetSaturation() {
-            this.saturation = 100;
+            this.saturation = 1;
         },
 
         resetLightness() {
-            this.lightness = 100;
+            this.lightness = 1;
         },
 
         resetFillOpacity() {
-            this.fillOpacity = 100;
+            this.fillOpacity = 1;
         },
 
         resetStrokeOpacity() {
-            this.strokeOpacity = 100;
+            this.strokeOpacity = 1;
         },
 
         resetContrast() {
@@ -559,6 +574,7 @@ export default {
             this.hintIsShwon = false;
         },
 
+        format,
     },
 
 };

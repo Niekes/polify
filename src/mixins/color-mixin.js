@@ -34,13 +34,13 @@ export default {
                 ? hsl(0, 0, 1)
                 : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
 
-            const c = (this.contrast / 100) + 1;
+            const c = this.contrast + 1;
             const intercept = 128 * (1 - c);
 
             colorHsl.h += this.hue;
-            colorHsl.s *= this.saturation / 100;
-            colorHsl.l *= this.lightness / 100;
-            colorHsl.opacity = this.fillOpacity / 100;
+            colorHsl.s *= this.saturation;
+            colorHsl.l *= this.lightness;
+            colorHsl.opacity = this.fillOpacity;
 
             const rgbColor = colorHsl.rgb();
 
@@ -63,7 +63,7 @@ export default {
 
             return {
                 fill: rgbColor.toString(),
-                stroke: rgbColor.copy({ opacity: this.strokeOpacity / 100 }).toString(),
+                stroke: rgbColor.copy({ opacity: this.strokeOpacity }).toString(),
             };
         },
 

@@ -11,7 +11,7 @@ export default {
             const gridYScale = scaleLinear();
             const rows = Math.ceil(Math.sqrt(this.amount));
             const columns = rows;
-            const v = this.vibration / 2;
+            const v = this.vibration;
 
             let cell = 0;
 
