@@ -226,9 +226,8 @@
 </template>
 
 <script>
-import { Delaunay } from 'd3-delaunay';
-
 import {
+    Delaunay,
     create,
     select,
 } from 'd3';

@@ -121,7 +121,7 @@ export default {
     grid-area: logo;
     height: 3rem;
     user-select: none;
-    width: 17rem;
+    width: 14rem;
     z-index: 2;
 }
 
@@ -184,7 +184,7 @@ export default {
 @media (max-width: $breakpoint-sm) {
     .navigation__logo {
         height: 2rem;
-        width: 12rem;
+        width: 9rem;
     }
 
     .navigation__items {
