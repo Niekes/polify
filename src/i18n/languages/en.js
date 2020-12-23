@@ -5,6 +5,7 @@ export default {
     navigation: {
         buymeabeer: 'Buy me a beer',
         cookies: 'Cookies',
+        faq: 'FAQ',
         home: 'Home',
         imprint: 'Imprint',
     },
