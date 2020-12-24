@@ -51,4 +51,14 @@ export default {
         accept: 'Accept',
         learnMore: 'Learn more',
     },
+    faq: {
+        what: 'What is Polify?',
+        whatParagraph: 'Polify is a tool to create low poly backgrounds & wallpapers. You can use them on your mobile device, on your desktop pc or as a graphic designer you could use them as design assets.',
+        implement: 'Can you implement a new feature?',
+        implementParagraph: 'Yes, please send me an email to polify [at] niekes.com with detailed information about your feature request and I will try implement it as soon as possible.',
+        copyright: 'Who owns the copyright?',
+        copyrightParagraph: 'You own the copyright to any image that you created using polify.niekes.com.',
+        about: 'About',
+        aboutParagraph: 'My name is Stefan Nieke, I am a Front-end Engineer and a UI/UX Designer based in Berlin, Germany. If you want we can connect on social media. Please check <a style="color:#000" target="_blank" href="https://www.niekes.com">niekes.com</a>.',
+    },
 };
