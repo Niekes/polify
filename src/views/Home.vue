@@ -219,11 +219,15 @@
         <div
             class="context"
         >
-            <!-- TODO Canvas area exceeds the maximum limit (width * height > 16777216). -->
             <div
-                v-if="width * height < 1000000"
+                v-if="width * height > 0 && width * height < 1000000"
                 class="context__resolution-hint"
-                v-text="$t('home.resolutionHint')"
+                v-text="$t('home.resolutionHintLow')"
+            />
+            <div
+                v-if="width * height > 0 && width * height > 16777216"
+                class="context__resolution-hint"
+                v-text="$t('home.resolutionHintHigh')"
             />
             <canvas
                 id="canvas"

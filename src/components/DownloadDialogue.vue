@@ -11,6 +11,7 @@
             />
             <input
                 v-model="recipient"
+                :disabled="isLoading"
                 class="download-dialogue__recipient"
                 type="email"
                 name="email"
@@ -28,7 +29,7 @@
                 class="download-dialogue__send"
                 :disabled="!isEmailValid || isLoading"
                 :variant="2"
-                :text="$t('downloadDialogue.sendImages')"
+                :text="isLoading ? '...' : $t('downloadDialogue.sendImages')"
                 @click.native="sendImages"
             />
         </div>
