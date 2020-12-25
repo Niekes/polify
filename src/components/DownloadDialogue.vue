@@ -17,14 +17,11 @@
                 name="email"
                 :placeholder="$t('downloadDialogue.pleaseEnterEmail')"
             >
-            <a
+
+            <beer-button
                 class="download-dialogue__sponsor"
-                :href="buymeacoffee"
-                target="_blank"
-            >
-                {{ $t('downloadDialogue.buymeabeer') }}
-                <svg-icon :xlink="'#beer'" />
-            </a>
+            />
+
             <base-button
                 class="download-dialogue__send"
                 :disabled="!isEmailValid || isLoading"
@@ -45,10 +42,10 @@ import {
 
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
+import BeerButton from '@/components/BeerButton';
 import FlashMessageMixin from '@/mixins/flash-message-mixin';
 import colorMixin from '@/mixins/color-mixin';
 import canvasMixin from '@/mixins/canvas-mixin';
-import SvgIcon from '@/components/SvgIcon';
 
 import config from '@/config';
 
@@ -56,7 +53,7 @@ export default {
     name: 'DownloadDialogue',
 
     components: {
-        SvgIcon,
+        BeerButton,
         BaseButton,
         Modal,
     },
@@ -188,7 +185,7 @@ export default {
         "recipient recipient"
         "sponsor send";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 4fr min-content 1fr 1fr;
+    grid-template-rows: 3fr min-content 1fr 1fr;
     margin: 0 auto;
     max-width: $breakpoint-lg / 2;
     padding-bottom: $padding-y * 6;
@@ -232,28 +229,7 @@ export default {
     }
 
     &__sponsor {
-        align-items: center;
-        background: rgba($primary, 0.9);
-        border-radius: $border-radius;
-        color: $white;
-        display: flex;
-        font-weight: bolder;
         grid-area: sponsor;
-        justify-content: center;
-        padding: $padding;
-        text-decoration: none;
-        text-shadow: $text-shadow;
-        transition: background $transition-duration $transition-timing-function;
-
-        &:hover {
-            background: $primary;
-        }
-
-        svg {
-            height: 1.5rem;
-            margin-left: $margin-x;
-            width: 1.5rem;
-        }
     }
 
     &__send {
@@ -263,6 +239,8 @@ export default {
 
 @media (max-width: $breakpoint-sm) {
     .download-dialogue {
+        padding-bottom: $padding-y;
+
         &__sponsor {
             font-size: $font-size * 0.8;
 

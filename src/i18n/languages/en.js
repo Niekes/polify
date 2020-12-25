@@ -1,9 +1,9 @@
 export default {
     general: {
         dropIt: 'Drop it!',
+        buymeabeer: 'Buy me a beer',
     },
     navigation: {
-        buymeabeer: 'Buy me a beer',
         cookies: 'Cookies',
         faq: 'FAQ',
         home: 'Home',
@@ -41,7 +41,6 @@ export default {
         pleaseEnterEmail: 'Please enter your email',
         imageSendSuccess: 'Images were sent successfully to:\r\n\r\n"{recipient}"\r\n\r\nPlease check your mails',
         imageSendError: 'Error. Please try again later',
-        buymeabeer: '@:navigation.buymeabeer',
         hint: 'We will send you a .png and .svg file. We will not store your email address or share it with anyone.',
     },
     imageGallery: {
