@@ -10,6 +10,7 @@ const s = {
     fillOpacity: 100,
     strokeOpacity: 100,
     grayscale: false,
+    threshold: false,
     invert: false,
     hue: 0,
     contrast: 0,
@@ -71,6 +72,11 @@ const mutations = {
     setGrayscale: (st, grayscale) => {
         const state = st;
         state.grayscale = grayscale;
+    },
+
+    setThreshold: (st, threshold) => {
+        const state = st;
+        state.threshold = threshold;
     },
 
     setInvert: (st, invert) => {

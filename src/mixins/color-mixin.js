@@ -24,6 +24,9 @@ export default {
         grayscale() {
             return this.$store.state.canvas.grayscale;
         },
+        threshold() {
+            return this.$store.state.canvas.threshold;
+        },
     },
     methods: {
         setColor(i) {
@@ -59,6 +62,15 @@ export default {
                 rgbColor.r = gs;
                 rgbColor.g = gs;
                 rgbColor.b = gs;
+            }
+
+            if (this.threshold) {
+                const t = (0.2126 * rgbColor.r + 0.7152 * rgbColor.g + 0.0722 * rgbColor.r >= 100)
+                    ? 255
+                    : 0;
+                rgbColor.r = t;
+                rgbColor.g = t;
+                rgbColor.b = t;
             }
 
             return {

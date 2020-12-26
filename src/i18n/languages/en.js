@@ -22,6 +22,7 @@ export default {
         randomize: 'Randomize',
         invert: 'Invert',
         grayscale: 'Grayscale',
+        threshold: 'Threshold',
         reset: 'Reset',
         download: 'download',
         changeImage: 'Change image',

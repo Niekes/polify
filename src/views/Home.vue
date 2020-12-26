@@ -123,6 +123,20 @@
                 </div>
                 <div class="customize-checkbox">
                     <input
+                        id="threshold"
+                        v-model="threshold"
+                        type="checkbox"
+                        name="threshold"
+                        @change="changeColor()"
+                    >
+                    <label
+                        class="customize-checkbox__label"
+                        for="threshold"
+                        v-text="$t('home.threshold')"
+                    />
+                </div>
+                <div class="customize-checkbox">
+                    <input
                         id="grayscale"
                         v-model="grayscale"
                         type="checkbox"
@@ -283,6 +297,14 @@ export default {
             },
             set(value) {
                 this.$store.commit('canvas/setStrokeOpacity', value);
+            },
+        },
+        threshold: {
+            get() {
+                return this.$store.state.canvas.threshold;
+            },
+            set(value) {
+                this.$store.commit('canvas/setThreshold', value);
             },
         },
         grayscale: {
