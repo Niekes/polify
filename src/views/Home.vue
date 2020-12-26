@@ -136,38 +136,14 @@
                     />
                 </div>
             </div>
-            <div class="control__shape">
-                <div class="customize-radio">
-                    <input
-                        id="shape-triangle"
-                        v-model="shape"
-                        type="radio"
-                        name="shape"
-                        value="triangle"
-                        @change="update()"
-                    >
-                    <label
-                        class="customize-radio__label"
-                        for="shape-triangle"
-                        v-text="$t('home.triangle')"
-                    />
-                </div>
-                <div class="customize-radio">
-                    <input
-                        id="shape-cell"
-                        v-model="shape"
-                        type="radio"
-                        name="shape"
-                        value="cell"
-                        @change="update()"
-                    >
-                    <label
-                        class="customize-radio__label"
-                        for="shape-cell"
-                        v-text="$t('home.cell')"
-                    />
-                </div>
-            </div>
+            <input-radio
+                :id="'shape'"
+                v-model="shape"
+                class="control__shape"
+                :options="shapeOptions"
+                :label="$t('home.shape')"
+                @change.native="update()"
+            />
             <div class="control__customize-buttons">
                 <base-button
                     class="randomize-btn"
@@ -246,6 +222,7 @@ import {
 } from 'd3';
 
 import InputRange from '@/components/InputRange';
+import InputRadio from '@/components/InputRadio';
 import BaseButton from '@/components/BaseButton';
 import canvasMixin from '@/mixins/canvas-mixin';
 import colorMixin from '@/mixins/color-mixin';
@@ -264,6 +241,7 @@ export default {
 
     components: {
         BaseButton,
+        InputRadio,
         InputRange,
     },
 
@@ -275,6 +253,10 @@ export default {
             vibration: 62.5,
             hintIsShwon: false,
             virtualCanvas: null,
+            shapeOptions: [
+                { value: 'triangle', text: this.$t('home.triangle') },
+                { value: 'cell', text: this.$t('home.cell') },
+            ],
         };
     },
 
@@ -654,7 +636,7 @@ export default {
             display: none;
 
             &:checked + label::after {
-                transform: scale(1);
+                transform: scale(0.7);
             }
         }
 
@@ -675,12 +657,13 @@ export default {
                 border-radius: $border-radius;
                 bottom: 0;
                 content: '';
-                height: $font-size * 0.9;
+                height: $font-size;
                 left: 0;
                 margin: auto;
                 position: absolute;
                 top: 0;
-                width: $font-size * 0.9;
+                transform: scale(0.7);
+                width: $font-size;
             }
 
             &::after {
@@ -692,86 +675,21 @@ export default {
                 border-radius: $border-radius;
                 bottom: 0;
                 content: '';
-                height: $font-size * 0.9;
+                height: $font-size;
                 left: 0;
                 margin: auto;
                 position: absolute;
                 top: 0;
                 transform: scale(0);
                 transition: transform $transition-duration / 2 ease-in-out;
-                width: $font-size * 0.9;
+                width: $font-size;
             }
         }
     }
 }
 
 .control__shape {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
     grid-area: shape;
-
-    .customize-radio {
-        align-items: center;
-        display: flex;
-
-        &:not(:last-child) {
-            margin-bottom: $margin-y / 2;
-        }
-
-        input {
-            display: none;
-
-            &:checked + label {
-                &::after {
-                    background: $primary;
-                    transform: scale(0.65);
-                }
-            }
-        }
-
-        &__label {
-            color: $primary;
-            cursor: pointer;
-            font-size: $font-size * 0.7;
-            font-weight: bolder;
-            padding-left: $font-size * 0.7 + $padding-x;
-            position: relative;
-            text-transform: uppercase;
-            white-space: nowrap;
-            z-index: 1;
-
-            &::before {
-                border: $border-width solid;
-                border-color: $primary;
-                border-radius: 50%;
-                bottom: 0;
-                content: '';
-                height: $font-size * 0.9;
-                left: 0;
-                margin: auto;
-                position: absolute;
-                top: 0;
-                width: $font-size * 0.9;
-            }
-
-            &::after {
-                border-radius: 50%;
-                bottom: 0;
-                content: '';
-                height: $font-size * 0.9;
-                left: 0;
-                margin: auto;
-                position: absolute;
-                top: 0;
-                transform: scale(0);
-                transition:
-                    background $transition-duration / 2 $transition-timing-function,
-                    transform $transition-duration / 2 $transition-timing-function;
-                width: $font-size * 0.9;
-            }
-        }
-    }
 }
 
 .control__customize-buttons {

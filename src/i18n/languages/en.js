@@ -28,6 +28,7 @@ export default {
         mouseoverHint: 'Click to split up selected polygon',
         cell: 'Cell',
         triangle: 'Triangle',
+        shape: 'Shape',
         upload: 'Upload',
         resolutionHintLow: 'Resolution is too low. Preferred resultion is 1600 x 900.',
         resolutionHintHigh: 'Resolution is too high. Preferred resultion is 1600 x 900.',
