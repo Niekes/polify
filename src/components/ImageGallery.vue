@@ -4,15 +4,12 @@
             <div
                 class="image-gallery__images"
             >
-                <div
+                <img
                     v-for="(image, index) in referenceImages"
                     :key="index"
+                    :src="image[1].src"
+                    @click="chooseImage(index)"
                 >
-                    <img
-                        :src="image[1].src"
-                        @click="chooseImage(index)"
-                    >
-                </div>
             </div>
         </div>
     </modal>
@@ -58,34 +55,33 @@ export default {
 .image-gallery__images {
     display: grid;
     gap: $margin-y * 4 $margin-x * 4;
-    grid-auto-rows: 200px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-rows: 1fr;
     margin-bottom: $margin-y * 4;
 
-    div {
+    img {
         align-content: center;
+        border: $border-width solid $black-70;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+        cursor: pointer;
         display: flex;
+        height: auto;
         justify-content: center;
+        max-width: 100%;
+        transition: box-shadow $transition-duration $transition-timing-function;
 
-        img {
-            border: $border-width solid $black-70;
-            border-radius: $border-radius;
-            box-shadow: $box-shadow;
-            cursor: pointer;
-            height: auto;
-            max-width: 100%;
-            transition: box-shadow $transition-duration $transition-timing-function;
-
-            &:hover {
-                box-shadow: 0 0 1rem $black-75;
-            }
+        &:hover {
+            box-shadow: 0 0 1rem $black-75;
         }
-    }
-}
 
-@media (max-width: $breakpoint-md) {
-    .image-gallery__images {
-        grid-template-columns: repeat(1, 1fr);
+        &::before {
+            content: "";
+            display: block;
+            height: 0;
+            padding-bottom: calc(0.5625 * 100%);
+            width: 0;
+        }
     }
 }
 </style>
