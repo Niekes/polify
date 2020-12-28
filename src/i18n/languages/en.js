@@ -55,7 +55,7 @@ export default {
     },
     faq: {
         what: 'What is Polify?',
-        whatParagraph: 'Polify is a tool to create low poly backgrounds & wallpapers. You can use them on your mobile device, on your desktop pc or as a graphic designer you could use them as design assets.',
+        whatParagraph: 'Polify is a tool to create low poly backgrounds & wallpapers based on a reference image. Some may call it a low poly pattern generator as well. You can use the generated image on your mobile device as a background image, on your desktop pc as a wallpaper or as a graphic designer you could use them as a design asset.',
         implement: 'Can you implement a new feature?',
         implementParagraph: 'Yes, please send me an email to polify [at] niekes.com with detailed information about your feature request and I will try implement it as soon as possible.',
         copyright: 'Who owns the copyright?',

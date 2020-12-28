@@ -20,6 +20,7 @@ import '@/assets/svg/minus.svg?sprite';
 import '@/assets/svg/pattern.svg?sprite';
 import '@/assets/svg/plus.svg?sprite';
 import '@/assets/svg/reset.svg?sprite';
+import '@/assets/svg/rotate.svg?sprite';
 import '@/assets/svg/upload.svg?sprite';
 
 /*

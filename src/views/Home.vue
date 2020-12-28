@@ -2,6 +2,12 @@
     <div class="home">
         <div class="control">
             <div class="control__reference-image">
+                <button
+                    class="reference-image__rotate"
+                    @click="rotateReferenceImage"
+                >
+                    <svg-icon :xlink="'#rotate'" />
+                </button>
                 <canvas
                     id="reference-image__canvas"
                     :width="width"
@@ -238,6 +244,7 @@ import {
 import InputRange from '@/components/InputRange';
 import InputRadio from '@/components/InputRadio';
 import BaseButton from '@/components/BaseButton';
+import SvgIcon from '@/components/SvgIcon';
 import canvasMixin from '@/mixins/canvas-mixin';
 import colorMixin from '@/mixins/color-mixin';
 import gridMixin from '@/mixins/grid-mixin';
@@ -257,6 +264,7 @@ export default {
         BaseButton,
         InputRadio,
         InputRange,
+        SvgIcon,
     },
 
     mixins: [colorMixin, canvasMixin, gridMixin],
@@ -386,6 +394,7 @@ export default {
         this.refCtx = select('#reference-image__canvas').node().getContext('2d');
 
         this.init();
+
         this.$root.$on('reset', this.reset);
         this.$root.$on('change-image', this.init);
     },
@@ -516,6 +525,34 @@ export default {
             });
         },
 
+        rotateReferenceImage() {
+            const canvas = select('#reference-image__canvas').node();
+            const src = canvas.toDataURL();
+            const newImage = create('img');
+            const {
+                height,
+                width,
+            } = canvas;
+
+            newImage.on('load', () => {
+                this.$store.commit('canvas/setWidth', height);
+                this.$store.commit('canvas/setHeight', width);
+
+                this.setupCanvas();
+
+                this.$nextTick(() => {
+                    this.refCtx.save();
+                    this.refCtx.transform(0, -1, 1, 0, 0, this.height);
+                    this.refCtx.drawImage(newImage.node(), 0, 0);
+                    this.refCtx.restore();
+
+                    this.update();
+                });
+            });
+
+            newImage.node().src = src;
+        },
+
         reset() {
             this.resetAmount();
             this.resetVibration();
@@ -623,6 +660,34 @@ export default {
     flex-direction: column;
     grid-area: reference-image;
     padding: $padding;
+    position: relative;
+}
+
+.reference-image__rotate {
+    background: $white-50;
+    border: none;
+    border-radius: $border-radius;
+    color: $black-75;
+    cursor: pointer;
+    margin: $margin-y / 2 $margin-x / 2;
+    padding: $padding-y / 2 $padding-x / 2;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background $transition-duration $transition-timing-function;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background: $white-75;
+    }
+
+    svg {
+        height: 1rem;
+        width: 1rem;
+    }
 }
 
 #reference-image__canvas {
