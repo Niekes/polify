@@ -630,7 +630,7 @@ export default {
 }
 
 .control {
-    background-color: rgba($primary, 0.2);
+    background-color: lighten(desaturate($primary, 75%), 70%);
     display: grid;
     gap: $margin-y * 2 0;
     grid-template-areas:

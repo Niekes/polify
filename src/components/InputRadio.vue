@@ -73,7 +73,7 @@ export default {
     position: relative;
 
     &__legend {
-        background: #d7d8dc;
+        background-color: lighten(desaturate($primary, 75%), 70%);
         color: $primary;
         font-size: $font-size * 0.7;
         font-weight: bolder;
