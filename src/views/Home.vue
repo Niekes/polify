@@ -873,7 +873,7 @@ export default {
         display: grid;
         grid-template-areas: "context" "control";
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(0, 1fr) minmax(0, 3fr);
+        grid-template-rows: minmax(0, 1.5fr) minmax(0, 3fr);
     }
 
     .context {
