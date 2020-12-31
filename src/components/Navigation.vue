@@ -62,10 +62,6 @@ export default {
             return this.$route.name === 'Home' && window.localStorage.getItem('gtag-cookie-accepted') !== 'true';
         },
 
-        isMobile() {
-            return this.$store.getters['mobile/isMobile'];
-        },
-
         galleryIsOpen() {
             return this.$store.getters['modal/galleryIsOpen'];
         },

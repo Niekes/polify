@@ -5,10 +5,12 @@
                 class="download-dialogue__thx"
                 v-text="$t('downloadDialogue.thanksForUsing')"
             />
+
             <div
                 class="download-dialogue__hint"
                 v-text="$t('downloadDialogue.hint')"
             />
+
             <input
                 v-model="recipient"
                 :disabled="isLoading"
@@ -16,6 +18,7 @@
                 type="email"
                 name="email"
                 :placeholder="$t('downloadDialogue.pleaseEnterEmail')"
+                @focus="scrollToBottom"
             >
 
             <beer-button
@@ -171,6 +174,17 @@ export default {
                 }
             }
         },
+        scrollToBottom() {
+            try {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    left: 0,
+                    behavior: 'smooth',
+                });
+            } catch (e) {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        },
     },
 };
 </script>
@@ -185,7 +199,7 @@ export default {
         "recipient recipient"
         "sponsor send";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 3fr min-content 1fr 1fr;
+    grid-template-rows: 3fr min-content min-content min-content;
     margin: 0 auto;
     max-width: $breakpoint-lg / 2;
     padding-bottom: $padding-y * 6;
@@ -219,7 +233,7 @@ export default {
         border: $border-width * 2 solid rgba($primary, 0.5);
         border-radius: $border-radius;
         grid-area: recipient;
-        padding: $padding-y * 2 $padding-x * 2;
+        padding: $padding-y * 3 $padding-x * 2;
         transition: border $transition-duration $transition-timing-function;
 
         &:focus {

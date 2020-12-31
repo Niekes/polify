@@ -2,6 +2,10 @@
     <div class="home">
         <div class="control">
             <div class="control__reference-image">
+                <div
+                    class="reference-image__hint"
+                    v-text="$t('home.referenceImage')"
+                />
                 <button
                     class="reference-image__rotate"
                     @click="rotateReferenceImage"
@@ -659,6 +663,7 @@ export default {
     display: flex;
     flex-direction: column;
     grid-area: reference-image;
+    margin-top: $margin-y;
     padding: $padding;
     position: relative;
 }
@@ -690,6 +695,17 @@ export default {
     }
 }
 
+.reference-image__hint {
+    bottom: 100%;
+    color: $primary;
+    cursor: pointer;
+    font-size: $font-size * 0.7;
+    font-weight: bolder;
+    position: absolute;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 #reference-image__canvas {
     border-radius: $border-radius;
     box-shadow: $box-shadow;
@@ -707,9 +723,12 @@ export default {
 }
 
 .control__customize-checkbox {
+    border: $border-width solid $black-20;
+    border-radius: $border-radius;
     display: flex;
     grid-area: checkbox;
     justify-content: space-between;
+    padding: $padding-y $padding-x;
 
     .customize-checkbox {
         align-items: center;

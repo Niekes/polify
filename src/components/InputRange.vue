@@ -99,7 +99,7 @@ export default {
             this.p = this.scale(this.value) * 100;
 
             this.slider
-                .style('background', `linear-gradient(90deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.20) ${this.p}%, white ${this.p}%)`);
+                .style('background', `linear-gradient(90deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) ${this.p}%, white ${this.p}%)`);
         },
     },
 };
@@ -127,12 +127,13 @@ export default {
         background-color: $white;
         border-radius: $border-radius;
         cursor: pointer;
-        padding: 0 $padding-x;
+        padding: $padding-y / 2 $padding-x;
+        transition: background-color $transition-duration / 2 $transition-timing-function;
 
         svg {
-            color: $black-75;
-            height: 0.4rem;
-            width: 0.4rem;
+            color: $primary;
+            height: 0.5rem;
+            width: 0.5rem;
         }
     }
 
@@ -175,9 +176,10 @@ export default {
     }
 
     &__input {
+        align-self: center;
         grid-area: input;
 
-        @include input-type-range;
+        @include input-type-range($white, 1.25rem, 1.25rem, 100%, 0.5rem);
     }
 }
 
@@ -185,16 +187,14 @@ export default {
     .range {
         &__subtract,
         &__add {
-            color: green;
-
             svg {
-                height: 0.7rem;
-                width: 0.7rem;
+                height: 0.8rem;
+                width: 0.8rem;
             }
         }
 
         &__input {
-            @include input-type-range($white, 1.75rem, 1.75rem, 100%, 1.5rem);
+            @include input-type-range($white, 1.75rem, 1.75rem, 100%, 0.75rem);
         }
     }
 }
