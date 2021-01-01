@@ -844,7 +844,6 @@ export default {
     display: flex;
     grid-area: context;
     justify-content: center;
-    padding: $padding-y * 2 $padding-x * 2;
     position: relative;
     width: 100%;
 }
@@ -885,8 +884,8 @@ export default {
     }
 
     #canvas {
-        max-height: 100%;
-        max-width: 100%;
+        max-height: 90%;
+        max-width: 90%;
     }
 }
 </style>
