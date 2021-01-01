@@ -865,8 +865,8 @@ export default {
 
 #canvas {
     border-radius: $border-radius;
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 80%;
+    max-width: 80%;
     position: relative;
 }
 
@@ -882,6 +882,11 @@ export default {
         border-bottom: $border-width solid $black-50;
         border-radius: 0;
         box-shadow: $box-shadow;
+    }
+
+    #canvas {
+        max-height: 100%;
+        max-width: 100%;
     }
 }
 </style>
