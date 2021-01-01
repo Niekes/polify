@@ -637,6 +637,7 @@ export default {
     background-color: lighten(desaturate($primary, 75%), 70%);
     display: grid;
     gap: $margin-y * 2 0;
+    grid-area: control;
     grid-template-areas:
         "reference-image"
         "sliders"
@@ -843,6 +844,7 @@ export default {
     display: flex;
     grid-area: context;
     justify-content: center;
+    padding: $padding-y * 2 $padding-x * 2;
     position: relative;
     width: 100%;
 }
@@ -863,8 +865,8 @@ export default {
 
 #canvas {
     border-radius: $border-radius;
-    max-height: 80%;
-    max-width: 80%;
+    max-height: 100%;
+    max-width: 100%;
     position: relative;
 }
 
@@ -880,22 +882,6 @@ export default {
         border-bottom: $border-width solid $black-50;
         border-radius: 0;
         box-shadow: $box-shadow;
-    }
-
-    #canvas {
-        max-height: 90%;
-        max-width: 90%;
-    }
-}
-</style>
-
-<style lang="scss">
-@media (min-width: $breakpoint-md) {
-    .polygons {
-        &:hover {
-            cursor: crosshair;
-            fill-opacity: 0.5;
-        }
     }
 }
 </style>
