@@ -41,7 +41,7 @@ export default {
         downloadAsPng: 'Download as png',
         downloadAsSvg: 'Download as svg',
         sendImages: 'Send images',
-        pleaseEnterEmail: 'Please enter your email',
+        pleaseEnterEmail: 'Please enter your email address',
         imageSendSuccess: 'Images were sent successfully to:\r\n\r\n"{recipient}"\r\n\r\nPlease check your mails',
         imageSendError: 'Error. Please try again later',
         hint: 'We will send you a .png and .svg file. We will not store your email address or share it with others.',

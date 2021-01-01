@@ -870,7 +870,7 @@ export default {
     position: relative;
 }
 
-@media (max-width: $breakpoint-sm) {
+@media (max-width: $breakpoint-md) {
     .home {
         display: grid;
         grid-template-areas: "context" "control";

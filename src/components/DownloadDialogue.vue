@@ -19,6 +19,7 @@
                 name="email"
                 :placeholder="$t('downloadDialogue.pleaseEnterEmail')"
                 @focus="scrollToBottom"
+                @keyup.enter="sendImages"
             >
 
             <beer-button
@@ -199,7 +200,7 @@ export default {
         "recipient recipient"
         "sponsor send";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 3fr min-content min-content min-content;
+    grid-template-rows: 1fr min-content min-content min-content;
     margin: 0 auto;
     max-width: $breakpoint-lg / 2;
     padding-bottom: $padding-y * 6;
@@ -233,6 +234,7 @@ export default {
         border: $border-width * 2 solid rgba($primary, 0.5);
         border-radius: $border-radius;
         grid-area: recipient;
+        line-height: 1.5;
         padding: $padding-y * 3 $padding-x * 2;
         transition: border $transition-duration $transition-timing-function;
 
