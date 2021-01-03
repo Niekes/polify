@@ -1,5 +1,5 @@
 <template>
-    <fieldset
+    <div
         :id="id"
         class="radio"
     >
@@ -26,17 +26,25 @@
             <label
                 class="content__label"
                 :for="`${id}-${index}`"
-                v-text="option.text"
-            />
+            >
+                <svg-icon :xlink="`#${option.value}`" />
+            </label>
         </div>
-    </fieldset>
+    </div>
 </template>
 
 <script>
+import SvgIcon from '@/components/SvgIcon';
+
 export default {
+
+    components: {
+        SvgIcon,
+    },
     model: {
         event: 'change',
     },
+
     props: {
         id: {
             type: String,
@@ -91,60 +99,30 @@ export default {
     }
 
     &__content {
-        .content__input {
-            display: none;
-
-            &:checked + label {
-                &::after {
-                    background: $primary;
-                    transform: scale(0.5);
-                }
-            }
-        }
-
         .content__label {
             align-items: center;
-            color: $primary;
+            color: transparent;
             cursor: pointer;
-            display: flex;
-            font-size: $font-size * 0.7;
-            font-weight: bolder;
-            padding-left: $font-size * 0.7 + $padding-x;
+            justify-content: center;
             position: relative;
             text-transform: uppercase;
             user-select: none;
             white-space: nowrap;
             z-index: 1;
 
-            &::before {
-                border: $border-width solid;
-                border-color: $primary;
-                border-radius: 50%;
-                bottom: 0;
-                content: '';
-                height: $font-size;
-                left: 0;
-                margin: auto;
-                position: absolute;
-                top: 0;
-                transform: scale(0.8);
-                width: $font-size;
+            svg {
+                height: 1.25rem;
+                width: 1.25rem;
             }
+        }
 
-            &::after {
-                border-radius: 50%;
-                bottom: 0;
-                content: '';
-                height: $font-size;
-                left: 0;
-                margin: auto;
-                position: absolute;
-                top: 0;
-                transform: scale(0);
-                transition:
-                    background $transition-duration / 2 $transition-timing-function,
-                    transform $transition-duration / 2 $transition-timing-function;
-                width: $font-size;
+        .content__input {
+            display: none;
+
+            &:checked + .content__label {
+                svg {
+                    color: $primary;
+                }
             }
         }
     }

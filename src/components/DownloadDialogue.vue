@@ -85,6 +85,9 @@ export default {
         voronoi() {
             return this.$store.getters['canvas/voronoi'];
         },
+        hexbin() {
+            return this.$store.getters['canvas/hexbin'];
+        },
         shape() {
             return this.$store.state.shape.shape;
         },

@@ -10,7 +10,7 @@ export default {
         imprint: 'Imprint',
     },
     home: {
-        amountOfPoints: 'Amount of points: {n}',
+        sizeOfShape: 'Size of {shape}',
         cell: 'Cell',
         changeImage: 'Change image',
         contrast: 'Contrast: {n}',
@@ -32,6 +32,7 @@ export default {
         threshold: 'Threshold',
         title: 'home',
         triangle: 'Triangle',
+        hexagon: 'Hexagon',
         upload: 'Upload',
         vibration: 'Vibration: {n}',
     },

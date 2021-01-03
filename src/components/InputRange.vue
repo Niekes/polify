@@ -1,5 +1,8 @@
 <template>
-    <div class="range">
+    <div
+        class="range"
+        :class="{ 'range--disabled': disabled }"
+    >
         <span
             class="range__subtract"
             @click="value > min ? $emit('subtract', step) : null"
@@ -18,6 +21,7 @@
             :min="min"
             :max="max"
             :step="step"
+            :disabled="disabled"
             type="range"
             @input="handleInput"
         >
@@ -68,6 +72,10 @@ export default {
             type: Number,
             default: 1,
         },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     data() {
@@ -114,6 +122,23 @@ export default {
         "subtract input input add";
     grid-template-columns: min-content 1fr 1fr min-content;
     grid-template-rows: 1fr 1fr;
+    position: relative;
+
+    &--disabled {
+        opacity: 0.5;
+
+        &::before {
+            background: transparent;
+            content: '';
+            cursor: not-allowed;
+            height: 105%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 2;
+        }
+    }
 
     &__subtract,
     &__add,

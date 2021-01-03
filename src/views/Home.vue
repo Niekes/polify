@@ -23,9 +23,9 @@
                     v-model.number="amount"
                     class="sliders__input"
                     :min="10"
-                    :max="2000"
+                    :max="1000"
                     :step="10"
-                    :label="$tc('home.amountOfPoints', amount)"
+                    :label="$t('home.sizeOfShape', { shape })"
                     @input.native="update()"
                     @add="(step) => { amount += step; update()}"
                     @subtract="(step) => { amount -= step; update()}"
@@ -37,6 +37,7 @@
                     :min="0"
                     :max="125"
                     :step="1"
+                    :disabled="shape === 'hexagon'"
                     :label="$tc('home.vibration', format(f.percent)(vibration / 125))"
                     @input.native="update()"
                     @add="(step) => { vibration += step; update()}"
@@ -243,7 +244,10 @@ import {
     create,
     select,
     format,
+    scaleLinear,
 } from 'd3';
+
+import { hexbin as Hexbin } from 'd3-hexbin';
 
 import InputRange from '@/components/InputRange';
 import InputRadio from '@/components/InputRadio';
@@ -281,6 +285,7 @@ export default {
             virtualCanvas: null,
             shapeOptions: [
                 { value: 'triangle', text: this.$t('home.triangle') },
+                { value: 'hexagon', text: this.$t('home.hexagon') },
                 { value: 'cell', text: this.$t('home.cell') },
             ],
         };
@@ -422,6 +427,13 @@ export default {
             newImage.node().src = this.referenceImages.get(imageReference).src;
         },
         update() {
+            this.hexRadiusScale = scaleLinear()
+                .domain([0, 1000])
+                .range([150, 15])
+                .clamp(true);
+
+            this.hexRadius = this.hexRadiusScale(this.amount);
+
             this.particales = this.processGrid();
 
             this.delaunay = Delaunay.from(this.particales);
@@ -429,8 +441,19 @@ export default {
             this.voronoi = this.delaunay
                 .voronoi([0, 0, this.width, this.height]);
 
+            this.hexbin = Hexbin()
+                .radius(this.hexRadiusScale(this.amount))
+                .extent([
+                    [0, 0],
+                    [this.width, this.height],
+                ]);
+
             if (this.shape === 'triangle') {
                 this.updateTriangles();
+            }
+
+            if (this.shape === 'hexagon') {
+                this.updateHexagons();
             }
 
             if (this.shape === 'cell') {
@@ -439,6 +462,7 @@ export default {
 
             this.$store.commit('canvas/setVoronoi', this.voronoi);
             this.$store.commit('canvas/setDelaunay', this.delaunay);
+            this.$store.commit('canvas/setHexbin', this.hexbin);
         },
 
         updateTriangles() {
@@ -461,12 +485,30 @@ export default {
             }
         },
 
+        updateHexagons() {
+            this.ctx.clearRect(0, 0, this.width * 2, this.height * 2);
+
+            const canvasHexagon = new Path2D(this.hexbin.hexagon());
+
+            this.hexbin.centers().forEach((d, i) => {
+                const color = this.setColor(i);
+
+                this.ctx.translate(d[0], d[1]);
+
+                this.ctx.fillStyle = color.fill;
+                this.ctx.strokeStyle = color.stroke;
+                this.ctx.stroke(canvasHexagon);
+                this.ctx.fill(canvasHexagon);
+                this.ctx.translate(-d[0], -d[1]);
+            });
+        },
+
         updateCells() {
             const cells = this.voronoi.cellPolygons();
 
             this.ctx.clearRect(0, 0, this.width * 2, this.height * 2);
 
-            // eslint-disable-next-line no-restricted-syntax, no-unused-vars
+            // eslint-disable-next-line no-restricted-syntax
             for (const cell of cells) {
                 const color = this.setColor(cell.index);
 
@@ -482,6 +524,10 @@ export default {
         changeColor() {
             if (this.shape === 'triangle') {
                 this.updateTriangles();
+            }
+
+            if (this.shape === 'hexagon') {
+                this.updateHexagons();
             }
 
             if (this.shape === 'cell') {
@@ -863,6 +909,7 @@ export default {
 }
 
 #canvas {
+    border: $border-width solid $black-10;
     border-radius: $border-radius;
     max-height: 80%;
     max-width: 80%;

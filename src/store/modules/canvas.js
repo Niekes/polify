@@ -1,3 +1,9 @@
+// TODO Share via query params
+// import router from '@/router';
+
+// const { query } = router.currentRoute;
+// console.log(query);
+
 /*
     Set initital state
 */
@@ -7,6 +13,7 @@ const s = {
     width: 0,
     delaunay: null,
     voronoi: null,
+    hexbin: null,
     fillOpacity: 100,
     strokeOpacity: 100,
     grayscale: false,
@@ -27,6 +34,7 @@ const getters = {
     width: state => state.width,
     delaunay: state => state.delaunay,
     voronoi: state => state.voronoi,
+    hexbin: state => state.hexbin,
 };
 
 /*
@@ -57,6 +65,11 @@ const mutations = {
     setVoronoi: (st, voronoi) => {
         const state = st;
         state.voronoi = voronoi;
+    },
+
+    setHexbin(st, hexbin) {
+        const state = st;
+        state.hexbin = hexbin;
     },
 
     setFillOpacity: (st, opacity) => {

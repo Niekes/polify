@@ -30,53 +30,63 @@ export default {
     },
     methods: {
         setColor(i) {
-            const [x, y] = this.getPolygonCentroid(i);
-            const pixel = this.getPixel(x, y);
+            try {
+                const [x, y] = this.getPolygonCentroid(i);
+                const pixel = this.getPixel(x, y);
 
-            const colorHsl = pixel[3] === 0
-                ? hsl(0, 0, 1)
-                : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
+                const colorHsl = pixel[3] === 0
+                    ? hsl(0, 0, 1)
+                    : hsl(color(`rgba(${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]})`));
 
-            const c = this.contrast + 1;
-            const intercept = 128 * (1 - c);
+                const c = this.contrast + 1;
+                const intercept = 128 * (1 - c);
 
-            colorHsl.h += this.hue;
-            colorHsl.s *= this.saturation;
-            colorHsl.l *= this.lightness;
-            colorHsl.opacity = this.fillOpacity;
+                colorHsl.h += this.hue;
+                colorHsl.s *= this.saturation;
+                colorHsl.l *= this.lightness;
+                colorHsl.opacity = this.fillOpacity;
 
-            const rgbColor = colorHsl.rgb();
+                const rgbColor = colorHsl.rgb();
 
-            rgbColor.r = rgbColor.r * c + intercept;
-            rgbColor.g = rgbColor.g * c + intercept;
-            rgbColor.b = rgbColor.b * c + intercept;
+                rgbColor.r = rgbColor.r * c + intercept;
+                rgbColor.g = rgbColor.g * c + intercept;
+                rgbColor.b = rgbColor.b * c + intercept;
 
-            if (this.invert) {
-                rgbColor.r = 255 - rgbColor.r;
-                rgbColor.g = 255 - rgbColor.g;
-                rgbColor.b = 255 - rgbColor.b;
+                if (this.invert) {
+                    rgbColor.r = 255 - rgbColor.r;
+                    rgbColor.g = 255 - rgbColor.g;
+                    rgbColor.b = 255 - rgbColor.b;
+                }
+
+                if (this.grayscale) {
+                    const gs = (rgbColor.r + rgbColor.g + rgbColor.b) / 3;
+                    rgbColor.r = gs;
+                    rgbColor.g = gs;
+                    rgbColor.b = gs;
+                }
+
+                if (this.threshold) {
+                    const t = (0.2126
+                        * rgbColor.r + 0.7152
+                        * rgbColor.g + 0.0722
+                        * rgbColor.r >= 100)
+                        ? 255
+                        : 0;
+                    rgbColor.r = t;
+                    rgbColor.g = t;
+                    rgbColor.b = t;
+                }
+
+                return {
+                    fill: rgbColor.toString(),
+                    stroke: rgbColor.copy({ opacity: this.strokeOpacity }).toString(),
+                };
+            } catch (e) {
+                return {
+                    fill: '#000',
+                    stroke: '#000',
+                };
             }
-
-            if (this.grayscale) {
-                const gs = (rgbColor.r + rgbColor.g + rgbColor.b) / 3;
-                rgbColor.r = gs;
-                rgbColor.g = gs;
-                rgbColor.b = gs;
-            }
-
-            if (this.threshold) {
-                const t = (0.2126 * rgbColor.r + 0.7152 * rgbColor.g + 0.0722 * rgbColor.r >= 100)
-                    ? 255
-                    : 0;
-                rgbColor.r = t;
-                rgbColor.g = t;
-                rgbColor.b = t;
-            }
-
-            return {
-                fill: rgbColor.toString(),
-                stroke: rgbColor.copy({ opacity: this.strokeOpacity }).toString(),
-            };
         },
 
         getUniqueColorByInt(index) {

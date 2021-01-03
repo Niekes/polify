@@ -13,8 +13,6 @@ export default {
             const columns = rows;
             const v = this.vibration;
 
-            let cell = 0;
-
             gridXScale.domain([1, columns]).range([0, this.width]);
             gridYScale.domain([1, rows]).range([0, this.height]);
 
@@ -23,12 +21,10 @@ export default {
                     const gridX = gridXScale(j);
                     const gridY = gridYScale(i);
 
-                    data[cell] = [
+                    data.push([
                         this.getGridX(gridX, v),
                         this.getGridY(gridY, v),
-                    ];
-
-                    cell += 1;
+                    ]);
                 }
             }
 

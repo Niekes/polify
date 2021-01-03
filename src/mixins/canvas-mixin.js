@@ -25,6 +25,24 @@ export default {
         },
 
         getPolygonCentroid(i) {
+            if (this.shape === 'hexagon') {
+                const [cx, cy] = this.hexbin.centers()[i];
+
+                if (cx >= this.width && cy >= this.height) {
+                    return [this.width - 1, this.height - 1];
+                }
+
+                if (cx >= this.width) {
+                    return [this.width - 1, cy];
+                }
+
+                if (cy >= this.height) {
+                    return [cx, this.height - 1];
+                }
+
+                return [cx, cy];
+            }
+
             if (this.shape === 'cell') {
                 return polygonCentroid(this.voronoi.cellPolygon(i));
             }
