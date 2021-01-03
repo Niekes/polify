@@ -2,7 +2,7 @@
     Set initital state
 */
 const s = {
-    shape: 'hexagon',
+    shape: 'triangle',
 };
 
 /*

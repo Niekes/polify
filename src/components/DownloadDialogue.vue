@@ -105,9 +105,19 @@ export default {
 
     methods: {
         createSvg() {
-            const data = this.shape === 'cell'
-                ? this.voronoi.cellPolygons()
-                : this.delaunay.trianglePolygons();
+            let data = null;
+
+            if (this.shape === 'triangle') {
+                data = this.delaunay.trianglePolygons();
+            }
+
+            if (this.shape === 'hexagon') {
+                data = this.hexbin.centers();
+            }
+
+            if (this.shape === 'cell') {
+                data = this.voronoi.cellPolygons();
+            }
 
             select('#svg')
                 .selectAll('path')
@@ -118,6 +128,10 @@ export default {
                 .attr('stroke', (d, i) => this.setColor(i).stroke)
                 .attr('stroke-width', 1)
                 .attr('d', (d, i) => {
+                    if (this.shape === 'hexagon') {
+                        return `M${d[0]},${d[1]}${this.hexbin.hexagon()}`;
+                    }
+
                     if (this.shape === 'cell') {
                         return this.voronoi.renderCell(i);
                     }

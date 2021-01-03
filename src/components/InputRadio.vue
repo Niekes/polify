@@ -111,8 +111,8 @@ export default {
             z-index: 1;
 
             svg {
-                height: 1.25rem;
-                width: 1.25rem;
+                height: 1.1rem;
+                width: 1.1rem;
             }
         }
 
