@@ -23,7 +23,7 @@
                     v-model.number="amount"
                     class="sliders__input"
                     :min="10"
-                    :max="1000"
+                    :max="1500"
                     :step="10"
                     :label="$t('home.sizeOfShape', { shape })"
                     @input.native="update()"
@@ -174,6 +174,7 @@
                     class="randomize-btn"
                     :text="$t('home.randomize')"
                     :icon="'#change'"
+                    :disabled="shape === 'hexagon' || vibration === 0"
                     @click.native="update()"
                 />
 
