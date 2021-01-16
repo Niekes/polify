@@ -25,7 +25,7 @@
                     :min="10"
                     :max="1500"
                     :step="10"
-                    :label="$t('home.sizeOfShape', { shape })"
+                    :label="`${$t('home.sizeOfShape', { shape })}s`"
                     @input.native="update()"
                     @add="(step) => { amount += step; update()}"
                     @subtract="(step) => { amount -= step; update()}"
