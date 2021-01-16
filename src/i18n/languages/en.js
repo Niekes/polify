@@ -1,7 +1,7 @@
 export default {
     general: {
         dropIt: 'Drop it!',
-        buymeabeer: 'Buy me a beer',
+        buymeacoffee: 'Buy me a coffee',
     },
     navigation: {
         cookies: 'Cookies',

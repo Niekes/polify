@@ -21,7 +21,7 @@
                 @click="goTo('imprint')"
                 v-text="$t('navigation.imprint')"
             />
-            <beer-button
+            <coffee-button
                 class="item__sponsor"
             />
         </div>
@@ -31,14 +31,14 @@
 <script>
 import Modal from '@/components/Modal';
 import ModalMixin from '@/mixins/modal-mixin';
-import BeerButton from '@/components/BeerButton';
+import CoffeeButton from '@/components/CoffeeButton';
 
 export default {
     name: 'NavigationMenu',
 
     components: {
         Modal,
-        BeerButton,
+        CoffeeButton,
     },
 
     mixins: [ModalMixin],

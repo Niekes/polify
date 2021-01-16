@@ -14,7 +14,7 @@
         <div
             class="navigation__items"
         >
-            <beer-button
+            <coffee-button
                 class="item__sponsor"
             />
 
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import BeerButton from '@/components/BeerButton';
+import CoffeeButton from '@/components/CoffeeButton';
 import CookiesBanner from '@/components/CookiesBanner';
 import DownloadDialogue from '@/components/DownloadDialogue';
 import ImageGallery from '@/components/ImageGallery';
@@ -49,7 +49,7 @@ export default {
     name: 'Navigation',
 
     components: {
-        BeerButton,
+        CoffeeButton,
         CookiesBanner,
         DownloadDialogue,
         ImageGallery,

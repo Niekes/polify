@@ -1,11 +1,11 @@
 <template>
     <a
-        class="beer-button"
+        class="coffee-button"
         :href="buymeacoffee"
         target="_blank"
     >
-        {{ $t('general.buymeabeer') }}
-        <svg-icon :xlink="'#beer'" />
+        {{ $t('general.buymeacoffee') }}
+        <svg-icon :xlink="'#coffee'" />
     </a>
 </template>
 
@@ -15,7 +15,7 @@ import SvgIcon from '@/components/SvgIcon';
 import config from '@/config';
 
 export default {
-    name: 'BeerButton',
+    name: 'CoffeeButton',
 
     components: {
         SvgIcon,
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.beer-button {
+.coffee-button {
     align-items: center;
     background: rgba($primary, 0.9);
     border-radius: $border-radius;

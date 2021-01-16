@@ -10,10 +10,10 @@ import './registerServiceWorker';
 */
 
 /* eslint-disable import/extensions */
-import '@/assets/svg/beer.svg?sprite';
 import '@/assets/svg/cell.svg?sprite';
 import '@/assets/svg/change.svg?sprite';
 import '@/assets/svg/close.svg?sprite';
+import '@/assets/svg/coffee.svg?sprite';
 import '@/assets/svg/hexagon.svg?sprite';
 import '@/assets/svg/image.svg?sprite';
 import '@/assets/svg/logo.svg?sprite';

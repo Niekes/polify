@@ -22,7 +22,7 @@
                 @keyup.enter="sendImages"
             >
 
-            <beer-button
+            <coffee-button
                 class="download-dialogue__sponsor"
             />
 
@@ -46,7 +46,7 @@ import {
 
 import Modal from '@/components/Modal';
 import BaseButton from '@/components/BaseButton';
-import BeerButton from '@/components/BeerButton';
+import CoffeeButton from '@/components/CoffeeButton';
 import FlashMessageMixin from '@/mixins/flash-message-mixin';
 import colorMixin from '@/mixins/color-mixin';
 import canvasMixin from '@/mixins/canvas-mixin';
@@ -57,7 +57,7 @@ export default {
     name: 'DownloadDialogue',
 
     components: {
-        BeerButton,
+        CoffeeButton,
         BaseButton,
         Modal,
     },
