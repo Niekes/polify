@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import BaseModal from './BaseModal.vue';
 import BaseSegmented from './BaseSegmented.vue';
 import { embedMetadata } from '../lib/embedMetadata';
-import { pngScale } from '../lib/pngScale';
+import { pngSize } from '../lib/pngSize';
 import { version } from '../../package.json';
 
 const isOpen = defineModel<boolean>({ default: false });
@@ -20,11 +20,7 @@ const scale = ref('2');
 const failed = ref(false);
 
 // the size the PNG really gets: 4× of a large surface is capped to what every browser draws
-const pngSize = computed(() => {
-    const factor = pngScale(props, Number(scale.value));
-
-    return { width: Math.floor(props.width * factor), height: Math.floor(props.height * factor) };
-});
+const png = computed(() => pngSize(props, Number(scale.value)));
 
 function hand(blob: Blob, extension: string) {
     const anchor = document.createElement('a');
@@ -54,8 +50,8 @@ async function exportPng() {
     const canvas = document.createElement('canvas');
 
     failed.value = false;
-    canvas.width = pngSize.value.width;
-    canvas.height = pngSize.value.height;
+    canvas.width = png.value.width;
+    canvas.height = png.value.height;
 
     try {
         image.src = url;
@@ -99,7 +95,7 @@ async function exportPng() {
             </button>
             <BaseSegmented v-model="scale" legend="PNG size" :options="scales" />
             <span class="label pb-1 text-xs tabular-nums">
-                {{ pngSize.width }} × {{ pngSize.height }} px
+                {{ png.width }} × {{ png.height }} px
             </span>
             <button type="button" class="btn btn-primary btn-sm" @click="exportPng">
                 Export PNG
