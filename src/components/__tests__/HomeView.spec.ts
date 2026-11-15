@@ -123,6 +123,16 @@ describe('HomeView', () => {
         expect(parseArtwork(source.split('?')[1]!)).toEqual(gradientArtwork);
     });
 
+    it('caps a 4× PNG at the largest canvas every browser draws', async () => {
+        const dialog = wrapper.findComponent(TheExportDialog);
+
+        expect(dialog.text()).toContain('3200 × 3200 px');
+
+        await dialog.find('input[type=radio][value="4"]').setValue();
+
+        expect(dialog.text()).toContain('4096 × 4096 px');
+    });
+
     it('says so when the PNG cannot be made', async () => {
         // jsdom decodes no images, as a browser refuses an oversized canvas
         vi.stubGlobal('URL', { createObjectURL: () => 'blob:polify', revokeObjectURL: vi.fn() });
@@ -158,9 +168,9 @@ describe('HomeView', () => {
         expect(vm.artwork.source).toEqual({ kind: 'upload', rotation: 0 });
     });
 
-    it('shows the imprint in the about dialog', async () => {
+    it('shows the legal notice in the about dialog', async () => {
         await button(wrapper, 'About').trigger('click');
 
-        expect(wrapper.findComponent(TheAbout).text()).toContain('Impressum');
+        expect(wrapper.findComponent(TheAbout).text()).toContain('Legal notice');
     });
 });

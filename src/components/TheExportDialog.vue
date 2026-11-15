@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import BaseModal from './BaseModal.vue';
 import BaseSegmented from './BaseSegmented.vue';
 import { embedMetadata } from '../lib/embedMetadata';
+import { pngScale } from '../lib/pngScale';
 import { version } from '../../package.json';
 
 const isOpen = defineModel<boolean>({ default: false });
@@ -17,6 +18,13 @@ const scales = [
 ];
 const scale = ref('2');
 const failed = ref(false);
+
+// the size the PNG really gets: 4× of a large surface is capped to what every browser draws
+const pngSize = computed(() => {
+    const factor = pngScale(props, Number(scale.value));
+
+    return { width: Math.floor(props.width * factor), height: Math.floor(props.height * factor) };
+});
 
 function hand(blob: Blob, extension: string) {
     const anchor = document.createElement('a');
@@ -41,24 +49,23 @@ function exportSvg() {
 
 // the PNG is the SVG rasterised by the browser, so both files show the same artwork
 async function exportPng() {
-    const factor = Number(scale.value);
     const url = URL.createObjectURL(new Blob([props.svg], { type: 'image/svg+xml' }));
     const image = new Image();
     const canvas = document.createElement('canvas');
 
     failed.value = false;
-    canvas.width = props.width * factor;
-    canvas.height = props.height * factor;
+    canvas.width = pngSize.value.width;
+    canvas.height = pngSize.value.height;
 
     try {
         image.src = url;
         await image.decode();
         canvas.getContext('2d')!.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-        // null when the canvas is larger than the browser allows, as on phones at 4×
+        // null when the browser cannot make the file, e.g. out of memory
         const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve));
 
-        if (!blob) throw new Error('canvas too large');
+        if (!blob) throw new Error('no PNG');
 
         hand(blob, 'png');
         isOpen.value = false;
@@ -91,12 +98,15 @@ async function exportPng() {
                 Export SVG
             </button>
             <BaseSegmented v-model="scale" legend="PNG size" :options="scales" />
+            <span class="label pb-1 text-xs tabular-nums">
+                {{ pngSize.width }} × {{ pngSize.height }} px
+            </span>
             <button type="button" class="btn btn-primary btn-sm" @click="exportPng">
                 Export PNG
             </button>
         </div>
         <p v-if="failed" role="alert" class="alert alert-error alert-soft mt-4">
-            The PNG could not be made at this size. Try a smaller one.
+            The PNG could not be made. Try a smaller size.
         </p>
     </BaseModal>
 </template>

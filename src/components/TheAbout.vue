@@ -32,64 +32,54 @@ const questions = [
                 <p v-text="item.answer" />
             </section>
 
-            <!-- the imprint as published by polify 1, word for word -->
-            <section lang="de" class="text-sm">
-                <h4 class="font-semibold">Impressum</h4>
-                <h5 class="mt-2 font-semibold">Angaben gemäß § 5 TMG</h5>
+            <!-- the imprint of polify 1, translated; the facts and the cited sections are unchanged -->
+            <section class="text-sm">
+                <h4 class="font-semibold">Legal notice</h4>
+                <h5 class="mt-2 font-semibold">Information pursuant to § 5 TMG</h5>
+                <p class="mt-1">Stefan Nieke<br />Karl-Marx-Allee 102<br />10243 Berlin, Germany</p>
+                <h5 class="mt-2 font-semibold">Contact</h5>
+                <p class="mt-1">Phone: +4915678523933<br />Email: polify [at] niekes.com</p>
+                <h5 class="mt-2 font-semibold">Liability for content</h5>
                 <p class="mt-1">
-                    Stefan Nieke<br />
-                    Karl-Marx-Allee 102<br />
-                    10243 Berlin
-                </p>
-                <h5 class="mt-2 font-semibold">Kontakt</h5>
-                <p class="mt-1">
-                    Telefon: +4915678523933<br />
-                    E-Mail: polify [at] niekes.com
-                </p>
-                <h5 class="mt-2 font-semibold">Haftung für Inhalte</h5>
-                <p class="mt-1">
-                    Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen
-                    Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind
-                    wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
-                    gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen,
-                    die auf eine rechtswidrige Tätigkeit hinweisen.
+                    As a service provider, we are responsible for our own content on these pages
+                    under general law pursuant to § 7 (1) TMG. Under §§ 8 to 10 TMG, however, we are
+                    not obliged to monitor transmitted or stored third-party information or to
+                    investigate circumstances that indicate unlawful activity.
                 </p>
                 <p class="mt-1">
-                    Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach
-                    den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung
-                    ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung
-                    möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir
-                    diese Inhalte umgehend entfernen.
+                    Obligations to remove or block the use of information under general law remain
+                    unaffected. Liability in this respect is only possible from the moment we become
+                    aware of a specific infringement. As soon as we become aware of such
+                    infringements, we will remove the content concerned immediately.
                 </p>
-                <h5 class="mt-2 font-semibold">Haftung für Links</h5>
+                <h5 class="mt-2 font-semibold">Liability for links</h5>
                 <p class="mt-1">
-                    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir
-                    keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine
-                    Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige
-                    Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden
-                    zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
-                    Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
-                </p>
-                <p class="mt-1">
-                    Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne
-                    konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden
-                    von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
-                </p>
-                <h5 class="mt-2 font-semibold">Urheberrecht</h5>
-                <p class="mt-1">
-                    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
-                    unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung,
-                    Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes
-                    bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-                    Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen
-                    Gebrauch gestattet.
+                    Our offer contains links to external third-party websites whose content we
+                    cannot influence. We therefore cannot accept any liability for this third-party
+                    content. The respective provider or operator of the linked pages is always
+                    responsible for their content. The linked pages were checked for possible legal
+                    violations at the time of linking. No unlawful content was recognisable at that
+                    time.
                 </p>
                 <p class="mt-1">
-                    Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden
-                    die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als
-                    solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung
-                    aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden
-                    von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
+                    Permanent monitoring of the content of linked pages is not reasonable without
+                    concrete evidence of an infringement. As soon as we become aware of
+                    infringements, we will remove such links immediately.
+                </p>
+                <h5 class="mt-2 font-semibold">Copyright</h5>
+                <p class="mt-1">
+                    The content and works created by the site operators on these pages are subject
+                    to German copyright law. Reproduction, editing, distribution and any kind of use
+                    beyond the limits of copyright law require the written consent of the respective
+                    author or creator. Downloads and copies of this site are only permitted for
+                    private, non-commercial use.
+                </p>
+                <p class="mt-1">
+                    Insofar as the content on this site was not created by the operator, the
+                    copyrights of third parties are respected. In particular, third-party content is
+                    marked as such. Should you nevertheless become aware of a copyright
+                    infringement, please let us know. As soon as we become aware of infringements,
+                    we will remove such content immediately.
                 </p>
             </section>
         </div>
