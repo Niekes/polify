@@ -39,6 +39,13 @@ describe('useUrlSync', () => {
         expect(artwork.value.seed).toBe(9);
     });
 
+    it('gives the full link of the artwork', () => {
+        artwork.value.amount = 700;
+
+        expect(sync.link.value).toMatch(/^http:\/\/localhost(:\d+)?\/\?c=/);
+        expect(parseArtwork(sync.link.value.split('?')[1]!)!.amount).toBe(700);
+    });
+
     it('writes the opened artwork into the first entry', () => {
         sync.setupWatchers();
 

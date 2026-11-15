@@ -24,6 +24,9 @@ export function useUrlSync(artwork: Ref<Artwork>) {
 
     const linkOf = () => `${window.location.pathname}?${serializeArtwork(artwork.value)}`;
 
+    // the full address of the artwork, as it is shared and embedded in an export
+    const link = computed(() => `${window.location.origin}${linkOf()}`);
+
     function serializeToUrl() {
         const query = serializeArtwork(artwork.value);
         const current = parseArtwork(window.location.search.substring(1));
@@ -93,5 +96,5 @@ export function useUrlSync(artwork: Ref<Artwork>) {
         onUnmounted(() => scheduleSerialize.cancel());
     }
 
-    return { initFromUrl, setupWatchers, canUndo, canRedo, undo, redo };
+    return { initFromUrl, setupWatchers, link, canUndo, canRedo, undo, redo };
 }

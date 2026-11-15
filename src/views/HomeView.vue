@@ -17,7 +17,6 @@ import { gallery } from '../config/gallery';
 import { historyShortcut } from '../lib/historyShortcut';
 import { computePolygons } from '../lib/polygons';
 import { renderArtwork } from '../lib/renderArtwork';
-import { serializeArtwork } from '../lib/urlState';
 import { type Artwork } from '../types/Artwork';
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 31);
@@ -27,7 +26,7 @@ const artwork = ref<Artwork>(
     defaultArtwork(gallery[Math.floor(Math.random() * gallery.length)]!, newSeed())
 );
 
-const { initFromUrl, setupWatchers, canUndo, canRedo, undo, redo } = useUrlSync(artwork);
+const { initFromUrl, setupWatchers, link, canUndo, canRedo, undo, redo } = useUrlSync(artwork);
 
 initFromUrl();
 setupWatchers();
@@ -51,13 +50,15 @@ function takeUpload(file: File | undefined) {
 
 const { open: openFileDialog, onChange } = useFileDialog({
     accept: accept.join(','),
-    multiple: false
+    multiple: false,
+    // without it, choosing the same file again fires no change
+    reset: true
 });
 
 onChange((files) => takeUpload(files?.[0]));
 
-const stage = useTemplateRef<HTMLElement>('stage');
-const { isOverDropZone } = useDropZone(stage, {
+const workspace = useTemplateRef<HTMLElement>('workspace');
+const { isOverDropZone } = useDropZone(workspace, {
     dataTypes: accept,
     multiple: false,
     onDrop: (files) => takeUpload(files?.[0])
@@ -81,10 +82,6 @@ const svg = computed(() =>
               surface.value
           )
         : ''
-);
-
-const link = computed(
-    () => `${location.origin}${location.pathname}?${serializeArtwork(artwork.value)}`
 );
 
 function chooseImage(name: string) {
@@ -138,14 +135,14 @@ const showAbout = ref(false);
         <div class="drawer lg:drawer-open">
             <input id="controls" type="checkbox" class="drawer-toggle" />
 
-            <main ref="stage" class="drawer-content stage bg-base-100">
+            <main ref="workspace" class="drawer-content workspace bg-base-100">
                 <label for="controls" class="btn btn-sm drawer-button self-start lg:hidden">
                     <AdjustmentsHorizontalIcon class="size-4" /> Controls
                 </label>
 
-                <div class="stage__fit">
+                <div class="workspace__fit">
                     <div
-                        class="stage__surface"
+                        class="workspace__surface"
                         :class="isOverDropZone && 'outline-4 outline-primary'"
                         :style="surface && { '--ratio': surface.width / surface.height }"
                     >
@@ -238,7 +235,7 @@ const showAbout = ref(false);
     min-height: 100%;
 }
 
-.stage {
+.workspace {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -247,7 +244,7 @@ const showAbout = ref(false);
 }
 
 /* the surface is as large as fits while keeping its aspect ratio */
-.stage__fit {
+.workspace__fit {
     flex: 1;
     min-height: 0;
     display: grid;
@@ -255,7 +252,7 @@ const showAbout = ref(false);
     container-type: size;
 }
 
-.stage__surface {
+.workspace__surface {
     display: grid;
     place-items: center;
     width: min(100cqw, 100cqh * var(--ratio, 16 / 9));
@@ -264,7 +261,7 @@ const showAbout = ref(false);
     border-radius: var(--radius-box);
 }
 
-.stage__surface :deep(svg) {
+.workspace__surface :deep(svg) {
     display: block;
     width: 100%;
     height: 100%;

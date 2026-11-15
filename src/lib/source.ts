@@ -1,5 +1,5 @@
 import { color } from 'd3';
-import { colorInterPolators } from '../config/colorInterPolators';
+import { ramps } from '../config/ramps';
 import { SURFACE_LONG_EDGE } from '../config/defaults';
 import { type AspectRatio, type GradientSource, type Size } from '../types/Artwork';
 import { type Rgba } from './color';
@@ -23,9 +23,13 @@ export function surfaceSize(aspect: number): Size {
         : { width: Math.round(SURFACE_LONG_EDGE * aspect), height: SURFACE_LONG_EDGE };
 }
 
+// any whole number of quarter turns as 0 to 3; anything else is no turn
+export const quarterTurns = (turns: unknown) =>
+    typeof turns === 'number' && Number.isInteger(turns) ? ((turns % 4) + 4) % 4 : 0;
+
 // the pixels turned clockwise by quarter turns
 export function rotatePixels(pixels: Pixels, turns: number): Pixels {
-    const quarter = ((turns % 4) + 4) % 4;
+    const quarter = quarterTurns(turns);
 
     if (quarter === 0) return pixels;
 
@@ -80,9 +84,7 @@ function gradientPosition(gradient: GradientSource, { width, height }: Size, x: 
 }
 
 export function gradientSampler(gradient: GradientSource, size: Size): Sampler {
-    const ramp = (
-        colorInterPolators.find(({ name }) => name === gradient.ramp) ?? colorInterPolators[0]!
-    ).fn;
+    const ramp = (ramps.find(({ name }) => name === gradient.ramp) ?? ramps[0]!).fn;
 
     return (x, y) => {
         const t = Math.min(1, Math.max(0, gradientPosition(gradient, size, x, y)));

@@ -1,8 +1,8 @@
 import { interpolateLab, interpolateRgbBasis } from 'd3';
 import * as chromatic from 'd3-scale-chromatic';
-import { type ColorInterPolator } from '../types/ColorInterPolators';
+import { type RampName } from '../types/Ramp';
 
-type Ramp = (t: number) => string;
+type RampFn = (t: number) => string;
 
 const interpolateBlueToPink = interpolateLab('#00adf6', '#e701e6');
 const interpolateMegatron = interpolateRgbBasis(['#C6FFDD', '#FBD786', '#ec38bc']);
@@ -29,18 +29,18 @@ const customRamps = {
     interpolateBlueToPink,
     interpolateYoda,
     interpolateGold
-} satisfies Partial<Record<ColorInterPolator, Ramp>>;
+} satisfies Partial<Record<RampName, RampFn>>;
 
 // every ramp d3 ships comes in by itself; Magma leads as the fallback for unknown names
-const ramps = {
+const rampsByName = {
     interpolateMagma: chromatic.interpolateMagma,
     ...customRamps,
     ...Object.fromEntries(
         Object.entries(chromatic).filter(([name]) => name.startsWith('interpolate'))
     )
-} as Record<ColorInterPolator, Ramp>;
+} as Record<RampName, RampFn>;
 
-export const colorInterPolators = Object.entries(ramps).map(([name, fn]) => ({
-    name: name as ColorInterPolator,
+export const ramps = Object.entries(rampsByName).map(([name, fn]) => ({
+    name: name as RampName,
     fn
 }));

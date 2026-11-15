@@ -1,4 +1,4 @@
-import { type ColorInterPolator } from './ColorInterPolators';
+import { type RampName } from './Ramp';
 
 export type Shape = 'triangle' | 'cell' | 'hexagon';
 
@@ -23,7 +23,7 @@ export type UploadSource = {
 
 export type GradientSource = {
     kind: 'gradient';
-    ramp: ColorInterPolator;
+    ramp: RampName;
     type: GradientType;
     // degrees, 0 runs left to right
     angle: number;

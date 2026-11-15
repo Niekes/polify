@@ -1,8 +1,16 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
-import { colorInterPolators } from '../config/colorInterPolators';
-import { aspectRatios, defaultAdjustments, defaultGradient, shapes } from '../config/defaults';
+import { ramps } from '../config/ramps';
+import {
+    aspectRatios,
+    defaultAdjustments,
+    defaultArtwork,
+    defaultGradient,
+    gradientTypes,
+    shapes
+} from '../config/defaults';
 import { gallery } from '../config/gallery';
 import { ranges } from '../config/ranges';
+import { quarterTurns } from './source';
 import { type Adjustments, type Artwork, type GradientSource, type Source } from '../types/Artwork';
 
 // a link is input from anywhere: every field is checked, out of range numbers are clamped and
@@ -25,7 +33,7 @@ function numberIn(value: unknown, range: { min: number; max: number }, fallback:
 const integer = (value: unknown) =>
     typeof value === 'number' && Number.isInteger(value) ? value : 0;
 
-const quarterTurns = (value: unknown) => ((integer(value) % 4) + 4) % 4;
+const fallback = defaultArtwork(gallery[0]!, 0);
 
 function parseSource(raw: Raw): Source {
     if (raw.kind === 'gradient') {
@@ -33,10 +41,14 @@ function parseSource(raw: Raw): Source {
             kind: 'gradient',
             ramp: oneOf(
                 raw.ramp,
-                colorInterPolators.map(({ name }) => name),
+                ramps.map(({ name }) => name),
                 defaultGradient.ramp
             ),
-            type: oneOf(raw.type, ['linear', 'radial'] as const, defaultGradient.type),
+            type: oneOf(
+                raw.type,
+                gradientTypes.map(({ value }) => value),
+                defaultGradient.type
+            ),
             angle: numberIn(raw.angle, ranges.angle, defaultGradient.angle),
             aspectRatio: oneOf(raw.aspectRatio, aspectRatios, defaultGradient.aspectRatio)
         };
@@ -95,10 +107,10 @@ export function parseArtwork(queryString: string): Artwork | null {
         shape: oneOf(
             raw.shape,
             shapes.map(({ value }) => value),
-            'triangle'
+            fallback.shape
         ),
-        amount: numberIn(raw.amount, ranges.amount, 100),
-        vibration: numberIn(raw.vibration, ranges.vibration, 62),
+        amount: numberIn(raw.amount, ranges.amount, fallback.amount),
+        vibration: numberIn(raw.vibration, ranges.vibration, fallback.vibration),
         seed: integer(raw.seed),
         adjustments: parseAdjustments(asRecord(raw.adjustments))
     };

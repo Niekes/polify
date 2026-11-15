@@ -10,9 +10,9 @@ import {
     type Pixels,
     type Sampler
 } from '../lib/source';
-import { type Artwork } from '../types/Artwork';
+import { type Artwork, type Size } from '../types/Artwork';
 
-type Surface = { width: number; height: number; sample: Sampler };
+type Surface = Size & { sample: Sampler };
 
 // the image drawn at surface size, unturned; null where the browser gives no 2d canvas
 function readPixels(image: HTMLImageElement): Pixels | null {

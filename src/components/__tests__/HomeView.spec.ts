@@ -37,12 +37,12 @@ describe('HomeView', () => {
     });
 
     it('opens the artwork in the link and draws its polygons', () => {
-        expect(wrapper.findAll('.stage__surface path').length).toBeGreaterThan(50);
+        expect(wrapper.findAll('.workspace__surface path').length).toBeGreaterThan(50);
         expect(linked().source).toEqual(gradientArtwork.source);
     });
 
     it('recolors the polygons with an adjustment', async () => {
-        const fill = () => wrapper.find('.stage__surface path').attributes('fill');
+        const fill = () => wrapper.find('.workspace__surface path').attributes('fill');
         const before = fill();
         const invert = wrapper.findAll('label').find((l) => l.text() === 'Invert')!;
 
@@ -54,7 +54,9 @@ describe('HomeView', () => {
     it('lays hexagons, which cannot be randomized', async () => {
         await wrapper.find('input[type=radio][value=hexagon]').setValue();
 
-        expect(wrapper.find('.stage__surface path').attributes('d')!.split('L')).toHaveLength(6);
+        expect(wrapper.find('.workspace__surface path').attributes('d')!.split('L')).toHaveLength(
+            6
+        );
         expect(button(wrapper, 'Randomize').attributes('disabled')).toBeDefined();
     });
 
@@ -129,6 +131,31 @@ describe('HomeView', () => {
         await flushPromises();
 
         expect(wrapper.findComponent(TheExportDialog).find('[role=alert]').exists()).toBe(true);
+    });
+
+    it('takes an image chosen in the file dialog and nothing else', async () => {
+        // the dialog is a file input the page clicks; the test chooses its files
+        const click = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
+        vi.stubGlobal('URL', { createObjectURL: () => 'blob:upload', revokeObjectURL: vi.fn() });
+
+        const choose = async (file: File) => {
+            await button(wrapper, 'Upload').trigger('click');
+            const input = click.mock.contexts[click.mock.contexts.length - 1] as HTMLInputElement;
+
+            Object.defineProperty(input, 'files', { value: [file], configurable: true });
+            input.dispatchEvent(new Event('change'));
+            await flushPromises();
+        };
+        const vm = wrapper.vm as unknown as { artwork: Artwork };
+
+        await wrapper.find('input[type=radio][value=image]').setValue();
+        await choose(new File(['x'], 'notes.txt', { type: 'text/plain' }));
+
+        expect(vm.artwork.source.kind).toBe('image');
+
+        await choose(new File(['x'], 'photo.png', { type: 'image/png' }));
+
+        expect(vm.artwork.source).toEqual({ kind: 'upload', rotation: 0 });
     });
 
     it('shows the imprint in the about dialog', async () => {

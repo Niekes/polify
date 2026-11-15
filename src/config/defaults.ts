@@ -3,6 +3,7 @@ import {
     type Artwork,
     type AspectRatio,
     type GradientSource,
+    type GradientType,
     type Shape
 } from '../types/Artwork';
 
@@ -36,6 +37,11 @@ export const shapes: { value: Shape; label: string }[] = [
 ];
 
 export const aspectRatios: AspectRatio[] = ['16:9', '4:3', '1:1', '9:16'];
+
+export const gradientTypes: { value: GradientType; label: string }[] = [
+    { value: 'linear', label: 'Linear' },
+    { value: 'radial', label: 'Radial' }
+];
 
 export function defaultArtwork(imageName: string, seed: number): Artwork {
     return {

@@ -18,7 +18,7 @@ const scales = [
 const scale = ref('2');
 const failed = ref(false);
 
-function save(blob: Blob, extension: string) {
+function hand(blob: Blob, extension: string) {
     const anchor = document.createElement('a');
     const date = new Date();
 
@@ -35,7 +35,7 @@ function exportSvg() {
         generator: `Polify ${version}`
     });
 
-    save(new Blob([file], { type: 'image/svg+xml' }), 'svg');
+    hand(new Blob([file], { type: 'image/svg+xml' }), 'svg');
     isOpen.value = false;
 }
 
@@ -60,7 +60,7 @@ async function exportPng() {
 
         if (!blob) throw new Error('canvas too large');
 
-        save(blob, 'png');
+        hand(blob, 'png');
         isOpen.value = false;
     } catch {
         failed.value = true;
