@@ -41,6 +41,15 @@ describe('HomeView', () => {
         expect(linked().source).toEqual(gradientArtwork.source);
     });
 
+    it('opens the default gradient when the page has no link', async () => {
+        wrapper.unmount();
+        window.history.replaceState(null, '', '/');
+        wrapper = mount(HomeView, { attachTo: document.body });
+
+        expect(linked().source).toEqual(defaultGradient);
+        expect(wrapper.findAll('.workspace__surface path').length).toBeGreaterThan(50);
+    });
+
     it('recolors the polygons with an adjustment', async () => {
         const fill = () => wrapper.find('.workspace__surface path').attributes('fill');
         const before = fill();

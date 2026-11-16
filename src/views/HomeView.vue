@@ -13,7 +13,7 @@ import UndoRedoButtons from '../components/UndoRedoButtons.vue';
 import { useSource } from '../composables/useSource';
 import { useUrlSync } from '../composables/useUrlSync';
 import { useWebMcp } from '../composables/useWebMcp';
-import { defaultAdjustments, defaultArtwork } from '../config/defaults';
+import { defaultAdjustments, defaultArtwork, defaultGradient } from '../config/defaults';
 import { gallery } from '../config/gallery';
 import { historyShortcut } from '../lib/historyShortcut';
 import { computePolygons } from '../lib/polygons';
@@ -22,10 +22,11 @@ import { type Artwork } from '../types/Artwork';
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 31);
 
-// a page opened without a link starts from a random gallery image
-const artwork = ref<Artwork>(
-    defaultArtwork(gallery[Math.floor(Math.random() * gallery.length)]!, newSeed())
-);
+// a page opened without a link starts from the default gradient
+const artwork = ref<Artwork>({
+    ...defaultArtwork(gallery[0]!, newSeed()),
+    source: { ...defaultGradient }
+});
 
 const { initFromUrl, setupWatchers, link, canUndo, canRedo, undo, redo } = useUrlSync(artwork);
 
