@@ -1,8 +1,11 @@
 name: CI
 
 on:
-    - pull_request
-    - push
+    pull_request:
+    # pull requests run on their own trigger; a push to a branch would run the same checks twice
+    push:
+        branches:
+            - main
 
 jobs:
     verify:
