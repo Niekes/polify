@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-  <a href="https://polify.niekes.com/">Live app</a> ·
+  <a href="https://niekes.github.io/polify/">Live app</a> ·
   <a href="https://github.com/Niekes/polify/blob/main/CONTRIBUTING.md">Contributing</a> ·
   <a href="https://github.com/Niekes/polify/blob/main/AGENTS.md">Architecture &amp; quality gates</a>
 </p>
@@ -38,13 +38,13 @@
 
 <table>
     <tr style="background-color: #f6f8fa">
-        <td><a target="_blank" href="https://polify.niekes.com/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQYC2AhgOZIA0IWxhSyBJ5AtAIwBMIVMEALsbwwQsKAAwBfKmAAWxAA70QvGBmJZSAG0oha0LLxQBmUaKoA3DACMYAoSOQAOU+AQI8yAOxViOAFZQwXjp9MBRQaSh6ZzABWFthFFYqDQxSaV4sBDBQ5CSQOGFlYkCxKgAzDA0NAHk5YjgMXgBPRKllCDQEWvrGltyqbDMEGANkMuINMAQqXmkYLOkIDXdxyemQUhsmsDgJ+lWp8XEgA"><img src="assets/examples/twilight-triangles.svg" alt="Twilight Triangles"></a></td>
-        <td><a target="_blank" href="https://polify.niekes.com/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQDmMAhjhglgC4gA0IJAtgA77aUIxMQA2x7AsggJ8YELLRCUAnkyTJ6pDMW4TiWAtzkAGOsTCy4lAEp8MEfAEYAbMgCcIAL50wAC2Kz8ibit0NoVFAAWLR0QADcMACMSSjNxO1CwBAQ8ZABmXRwAKygwSgYKSjAUUBcobWc+WFMxFAs6bgwCF0osBDBi5HqQODFKEjyUUIAzDG8AeSZiOAxpOud+iDQESenZqXmQbDCOamRh5SS6ShcYdpceVIPuI8ISKTA4ZTlrpIcHIA"><img src="assets/examples/megatron-cells.svg" alt="Megatron Cells"></a></td>
-        <td><a target="_blank" href="https://polify.niekes.com/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQDmMAhjhglgC4gA0IJAtgA77aUIxMQA2x7ACrzANitEJQCeTJMhDdsCYjDHEsBbjIDMABjrEw0uJQBKfDBHwBGAGzIAnCAC+dMAAti0-K4QAPYgQgsFQZoKhQAdm1dEAA3DAAjEkpzIORrACYXBAQ8ZEs9HAArKDBKBgpKMBRQVygZaLA+WDNAlHy5DAJXSiwEMCq8ujhAyhJSlG0AOkyQADMMbm4AeSZiOAxJNpdRiDQEFbWNiS2QbBiOamRZ4m4wBDpKVxg+1x5c69v7whIJMDgbmQfO6ORxAA"><img src="assets/examples/sunset-hexagons.svg" alt="Sunset Hexagons"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/polify/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQYC2AhgOZIA0IWxhSyBJ5AtAIwBMIVMEALsbwwQsKAAwBfKmAAWxAA70QvGBmJZSAG0oha0LLxQBmUaKoA3DACMYAoSOQAOU+AQI8yAOxViOAFZQwXjp9MBRQaSh6ZzABWFthFFYqDQxSaV4sBDBQ5CSQOGFlYkCxKgAzDA0NAHk5YjgMXgBPRKllCDQEWvrGltyqbDMEGANkMuINMAQqXmkYLOkIDXdxyemQUhsmsDgJ+lWp8XEgA"><img src="assets/examples/twilight-triangles.svg" alt="Twilight Triangles"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/polify/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQDmMAhjhglgC4gA0IJAtgA77aUIxMQA2x7AsggJ8YELLRCUAnkyTJ6pDMW4TiWAtzkAGOsTCy4lAEp8MEfAEYAbMgCcIAL50wAC2Kz8ibit0NoVFAAWLR0QADcMACMSSjNxO1CwBAQ8ZABmXRwAKygwSgYKSjAUUBcobWc+WFMxFAs6bgwCF0osBDBi5HqQODFKEjyUUIAzDG8AeSZiOAxpOud+iDQESenZqXmQbDCOamRh5SS6ShcYdpceVIPuI8ISKTA4ZTlrpIcHIA"><img src="assets/examples/megatron-cells.svg" alt="Megatron Cells"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/polify/?c=N4Igzg9grgTgxgUxALlAawJYDsAmKQDmMAhjhglgC4gA0IJAtgA77aUIxMQA2x7ACrzANitEJQCeTJMhDdsCYjDHEsBbjIDMABjrEw0uJQBKfDBHwBGAGzIAnCAC+dMAAti0-K4QAPYgQgsFQZoKhQAdm1dEAA3DAAjEkpzIORrACYXBAQ8ZEs9HAArKDBKBgpKMBRQVygZaLA+WDNAlHy5DAJXSiwEMCq8ujhAyhJSlG0AOkyQADMMbm4AeSZiOAxJNpdRiDQEFbWNiS2QbBiOamRZ4m4wBDpKVxg+1x5c69v7whIJMDgbmQfO6ORxAA"><img src="assets/examples/sunset-hexagons.svg" alt="Sunset Hexagons"></a></td>
     </tr>
 </table>
 
-Every artwork is a link: open one above to change it in the [app](https://polify.niekes.com/).
+Every artwork is a link: open one above to change it in the [app](https://niekes.github.io/polify/).
 
 ## Sponsor Polify
 
@@ -77,7 +77,7 @@ Thank you to the people who make this possible. Sponsors at $25/mo and above get
 
 ## Using Polify
 
-No install — it runs in the browser at [polify.niekes.com](https://polify.niekes.com/). Uploaded images never leave your device.
+No install — it runs in the browser at [niekes.github.io/polify](https://niekes.github.io/polify/). Uploaded images never leave your device.
 
 To work on it locally:
 

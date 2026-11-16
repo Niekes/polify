@@ -9,7 +9,8 @@
                 var theme =
                     stored === 'light' || stored === 'dark'
                         ? stored
-                        : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                        : window.matchMedia &&
+                            window.matchMedia('(prefers-color-scheme: dark)').matches
                           ? 'dark'
                           : 'light';
                 document.documentElement.setAttribute('data-theme', theme);
@@ -18,7 +19,11 @@
         <title>Polify - Low Poly Art Generator</title>
         <meta
             name="description"
-            content="Turn any image or gradient into low poly art made of triangles, cells or hexagons and export it as SVG or PNG. Free, in your browser."
+            content="Free low poly art generator: turn any image or gradient into triangles, cells or hexagons and export SVG or PNG. Runs in your browser, nothing is uploaded."
+        />
+        <meta
+            name="keywords"
+            content="low poly, low poly art, low poly generator, polygon art, generative art, delaunay triangulation, voronoi, hexagon, hexbin, image to svg, svg, png, gradient, wallpaper, d3, vue, typescript"
         />
         <link rel="canonical" href="%VITE_APP_URL%" />
         <meta name="robots" content="index, follow" />
@@ -28,7 +33,7 @@
         <meta property="og:title" content="Polify - Low Poly Art Generator" />
         <meta
             property="og:description"
-            content="Turn any image or gradient into low poly art made of triangles, cells or hexagons and export it as SVG or PNG."
+            content="Free low poly art generator: turn any image or gradient into triangles, cells or hexagons and export SVG or PNG. Runs in your browser, nothing is uploaded."
         />
 
         <link rel="icon" href="/favicon.ico" />

@@ -98,6 +98,6 @@ Decisions that are hard to reverse are recorded in `docs/adr/`.
 
 ## Releasing
 
-`main` deploys to GitHub Pages (polify.niekes.com, see `public/CNAME`) through
+`main` deploys to GitHub Pages (https://niekes.github.io/polify/) through
 `.github/workflows/deploy.yml` on every push; CI (`.github/workflows/ci.yml`)
 must be green for the merge.
