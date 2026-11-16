@@ -8,7 +8,7 @@ defineProps<{
 }>();
 
 // the prefix is CSS, so the clipboard gets the bare code
-const { copy, copied, isSupported } = useClipboard({ legacy: true });
+const { copy, copied } = useClipboard({ legacy: true });
 const copyLabel = computed(() => (copied.value ? 'Copied' : 'Copy'));
 </script>
 
@@ -19,7 +19,6 @@ const copyLabel = computed(() => (copied.value ? 'Copied' : 'Copy'));
             <pre :data-prefix="prefix"><code v-text="code" /></pre>
         </div>
         <button
-            v-if="isSupported"
             type="button"
             class="btn btn-sm absolute top-2 right-2"
             aria-live="polite"

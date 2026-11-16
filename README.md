@@ -78,7 +78,7 @@ Thank you to the people who make this possible. Sponsors at $25/mo and above get
 
 ## Using Polify
 
-No install — it runs in the browser at [niekes.github.io/polify](https://niekes.github.io/polify/). Uploaded images never leave your device, and you own the copyright to every artwork you make.
+No install — it runs in the browser at [niekes.github.io/polify](https://niekes.github.io/polify/). Uploaded images never leave your device.
 
 Describe the artwork you want and let an AI agent set it up: **Use with AI** in the [app](https://niekes.github.io/polify/) connects Claude Code through [WebMCP](https://webmachinelearning.github.io/webmcp/) in two steps.
 

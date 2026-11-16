@@ -17,7 +17,7 @@ import { type Adjustments, type Artwork, type GradientSource, type Source } from
 // unknown names fall back, so a hand-edited link still opens an artwork
 type Raw = Record<string, unknown>;
 
-const asRecord = (value: unknown): Raw =>
+export const asRecord = (value: unknown): Record<string, unknown> =>
     value !== null && typeof value === 'object' ? (value as Raw) : {};
 
 function oneOf<T>(value: unknown, options: readonly T[], fallback: T): T {
