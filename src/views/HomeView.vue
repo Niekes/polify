@@ -155,8 +155,19 @@ const showAgentGuide = ref(false);
                             The image could not be read. Try another one.
                         </div>
                         <div v-else class="skeleton size-full" aria-label="Loading the image" />
+                        <div
+                            v-if="isOverDropZone"
+                            class="absolute inset-0 grid place-items-center bg-base-100/70 text-lg font-semibold"
+                        >
+                            Drop to upload
+                        </div>
                     </div>
                 </div>
+
+                <!-- touch screens cannot drag files, so only a fine pointer gets the hint -->
+                <p class="hidden text-center text-sm text-base-content/70 pointer-fine:block">
+                    Drop an image here to upload it
+                </p>
             </main>
 
             <div class="drawer-side z-40">
@@ -262,6 +273,7 @@ const showAgentGuide = ref(false);
 }
 
 .workspace__surface {
+    position: relative;
     display: grid;
     place-items: center;
     width: min(100cqw, 100cqh * var(--ratio, 16 / 9));
