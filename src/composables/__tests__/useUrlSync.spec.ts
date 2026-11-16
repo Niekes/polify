@@ -58,17 +58,17 @@ describe('useUrlSync', () => {
         sync.setupWatchers();
         const entries = window.history.length;
 
-        for (const amount of [200, 300, 400]) {
+        for (const amount of [300, 400, 500]) {
             artwork.value.amount = amount;
             await nextTick();
             vi.advanceTimersByTime(100);
         }
 
-        expect(linkAmount()).toBe(100);
+        expect(linkAmount()).toBe(200);
 
         vi.advanceTimersByTime(300);
 
-        expect(linkAmount()).toBe(400);
+        expect(linkAmount()).toBe(500);
         expect(window.history.length).toBe(entries + 1);
     });
 

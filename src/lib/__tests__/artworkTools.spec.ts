@@ -68,7 +68,7 @@ describe('set_artwork', () => {
             adjustments: 'not an object'
         })) as Artwork;
 
-        expect(result.amount).toBe(1500);
+        expect(result.amount).toBe(3000);
         expect(result.adjustments).toEqual(current.adjustments);
     });
 
@@ -96,7 +96,7 @@ describe('set_artwork', () => {
             properties: Record<string, { minimum?: number; maximum?: number; enum?: string[] }>;
         };
 
-        expect(schema.properties.amount).toMatchObject({ minimum: 10, maximum: 1500 });
+        expect(schema.properties.amount).toMatchObject({ minimum: 10, maximum: 3000 });
         expect(schema.properties.shape!.enum).toEqual(['triangle', 'cell', 'hexagon']);
     });
 });

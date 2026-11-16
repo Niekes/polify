@@ -81,7 +81,7 @@ describe('HomeView', () => {
         vm.artwork.adjustments.hue = 90;
         await button(wrapper, 'Reset').trigger('click');
 
-        expect(vm.artwork.amount).toBe(100);
+        expect(vm.artwork.amount).toBe(200);
         expect(vm.artwork.adjustments.hue).toBe(0);
         expect(vm.artwork.shape).toBe('cell');
     });

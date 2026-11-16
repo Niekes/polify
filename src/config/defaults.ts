@@ -47,7 +47,7 @@ export function defaultArtwork(imageName: string, seed: number): Artwork {
     return {
         source: { kind: 'image', name: imageName, rotation: 0 },
         shape: 'triangle',
-        amount: 100,
+        amount: 200,
         vibration: 62,
         seed,
         adjustments: { ...defaultAdjustments }

@@ -1,6 +1,6 @@
 // the slider bounds; the link parser clamps to them too, so a hand-edited link stays in range
 export const ranges = {
-    amount: { min: 10, max: 1500, step: 10 },
+    amount: { min: 10, max: 3000, step: 10 },
     vibration: { min: 0, max: 125, step: 1 },
     angle: { min: 0, max: 360, step: 1 },
     hue: { min: 0, max: 360, step: 1 },

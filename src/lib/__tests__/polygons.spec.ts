@@ -27,6 +27,23 @@ describe('computePolygons', () => {
         expect(computePolygons({ ...layout('cell'), amount: 90 }, size)).toHaveLength(100);
     });
 
+    it('makes at least the amount of triangles, the grid rounded up', () => {
+        // 100 / 2 → 8 gaps a side → 2 · 8² triangles
+        expect(computePolygons(layout('triangle'), size)).toHaveLength(128);
+    });
+
+    it.each(['triangle', 'cell', 'hexagon'] as const)(
+        'divides the artwork into about the amount of %s polygons up to 3000',
+        (shape) => {
+            for (const amount of [500, 1000, 1500, 3000]) {
+                const count = computePolygons({ ...layout(shape), amount }, size).length;
+
+                expect(count).toBeGreaterThanOrEqual(amount * 0.95);
+                expect(count).toBeLessThanOrEqual(amount * 1.1);
+            }
+        }
+    );
+
     it('gives the same polygons for the same seed and others for another', () => {
         const first = computePolygons(layout('triangle', 62, 7), size);
 
@@ -45,7 +62,6 @@ describe('computePolygons', () => {
     it('lays hexagons with six corners and keeps their centers on the surface', () => {
         const hexagons = computePolygons(layout('hexagon'), size);
 
-        expect(hexagons).toHaveLength(45);
         for (const { points, center } of hexagons) {
             expect(points).toHaveLength(6);
             expect(center[0]).toBeLessThanOrEqual(1599);
