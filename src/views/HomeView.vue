@@ -5,13 +5,14 @@ import { useDropZone, useEventListener, useFileDialog, useObjectUrl } from '@vue
 import AdjustmentControl from '../components/AdjustmentControl.vue';
 import ShapeControl from '../components/ShapeControl.vue';
 import SourceControl from '../components/SourceControl.vue';
-import TheAbout from '../components/TheAbout.vue';
+import TheAgentGuide from '../components/TheAgentGuide.vue';
 import TheExportDialog from '../components/TheExportDialog.vue';
 import TheGallery from '../components/TheGallery.vue';
 import TheNavbar from '../components/TheNavbar.vue';
 import UndoRedoButtons from '../components/UndoRedoButtons.vue';
 import { useSource } from '../composables/useSource';
 import { useUrlSync } from '../composables/useUrlSync';
+import { useWebMcp } from '../composables/useWebMcp';
 import { defaultAdjustments, defaultArtwork } from '../config/defaults';
 import { gallery } from '../config/gallery';
 import { historyShortcut } from '../lib/historyShortcut';
@@ -38,6 +39,8 @@ const { surface, failed } = useSource(
     artwork,
     computed(() => uploadUrl.value ?? null)
 );
+
+useWebMcp(artwork, () => uploadFile.value !== null);
 
 const accept = ['image/png', 'image/jpeg', 'image/webp', 'image/avif'];
 
@@ -111,15 +114,15 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 const showGallery = ref(false);
 const showExport = ref(false);
-const showAbout = ref(false);
+const showAgentGuide = ref(false);
 </script>
 
 <template>
     <div class="home">
         <TheNavbar>
             <template #secondary>
-                <button type="button" class="btn btn-ghost btn-sm" @click="showAbout = true">
-                    About
+                <button type="button" class="btn btn-ghost btn-sm" @click="showAgentGuide = true">
+                    Use with AI
                 </button>
             </template>
             <button
@@ -213,7 +216,7 @@ const showAbout = ref(false);
             :width="surface.width"
             :height="surface.height"
         />
-        <TheAbout v-model="showAbout" />
+        <TheAgentGuide v-model="showAgentGuide" />
     </div>
 </template>
 

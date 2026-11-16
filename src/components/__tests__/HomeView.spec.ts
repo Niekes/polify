@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import HomeView from '../../views/HomeView.vue';
-import TheAbout from '../TheAbout.vue';
+import TheAgentGuide from '../TheAgentGuide.vue';
 import TheExportDialog from '../TheExportDialog.vue';
 import TheGallery from '../TheGallery.vue';
 import { defaultArtwork, defaultGradient } from '../../config/defaults';
@@ -168,9 +168,11 @@ describe('HomeView', () => {
         expect(vm.artwork.source).toEqual({ kind: 'upload', rotation: 0 });
     });
 
-    it('shows the legal notice in the about dialog', async () => {
-        await button(wrapper, 'About').trigger('click');
+    it('explains how to use Polify with an AI agent, pointing at this page', async () => {
+        await button(wrapper, 'Use with AI').trigger('click');
 
-        expect(wrapper.findComponent(TheAbout).text()).toContain('Legal notice');
+        expect(wrapper.findComponent(TheAgentGuide).text()).toContain(
+            `Open ${window.location.origin}/`
+        );
     });
 });

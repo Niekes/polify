@@ -25,6 +25,7 @@
   <a href="https://d3js.org/"><img src="https://img.shields.io/badge/d3-F9A03C?logo=d3&logoColor=white" alt="d3"></a>
   <a href="https://developer.mozilla.org/docs/Web/SVG"><img src="https://img.shields.io/badge/SVG-FFB13B?logo=svg&logoColor=white" alt="SVG"></a>
   <a href="https://daisyui.com/"><img src="https://img.shields.io/badge/daisyUI-5A0EF8?logo=daisyui&logoColor=white" alt="daisyUI"></a>
+  <a href="https://webmachinelearning.github.io/webmcp/"><img src="https://img.shields.io/badge/WebMCP-2B2B2B" alt="WebMCP"></a>
   <a href="https://fallow.tools/"><img src="https://img.shields.io/badge/fallow-1F6FEB" alt="fallow"></a>
 </p>
 
@@ -77,7 +78,9 @@ Thank you to the people who make this possible. Sponsors at $25/mo and above get
 
 ## Using Polify
 
-No install — it runs in the browser at [niekes.github.io/polify](https://niekes.github.io/polify/). Uploaded images never leave your device.
+No install — it runs in the browser at [niekes.github.io/polify](https://niekes.github.io/polify/). Uploaded images never leave your device, and you own the copyright to every artwork you make.
+
+Describe the artwork you want and let an AI agent set it up: **Use with AI** in the [app](https://niekes.github.io/polify/) connects Claude Code through [WebMCP](https://webmachinelearning.github.io/webmcp/) in two steps.
 
 To work on it locally:
 
