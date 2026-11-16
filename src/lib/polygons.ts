@@ -10,13 +10,9 @@ export type Polygon = {
 
 export type Layout = Pick<Artwork, 'shape' | 'amount' | 'vibration' | 'seed'>;
 
-// polify's hexagon radius for an amount: 150 at none, 15 from 1000 on
-const hexagonRadius = scaleLinear().domain([0, 1000]).range([150, 15]).clamp(true);
-
-// an even grid of about `amount` points whose inner points stray up to `vibration` from their
+// an even grid of `lines` × `lines` points whose inner points stray up to `vibration` from their
 // place; the edge points stay on the edge, so the polygons always fill the whole surface
-function grid({ amount, vibration, seed }: Layout, { width, height }: Size): Point[] {
-    const lines = Math.ceil(Math.sqrt(amount));
+function grid(lines: number, { vibration, seed }: Layout, { width, height }: Size): Point[] {
     const random = randomInt.source(randomLcg(seed));
     const stray = (place: number, edge: number) => {
         if (place === 0 || place === edge) return place;
@@ -41,7 +37,8 @@ function grid({ amount, vibration, seed }: Layout, { width, height }: Size): Poi
 const withCenter = (points: Point[]): Polygon => ({ points, center: polygonCentroid(points) });
 
 function hexagons(amount: number, { width, height }: Size): Polygon[] {
-    const radius = hexagonRadius(amount);
+    // the radius at which `amount` hexagons of area 3√3/2 · r² fill the surface
+    const radius = Math.sqrt((width * height) / ((amount * 3 * Math.sqrt(3)) / 2));
     const layout = hexbin()
         .radius(radius)
         .extent([
@@ -65,11 +62,16 @@ function hexagons(amount: number, { width, height }: Size): Polygon[] {
 export function computePolygons(layout: Layout, size: Size): Polygon[] {
     if (layout.shape === 'hexagon') return hexagons(layout.amount, size);
 
-    const delaunay = Delaunay.from(grid(layout, size));
-
     if (layout.shape === 'triangle') {
+        // n × n grid points make 2 · (n − 1)² triangles, so at least `amount` of them
+        const lines = Math.ceil(Math.sqrt(layout.amount / 2)) + 1;
+        const delaunay = Delaunay.from(grid(lines, layout, size));
+
         return Array.from(delaunay.trianglePolygons(), (points) => withCenter(points as Point[]));
     }
+
+    // one cell per grid point, the amount rounded up to a square
+    const delaunay = Delaunay.from(grid(Math.ceil(Math.sqrt(layout.amount)), layout, size));
 
     return Array.from(delaunay.voronoi([0, 0, size.width, size.height]).cellPolygons(), (points) =>
         withCenter(points as Point[])

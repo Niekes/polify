@@ -59,7 +59,7 @@ describe('urlState', () => {
 
         expect(artwork.source).toEqual({ kind: 'image', name: 'image-0', rotation: 3 });
         expect(artwork.shape).toBe('triangle');
-        expect(artwork.amount).toBe(1500);
+        expect(artwork.amount).toBe(3000);
         expect(artwork.vibration).toBe(62);
         expect(artwork.seed).toBe(0);
         expect(artwork.adjustments.hue).toBe(0);

@@ -57,7 +57,7 @@ One tile of the artwork. Its color is the color of the source at its center.
 _Avoid_: Tile, Cell (when meaning any tile), Particle
 
 **Amount**:
-How many polygons the artwork is divided into.
+How many polygons the artwork is divided into, whatever its shape.
 _Avoid_: Size, Density, Count, Resolution
 
 **Vibration**:
