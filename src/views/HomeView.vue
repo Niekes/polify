@@ -186,7 +186,6 @@ const showAbout = ref(false);
                         v-for="section in ['Source', 'Shape', 'Adjustments']"
                         :key="section"
                         class="collapse collapse-arrow rounded-none border-b border-base-300"
-                        open
                     >
                         <summary class="collapse-title text-sm font-semibold" v-text="section" />
                         <div class="collapse-content flex flex-col gap-3">
