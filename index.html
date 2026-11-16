@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <script>
+            // set the theme before the first paint: the stored choice wins, otherwise the OS decides
+            (function () {
+                var stored = localStorage.getItem('polify-theme');
+                var theme =
+                    stored === 'light' || stored === 'dark'
+                        ? stored
+                        : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                          ? 'dark'
+                          : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+            })();
+        </script>
+        <title>Polify - Low Poly Art Generator</title>
+        <meta
+            name="description"
+            content="Turn any image or gradient into low poly art made of triangles, cells or hexagons and export it as SVG or PNG. Free, in your browser."
+        />
+        <link rel="canonical" href="%VITE_APP_URL%" />
+        <meta name="robots" content="index, follow" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="%VITE_APP_URL%" />
+        <meta property="og:title" content="Polify - Low Poly Art Generator" />
+        <meta
+            property="og:description"
+            content="Turn any image or gradient into low poly art made of triangles, cells or hexagons and export it as SVG or PNG."
+        />
+
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+
+        <meta name="author" content="Stefan Nieke" />
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#1c243f" />
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="module" src="/src/main.ts"></script>
+    </body>
+</html>
