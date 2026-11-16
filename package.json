@@ -22,7 +22,7 @@
         "vue",
         "typescript"
     ],
-    "homepage": "https://polify.niekes.com/",
+    "homepage": "https://niekes.github.io/polify/",
     "license": "MIT",
     "type": "module",
     "packageManager": "pnpm@12.21.0",
