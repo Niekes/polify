@@ -231,6 +231,12 @@ const showAgentGuide = ref(false);
     height: 100%;
 }
 
+/* daisyUI pins the side to the top of the screen at full height; it belongs under the navbar */
+.drawer-side {
+    top: var(--navbar-height);
+    height: calc(100dvh - var(--navbar-height));
+}
+
 .panel {
     width: 22rem;
     max-width: 85vw;

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ArrowPathRoundedSquareIcon, ArrowUpTrayIcon, PhotoIcon } from '@heroicons/vue/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon } from '@heroicons/vue/24/outline';
 import { computed } from 'vue';
 import BaseRangeSlider from './BaseRangeSlider.vue';
 import BaseSegmented from './BaseSegmented.vue';
 import RampPicker from './RampPicker.vue';
+import RotateClockwiseIcon from './RotateClockwiseIcon.vue';
 import { aspectRatios, defaultGradient, gradientTypes } from '../config/defaults';
 import { gallery } from '../config/gallery';
 import { ranges } from '../config/ranges';
@@ -42,14 +43,14 @@ function rotate() {
 const imageActions = [
     { label: 'Gallery', icon: PhotoIcon, run: () => emit('gallery') },
     { label: 'Upload', icon: ArrowUpTrayIcon, run: () => emit('upload') },
-    { label: 'Rotate', icon: ArrowPathRoundedSquareIcon, run: rotate }
+    { label: 'Rotate', icon: RotateClockwiseIcon, run: rotate }
 ];
 </script>
 
 <template>
     <BaseSegmented v-model="kind" legend="Source" hide-legend :options="[...kinds]" />
 
-    <div v-if="source.kind !== 'gradient'" class="flex flex-wrap gap-2">
+    <div v-if="source.kind !== 'gradient'" class="flex flex-wrap justify-center gap-2">
         <button
             v-for="action in imageActions"
             :key="action.label"
