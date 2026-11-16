@@ -17,7 +17,7 @@ import { type Adjustments, type Artwork, type GradientSource, type Source } from
 // unknown names fall back, so a hand-edited link still opens an artwork
 type Raw = Record<string, unknown>;
 
-const asRecord = (value: unknown): Raw =>
+export const asRecord = (value: unknown): Record<string, unknown> =>
     value !== null && typeof value === 'object' ? (value as Raw) : {};
 
 function oneOf<T>(value: unknown, options: readonly T[], fallback: T): T {
@@ -94,13 +94,20 @@ export function parseArtwork(queryString: string): Artwork | null {
 
     if (!json) return null;
 
-    let raw: Raw;
+    let raw: unknown;
 
     try {
-        raw = asRecord(JSON.parse(json));
+        raw = JSON.parse(json);
     } catch {
         return null;
     }
+
+    return artworkFrom(raw);
+}
+
+// checks and clamps an artwork from anywhere, a link or an agent, field by field
+export function artworkFrom(value: unknown): Artwork {
+    const raw = asRecord(value);
 
     return {
         source: parseSource(asRecord(raw.source)),

@@ -78,6 +78,12 @@ _Avoid_: Filter, Effect
 The adjustment that turns every polygon either black or white, depending on its brightness.
 _Avoid_: Binarize, Black & white
 
+### Interaction
+
+**Agent**:
+A program that reads and replaces the artwork on request, instead of someone moving the sliders.
+_Avoid_: Bot, Assistant
+
 ### Sharing
 
 **Link**:
