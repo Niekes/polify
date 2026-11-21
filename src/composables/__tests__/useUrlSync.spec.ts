@@ -13,7 +13,7 @@ describe('useUrlSync', () => {
 
     beforeEach(() => {
         window.history.replaceState({}, '', '/');
-        artwork = ref(defaultArtwork('image-0', 1));
+        artwork = ref(defaultArtwork('hokusai-great-wave', 1));
         sync = useUrlSync(artwork);
     });
 
@@ -24,14 +24,14 @@ describe('useUrlSync', () => {
 
     it('returns false and keeps the artwork when the URL has none', () => {
         expect(sync.initFromUrl()).toBe(false);
-        expect(artwork.value).toEqual(defaultArtwork('image-0', 1));
+        expect(artwork.value).toEqual(defaultArtwork('hokusai-great-wave', 1));
     });
 
     it('opens the artwork in the link', () => {
         window.history.replaceState(
             {},
             '',
-            `/?${serializeArtwork({ ...defaultArtwork('image-4', 9), amount: 400 })}`
+            `/?${serializeArtwork({ ...defaultArtwork('cezanne-basket-of-apples', 9), amount: 400 })}`
         );
 
         expect(sync.initFromUrl()).toBe(true);
@@ -75,10 +75,18 @@ describe('useUrlSync', () => {
     it('reopens the artwork when the browser navigates back', () => {
         sync.setupWatchers();
 
-        window.history.pushState({}, '', `/?${serializeArtwork(defaultArtwork('image-3', 5))}`);
+        window.history.pushState(
+            {},
+            '',
+            `/?${serializeArtwork(defaultArtwork('cassatt-the-childs-bath', 5))}`
+        );
         window.dispatchEvent(new PopStateEvent('popstate'));
 
-        expect(artwork.value.source).toEqual({ kind: 'image', name: 'image-3', rotation: 0 });
+        expect(artwork.value.source).toEqual({
+            kind: 'image',
+            name: 'cassatt-the-childs-bath',
+            rotation: 0
+        });
     });
 
     it('keeps the way forward after going back, adding no entry for the restored artwork', async () => {

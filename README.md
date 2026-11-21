@@ -63,7 +63,7 @@ Where the money goes:
 
 - **Issue triage and bug fixes.** Sponsorship buys a reply within a couple of days instead of whenever I get to it.
 - **An engine that stays correct.** Keeping the triangulation, the color pipeline and the link format in shape as Vue and the browsers move on.
-- **The gallery.** More images and gradients to start from.
+- **Sample images and gradients.** More to start from.
 - **Time for new work.** More shapes, better gradient controls, and whatever the community dreams up.
 
 Prefer a one-off? The [sponsor page](https://github.com/sponsors/niekes) also takes one-time contributions.
