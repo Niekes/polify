@@ -62,7 +62,7 @@ const inputSchema = {
         amount: bounded('amount', 'How many polygons the artwork is divided into.'),
         vibration: bounded(
             'vibration',
-            'How far the corners of triangles and cells stray from an even grid; hexagons have none.'
+            'How far the corners of triangles, cells, squares and diamonds stray from an even grid; hexagons have none.'
         ),
         seed: {
             type: 'integer',

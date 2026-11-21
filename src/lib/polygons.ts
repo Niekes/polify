@@ -10,23 +10,29 @@ export type Polygon = {
 
 export type Layout = Pick<Artwork, 'shape' | 'amount' | 'vibration' | 'seed'>;
 
-// an even grid of `lines` × `lines` points whose inner points stray up to `vibration` from their
-// place; the edge points stay on the edge, so the polygons always fill the whole surface
-function grid(lines: number, { vibration, seed }: Layout, { width, height }: Size): Point[] {
+// moves an inner point up to `vibration` from its place; points on the edge stay on the edge,
+// so the polygons always fill the whole surface
+function strayer({ vibration, seed }: Layout) {
     const random = randomInt.source(randomLcg(seed));
-    const stray = (place: number, edge: number) => {
+
+    return (place: number, edge: number) => {
         if (place === 0 || place === edge) return place;
 
         const value = random(place - vibration, place + vibration + 1)();
 
         return Math.min(edge, Math.max(0, value));
     };
-    const x = scaleLinear([1, lines], [0, width]);
-    const y = scaleLinear([1, lines], [0, height]);
+}
+
+// an even grid of `columns` × `rows` points, row by row, each strayed
+function grid(columns: number, rows: number, layout: Layout, { width, height }: Size): Point[] {
+    const stray = strayer(layout);
+    const x = scaleLinear([1, columns], [0, width]);
+    const y = scaleLinear([1, rows], [0, height]);
     const points: Point[] = [];
 
-    for (let row = 1; row <= lines; row += 1) {
-        for (let column = 1; column <= lines; column += 1) {
+    for (let row = 1; row <= rows; row += 1) {
+        for (let column = 1; column <= columns; column += 1) {
             points.push([stray(x(column), width), stray(y(row), height)]);
         }
     }
@@ -59,19 +65,111 @@ function hexagons(amount: number, { width, height }: Size): Polygon[] {
     }));
 }
 
+// the columns and rows of a grid whose `parts` squares fill the surface, as square as fits
+function columnsAndRows(parts: number, { width, height }: Size) {
+    const side = Math.sqrt((width * height) / parts);
+
+    return [Math.max(1, Math.ceil(width / side)), Math.max(1, Math.ceil(height / side))];
+}
+
+// squares and diamonds keep their corners, unlike triangles and cells: a corner that strays
+// past half a step would cross its neighbour, so the polygons would overlap and leave holes;
+// stray rounds to whole units, hence the one unit off
+const withSafeVibration = (
+    layout: Layout,
+    columns: number,
+    rows: number,
+    { width, height }: Size
+): Layout => ({
+    ...layout,
+    vibration: Math.min(
+        layout.vibration,
+        Math.max(0, Math.floor(Math.min(width / columns, height / rows) / 2) - 1)
+    )
+});
+
+function squares(layout: Layout, size: Size): Polygon[] {
+    const [columns, rows] = columnsAndRows(layout.amount, size);
+    const points = grid(
+        columns + 1,
+        rows + 1,
+        withSafeVibration(layout, columns, rows, size),
+        size
+    );
+    const at = (row: number, column: number) => points[row * (columns + 1) + column]!;
+
+    return Array.from({ length: columns * rows }, (_, i) => {
+        const row = Math.floor(i / columns);
+        const column = i % columns;
+
+        return withCenter([
+            at(row, column),
+            at(row, column + 1),
+            at(row + 1, column + 1),
+            at(row + 1, column)
+        ]);
+    });
+}
+
+// squares turned by 45°: their corners lie on the half steps of the grid, and the diamonds along
+// the edge reach past it, as hexagons do
+function diamonds(layout: Layout, size: Size): Polygon[] {
+    const { width, height } = size;
+    // a diamond covers two squares of the half-step grid
+    const [columns, rows] = columnsAndRows(layout.amount * 2, size);
+    const stray = strayer(withSafeVibration(layout, columns, rows, size));
+    const corners = new Map<string, Point>();
+    const corner = (column: number, row: number): Point => {
+        const key = `${column},${row}`;
+        const x = (column * width) / columns;
+        const y = (row * height) / rows;
+        const outside = x < 0 || x > width || y < 0 || y > height;
+
+        if (!corners.has(key))
+            corners.set(key, outside ? [x, y] : [stray(x, width), stray(y, height)]);
+
+        return corners.get(key)!;
+    };
+    const polygons: Polygon[] = [];
+
+    for (let row = 0; row <= rows; row += 1) {
+        for (let column = row % 2; column <= columns; column += 2) {
+            const { points, center } = withCenter([
+                corner(column, row - 1),
+                corner(column + 1, row),
+                corner(column, row + 1),
+                corner(column - 1, row)
+            ]);
+
+            polygons.push({
+                points,
+                center: [
+                    Math.min(width - 1, Math.max(0, center[0])),
+                    Math.min(height - 1, Math.max(0, center[1]))
+                ]
+            });
+        }
+    }
+
+    return polygons;
+}
+
 export function computePolygons(layout: Layout, size: Size): Polygon[] {
     if (layout.shape === 'hexagon') return hexagons(layout.amount, size);
+    if (layout.shape === 'square') return squares(layout, size);
+    if (layout.shape === 'diamond') return diamonds(layout, size);
 
     if (layout.shape === 'triangle') {
         // n × n grid points make 2 · (n − 1)² triangles, so at least `amount` of them
         const lines = Math.ceil(Math.sqrt(layout.amount / 2)) + 1;
-        const delaunay = Delaunay.from(grid(lines, layout, size));
+        const delaunay = Delaunay.from(grid(lines, lines, layout, size));
 
         return Array.from(delaunay.trianglePolygons(), (points) => withCenter(points as Point[]));
     }
 
     // one cell per grid point, the amount rounded up to a square
-    const delaunay = Delaunay.from(grid(Math.ceil(Math.sqrt(layout.amount)), layout, size));
+    const lines = Math.ceil(Math.sqrt(layout.amount));
+    const delaunay = Delaunay.from(grid(lines, lines, layout, size));
 
     return Array.from(delaunay.voronoi([0, 0, size.width, size.height]).cellPolygons(), (points) =>
         withCenter(points as Point[])

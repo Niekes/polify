@@ -97,6 +97,6 @@ describe('set_artwork', () => {
         };
 
         expect(schema.properties.amount).toMatchObject({ minimum: 10, maximum: 3000 });
-        expect(schema.properties.shape!.enum).toEqual(['triangle', 'cell', 'hexagon']);
+        expect(schema.properties.shape!.enum).toEqual(['triangle', 'cell', 'hexagon', 'square', 'diamond']);
     });
 });
