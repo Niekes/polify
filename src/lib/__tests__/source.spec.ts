@@ -83,6 +83,26 @@ describe('gradientSampler', () => {
         expect(sample(0, 0)).toEqual(magma(1));
     });
 
+    it('sweeps a conic gradient clockwise around the center from its angle', () => {
+        const sample = gradientSampler({ ...defaultGradient, type: 'conic' }, size);
+
+        expect(sample(100, 25)).toEqual(magma(0));
+        expect(sample(50, 50)).toEqual(magma(0.25));
+        expect(sample(0, 25)).toEqual(magma(0.5));
+
+        const turned = gradientSampler({ ...defaultGradient, type: 'conic', angle: 90 }, size);
+
+        expect(turned(50, 50)).toEqual(magma(0));
+        expect(turned(0, 25)).toEqual(magma(0.25));
+    });
+
+    it('runs a reversed radial gradient from the corners to the center', () => {
+        const sample = gradientSampler({ ...defaultGradient, type: 'radial', reversed: true }, size);
+
+        expect(sample(50, 25)).toEqual(magma(1));
+        expect(sample(0, 0)).toEqual(magma(0));
+    });
+
     it('falls back to the first ramp for an unknown one', () => {
         const sample = gradientSampler(
             { ...defaultGradient, ramp: 'nope' as 'interpolateMagma' },

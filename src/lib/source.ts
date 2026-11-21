@@ -76,6 +76,13 @@ function gradientPosition(gradient: GradientSource, { width, height }: Size, x: 
     if (gradient.type === 'radial') return Math.hypot(dx, dy) / (Math.hypot(width, height) / 2);
 
     const angle = (gradient.angle * Math.PI) / 180;
+
+    if (gradient.type === 'conic') {
+        const turn = (Math.atan2(dy, dx) - angle) / (2 * Math.PI);
+
+        return ((turn % 1) + 1) % 1;
+    }
+
     const [cos, sin] = [Math.cos(angle), Math.sin(angle)];
     // half the length of the line through the center that the rectangle covers at this angle
     const reach = (Math.abs(width * cos) + Math.abs(height * sin)) / 2;
@@ -87,7 +94,8 @@ export function gradientSampler(gradient: GradientSource, size: Size): Sampler {
     const ramp = (ramps.find(({ name }) => name === gradient.ramp) ?? ramps[0]!).fn;
 
     return (x, y) => {
-        const t = Math.min(1, Math.max(0, gradientPosition(gradient, size, x, y)));
+        const position = Math.min(1, Math.max(0, gradientPosition(gradient, size, x, y)));
+        const t = gradient.reversed ? 1 - position : position;
         const { r, g, b } = color(ramp(t))!.rgb();
 
         return [r, g, b, 255];

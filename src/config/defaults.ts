@@ -27,6 +27,7 @@ export const defaultGradient: GradientSource = {
     ramp: 'interpolateMagma',
     type: 'linear',
     angle: 0,
+    reversed: false,
     aspectRatio: '16:9'
 };
 
@@ -42,7 +43,8 @@ export const aspectRatios: AspectRatio[] = ['16:9', '4:3', '1:1', '9:16'];
 
 export const gradientTypes: { value: GradientType; label: string }[] = [
     { value: 'linear', label: 'Linear' },
-    { value: 'radial', label: 'Radial' }
+    { value: 'radial', label: 'Radial' },
+    { value: 'conic', label: 'Conic' }
 ];
 
 export function defaultArtwork(imageName: string, seed: number): Artwork {

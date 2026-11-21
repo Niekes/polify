@@ -23,8 +23,12 @@ The named sequence of colors a gradient blends through, chosen from a fixed list
 _Avoid_: Palette, Color scheme, Interpolator
 
 **Gradient type**:
-Whether a gradient runs along a straight line at an angle (linear) or outward from the center (radial).
+Whether a gradient runs along a straight line at an angle (linear), outward from the center (radial) or around the center from an angle (conic).
 _Avoid_: Gradient mode, Direction
+
+**Reversed**:
+A gradient whose ramp runs from its last color to its first.
+_Avoid_: Inverted, Flipped
 
 **Sample image**:
 One of the images that ship with Polify, offered as a starting point for an artwork. All are free of copyright.
