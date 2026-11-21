@@ -21,7 +21,13 @@ describe('urlState', () => {
     it('round-trips an artwork made from a gradient', () => {
         const artwork: Artwork = {
             ...defaultArtwork('image-0', 1),
-            source: { ...defaultGradient, type: 'radial', angle: 45, aspectRatio: '9:16' }
+            source: {
+                ...defaultGradient,
+                type: 'conic',
+                angle: 45,
+                reversed: true,
+                aspectRatio: '9:16'
+            }
         };
 
         expect(parseArtwork(serializeArtwork(artwork))).toEqual(artwork);
@@ -67,10 +73,19 @@ describe('urlState', () => {
         expect(artwork.adjustments.fillOpacity).toBe(1);
     });
 
+    it('opens a gradient link from before reversing as not reversed', () => {
+        const { reversed: _, ...old } = { ...defaultGradient, type: 'radial' as const };
+
+        expect(parseArtwork(linkOf({ source: old }))!.source).toEqual({
+            ...defaultGradient,
+            type: 'radial'
+        });
+    });
+
     it('repairs a gradient and survives a link that is not an object', () => {
         const artwork = parseArtwork(
             linkOf({
-                source: { kind: 'gradient', ramp: 'alert', type: 'conic', aspectRatio: '3:1' }
+                source: { kind: 'gradient', ramp: 'alert', type: 'spiral', reversed: 'yes', aspectRatio: '3:1' }
             })
         )!;
 

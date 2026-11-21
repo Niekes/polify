@@ -3,6 +3,7 @@ import { ArrowUpTrayIcon, PhotoIcon } from '@heroicons/vue/24/outline';
 import { computed } from 'vue';
 import BaseRangeSlider from './BaseRangeSlider.vue';
 import BaseSegmented from './BaseSegmented.vue';
+import BaseToggle from './BaseToggle.vue';
 import RampPicker from './RampPicker.vue';
 import RotateClockwiseIcon from './RotateClockwiseIcon.vue';
 import { aspectRatios, defaultGradient, gradientTypes } from '../config/defaults';
@@ -65,8 +66,9 @@ const imageActions = [
     <template v-else>
         <RampPicker v-model="source.ramp" />
         <BaseSegmented v-model="source.type" legend="Gradient type" :options="gradientTypes" />
+        <BaseToggle v-model="source.reversed" label="Reversed" />
         <BaseRangeSlider
-            v-if="source.type === 'linear'"
+            v-if="source.type !== 'radial'"
             v-model.number="source.angle"
             v-bind="ranges.angle"
             label="Angle"

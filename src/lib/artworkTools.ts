@@ -48,9 +48,14 @@ const inputSchema = {
                 ),
                 type: choice(
                     gradientTypes.map(({ value }) => value),
-                    'Linear runs along the angle, radial runs outward from the center.'
+                    'Linear runs along the angle, radial runs outward from the center, ' +
+                        'conic runs clockwise around the center from the angle.'
                 ),
-                angle: bounded('angle', 'Degrees of a linear gradient, 0 runs left to right.'),
+                angle: bounded(
+                    'angle',
+                    'Degrees of a linear or conic gradient, 0 points to the right.'
+                ),
+                reversed: flag('Runs the ramp of a gradient from its last color to its first.'),
                 aspectRatio: choice(aspectRatios, 'Width to height of the surface of a gradient.')
             },
             additionalProperties: false

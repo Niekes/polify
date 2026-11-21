@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BaseRangeSlider from './BaseRangeSlider.vue';
+import BaseToggle from './BaseToggle.vue';
 import { ranges } from '../config/ranges';
 import { type Adjustments } from '../types/Artwork';
 
@@ -33,9 +34,11 @@ const toggles = [
         :unit="slider.unit"
     />
     <div class="flex flex-wrap gap-4">
-        <label v-for="toggle in toggles" :key="toggle.key" class="label text-xs">
-            <input v-model="adjustments[toggle.key]" type="checkbox" class="toggle toggle-xs" />
-            {{ toggle.label }}
-        </label>
+        <BaseToggle
+            v-for="toggle in toggles"
+            :key="toggle.key"
+            v-model="adjustments[toggle.key]"
+            :label="toggle.label"
+        />
     </div>
 </template>

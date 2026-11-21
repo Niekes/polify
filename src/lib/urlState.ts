@@ -50,6 +50,7 @@ function parseSource(raw: Raw): Source {
                 defaultGradient.type
             ),
             angle: numberIn(raw.angle, ranges.angle, defaultGradient.angle),
+            reversed: raw.reversed === true,
             aspectRatio: oneOf(raw.aspectRatio, aspectRatios, defaultGradient.aspectRatio)
         };
 

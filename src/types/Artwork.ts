@@ -2,7 +2,7 @@ import { type RampName } from './Ramp';
 
 export type Shape = 'triangle' | 'cell' | 'hexagon';
 
-export type GradientType = 'linear' | 'radial';
+export type GradientType = 'linear' | 'radial' | 'conic';
 
 // width / height of a gradient's surface
 export type AspectRatio = '16:9' | '4:3' | '1:1' | '9:16';
@@ -25,8 +25,10 @@ export type GradientSource = {
     kind: 'gradient';
     ramp: RampName;
     type: GradientType;
-    // degrees, 0 runs left to right
+    // degrees, 0 points to the right
     angle: number;
+    // the ramp runs from its last color to its first
+    reversed: boolean;
     aspectRatio: AspectRatio;
 };
 
