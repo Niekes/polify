@@ -49,7 +49,7 @@ The source divided into polygons and colored, with all adjustments applied. It i
 _Avoid_: Picture, Result, Output, Wallpaper
 
 **Shape**:
-The kind of polygon an artwork is made of: triangle, cell or hexagon.
+The kind of polygon an artwork is made of: triangle, cell, hexagon, square or diamond. Every shape fills the surface without gaps.
 _Avoid_: Mode, Pattern, Style
 
 **Polygon**:
@@ -61,7 +61,7 @@ How many polygons the artwork is divided into, whatever its shape.
 _Avoid_: Size, Density, Count, Resolution
 
 **Vibration**:
-How far the corners of triangles and cells stray from an even grid. Hexagons have none.
+How far the corners of triangles, cells, squares and diamonds stray from an even grid. For squares and diamonds it is measured against their size: at full vibration a corner strays almost to its neighbour, never past it. Hexagons have none.
 _Avoid_: Jitter, Noise, Randomness
 
 **Seed**:

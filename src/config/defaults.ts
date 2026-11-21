@@ -33,7 +33,9 @@ export const defaultGradient: GradientSource = {
 export const shapes: { value: Shape; label: string }[] = [
     { value: 'triangle', label: 'Triangle' },
     { value: 'cell', label: 'Cell' },
-    { value: 'hexagon', label: 'Hexagon' }
+    { value: 'hexagon', label: 'Hexagon' },
+    { value: 'square', label: 'Square' },
+    { value: 'diamond', label: 'Diamond' }
 ];
 
 export const aspectRatios: AspectRatio[] = ['16:9', '4:3', '1:1', '9:16'];

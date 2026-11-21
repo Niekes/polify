@@ -1,6 +1,6 @@
 import { type RampName } from './Ramp';
 
-export type Shape = 'triangle' | 'cell' | 'hexagon';
+export type Shape = 'triangle' | 'cell' | 'hexagon' | 'square' | 'diamond';
 
 export type GradientType = 'linear' | 'radial';
 
