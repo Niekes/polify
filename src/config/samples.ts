@@ -1,6 +1,6 @@
 // the images in public/samples, named after their file; the first opens a new artwork
 export const samples: string[] = [
-    'hokusai-great-wave',
+    'van-gogh-irises',
     'bruegel-the-harvesters',
     'caillebotte-paris-street-rainy-day',
     'cassatt-the-childs-bath',
@@ -19,7 +19,7 @@ export const samples: string[] = [
     'toulouse-lautrec-at-the-moulin-rouge',
     'turner-fighting-temeraire',
     'van-gogh-cafe-terrace-at-night',
-    'van-gogh-irises',
+    'hokusai-great-wave',
     'van-gogh-starry-night-over-the-rhone',
     'van-gogh-the-poets-garden',
     'van-gogh-wheat-field-with-cypresses',

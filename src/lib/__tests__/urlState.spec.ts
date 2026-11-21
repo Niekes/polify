@@ -47,7 +47,7 @@ describe('urlState', () => {
 
         expect(parseArtwork(link)!.source).toEqual({
             kind: 'image',
-            name: 'hokusai-great-wave',
+            name: 'van-gogh-irises',
             rotation: 2
         });
     });
@@ -70,7 +70,7 @@ describe('urlState', () => {
             })
         )!;
 
-        expect(artwork.source).toEqual({ kind: 'image', name: 'hokusai-great-wave', rotation: 3 });
+        expect(artwork.source).toEqual({ kind: 'image', name: 'van-gogh-irises', rotation: 3 });
         expect(artwork.shape).toBe('triangle');
         expect(artwork.amount).toBe(3000);
         expect(artwork.vibration).toBe(62);
@@ -90,7 +90,7 @@ describe('urlState', () => {
         expect(artwork.source).toEqual(defaultGradient);
         expect(parseArtwork(linkOf(null))!.source).toEqual({
             kind: 'image',
-            name: 'hokusai-great-wave',
+            name: 'van-gogh-irises',
             rotation: 0
         });
     });

@@ -97,7 +97,7 @@ describe('useSource', () => {
         uploadUrl.value = 'blob:upload';
         await settle();
 
-        expect(loaded).toEqual(['/samples/hokusai-great-wave.avif', 'blob:upload']);
+        expect(loaded).toEqual(['/samples/van-gogh-irises.avif', 'blob:upload']);
     });
 
     it('samples a gradient without an image', async () => {
