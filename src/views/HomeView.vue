@@ -126,14 +126,17 @@ const showAgentGuide = ref(false);
                     Use with AI
                 </button>
             </template>
-            <button
-                type="button"
-                class="btn btn-primary btn-sm text-nowrap"
-                :disabled="!surface"
-                @click="showExport = true"
-            >
-                Export
-            </button>
+            <!-- the aura glows in currentColor, so text-primary matches the button -->
+            <div class="aura aura-glow text-primary">
+                <button
+                    type="button"
+                    class="btn btn-primary btn-sm text-nowrap"
+                    :disabled="!surface"
+                    @click="showExport = true"
+                >
+                    Export
+                </button>
+            </div>
         </TheNavbar>
 
         <div class="drawer lg:drawer-open">
