@@ -1,5 +1,6 @@
 import { Delaunay, polygonCentroid, randomInt, randomLcg, scaleLinear } from 'd3';
 import { hexbin } from 'd3-hexbin';
+import { ranges } from '../config/ranges';
 import { type Artwork, type Point, type Size } from '../types/Artwork';
 
 export type Polygon = {
@@ -80,7 +81,8 @@ function columnsAndRows(parts: number, { width, height }: Size) {
 }
 
 // squares and diamonds keep their corners, unlike triangles and cells: a corner that strays
-// past half a step would cross its neighbour, so the polygons would overlap and leave holes;
+// past half a step would cross its neighbour, so the polygons would overlap and leave holes.
+// The vibration is scaled to that half step instead, so the whole slider moves the corners;
 // stray rounds to whole units, hence the one unit off
 const withSafeVibration = (
     layout: Layout,
@@ -89,10 +91,10 @@ const withSafeVibration = (
     { width, height }: Size
 ): Layout => ({
     ...layout,
-    vibration: Math.min(
-        layout.vibration,
-        Math.max(0, Math.floor(Math.min(width / columns, height / rows) / 2) - 1)
-    )
+    vibration:
+        (Math.max(0, Math.floor(Math.min(width / columns, height / rows) / 2) - 1) *
+            layout.vibration) /
+        ranges.vibration.max
 });
 
 function squares(layout: Layout, size: Size): Polygon[] {

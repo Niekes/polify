@@ -61,7 +61,7 @@ How many polygons the artwork is divided into, whatever its shape.
 _Avoid_: Size, Density, Count, Resolution
 
 **Vibration**:
-How far the corners of triangles, cells, squares and diamonds stray from an even grid. Squares and diamonds stray only so far that no corner crosses its neighbour. Hexagons have none.
+How far the corners of triangles, cells, squares and diamonds stray from an even grid. For squares and diamonds it is measured against their size: at full vibration a corner strays almost to its neighbour, never past it. Hexagons have none.
 _Avoid_: Jitter, Noise, Randomness
 
 **Seed**:

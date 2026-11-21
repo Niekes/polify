@@ -40,6 +40,15 @@ describe('computePolygons', () => {
         }
     );
 
+    it.each(['square', 'diamond'] as const)(
+        'lets every step of vibration move the corners of %s polygons',
+        (shape) => {
+            expect(computePolygons(layout(shape, 124), size)).not.toEqual(
+                computePolygons(layout(shape, 125), size)
+            );
+        }
+    );
+
     it('keeps squares square without vibration, whatever the surface', () => {
         for (const surface of [size, { width: 900, height: 1600 }]) {
             for (const { points } of computePolygons(layout('square', 0), surface)) {
