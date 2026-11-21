@@ -42,7 +42,14 @@ function grid(columns: number, rows: number, layout: Layout, { width, height }: 
 
 const withCenter = (points: Point[]): Polygon => ({ points, center: polygonCentroid(points) });
 
-function hexagons(amount: number, { width, height }: Size): Polygon[] {
+// a center on the edge or past it moves onto the surface; the source ends one unit before the edge
+const onSurface = ([x, y]: Point, { width, height }: Size): Point => [
+    Math.min(width - 1, Math.max(0, x)),
+    Math.min(height - 1, Math.max(0, y))
+];
+
+function hexagons(amount: number, size: Size): Polygon[] {
+    const { width, height } = size;
     // the radius at which `amount` hexagons of area 3√3/2 · r² fill the surface
     const radius = Math.sqrt((width * height) / ((amount * 3 * Math.sqrt(3)) / 2));
     const layout = hexbin()
@@ -60,8 +67,8 @@ function hexagons(amount: number, { width, height }: Size): Polygon[] {
 
     return layout.centers().map(([cx, cy]) => ({
         points: corners.map(([dx, dy]): Point => [cx + dx, cy + dy]),
-        // the centers along the right and bottom edge lie on it; the source ends one unit before
-        center: [Math.min(cx, width - 1), Math.min(cy, height - 1)]
+        // the centers along the right and bottom edge lie on it
+        center: onSurface([cx, cy], size)
     }));
 }
 
@@ -69,7 +76,7 @@ function hexagons(amount: number, { width, height }: Size): Polygon[] {
 function columnsAndRows(parts: number, { width, height }: Size) {
     const side = Math.sqrt((width * height) / parts);
 
-    return [Math.max(1, Math.ceil(width / side)), Math.max(1, Math.ceil(height / side))];
+    return [Math.ceil(width / side), Math.ceil(height / side)];
 }
 
 // squares and diamonds keep their corners, unlike triangles and cells: a corner that strays
@@ -141,13 +148,7 @@ function diamonds(layout: Layout, size: Size): Polygon[] {
                 corner(column - 1, row)
             ]);
 
-            polygons.push({
-                points,
-                center: [
-                    Math.min(width - 1, Math.max(0, center[0])),
-                    Math.min(height - 1, Math.max(0, center[1]))
-                ]
-            });
+            polygons.push({ points, center: onSurface(center, size) });
         }
     }
 
