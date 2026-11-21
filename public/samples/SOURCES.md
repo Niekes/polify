@@ -1,6 +1,6 @@
 # Sample images
 
-Every sample image is in the public domain (ADR-0004). Each file was taken from Wikimedia Commons, scaled to a long edge of 1600 px and saved as AVIF.
+Every sample image is in the public domain (ADR-0004). Each file was taken from Wikimedia Commons, scaled to a long edge of 1600 px and saved as AVIF with ffmpeg (SVT-AV1).
 
 | File | Work | Artist | Collection | Source | Licence |
 | --- | --- | --- | --- | --- | --- |
