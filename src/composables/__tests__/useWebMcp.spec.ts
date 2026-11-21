@@ -7,7 +7,7 @@ import { type Artwork } from '../../types/Artwork';
 let registered: { tool: ModelContextTool; signal?: AbortSignal }[];
 
 function setup(hasUpload = false) {
-    const artwork = ref<Artwork>(defaultArtwork('image-0', 1));
+    const artwork = ref<Artwork>(defaultArtwork('hokusai-great-wave', 1));
     const scope = effectScope();
 
     scope.run(() => useWebMcp(artwork, () => hasUpload));

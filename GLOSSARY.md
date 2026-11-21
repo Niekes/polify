@@ -11,7 +11,7 @@ What the polygons take their colors from: either an image or a gradient. An artw
 _Avoid_: Reference image, Input, Background
 
 **Image**:
-A source made from a picture, either chosen from the gallery or uploaded.
+A source made from a picture, either a sample image or an upload.
 _Avoid_: Photo, Picture, Reference image
 
 **Gradient**:
@@ -26,9 +26,9 @@ _Avoid_: Palette, Color scheme, Interpolator
 Whether a gradient runs along a straight line at an angle (linear) or outward from the center (radial).
 _Avoid_: Gradient mode, Direction
 
-**Gallery**:
-The collection of images that ship with Polify and can be chosen as a source.
-_Avoid_: Defaults, Presets, Library
+**Sample image**:
+One of the images that ship with Polify, offered as a starting point for an artwork. All are free of copyright.
+_Avoid_: Gallery (suggests finished artworks), Defaults, Presets, Library
 
 **Upload**:
 An image the user brings from their own device. It never leaves the browser and is not carried by the link.

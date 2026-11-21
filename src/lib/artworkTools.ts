@@ -1,6 +1,6 @@
 import { artworkFrom, asRecord } from './urlState';
 import { aspectRatios, gradientTypes, shapes } from '../config/defaults';
-import { gallery } from '../config/gallery';
+import { samples } from '../config/samples';
 import { ramps } from '../config/ramps';
 import { ranges } from '../config/ranges';
 import { type Artwork } from '../types/Artwork';
@@ -30,12 +30,12 @@ const inputSchema = {
         source: {
             type: 'object',
             description:
-                'What the polygons take their colors from. "image" is a gallery image, ' +
+                'What the polygons take their colors from. "image" is a sample image, ' +
                 '"gradient" blends a ramp, "upload" keeps the picture the user uploaded and ' +
                 'is only accepted while there is one.',
             properties: {
                 kind: choice(['image', 'gradient', 'upload'], 'The kind of source.'),
-                name: choice(gallery, 'The gallery image, for kind "image".'),
+                name: choice(samples, 'The sample image, for kind "image".'),
                 rotation: {
                     type: 'integer',
                     minimum: 0,
@@ -70,7 +70,8 @@ const inputSchema = {
         },
         adjustments: {
             type: 'object',
-            description: 'Changes applied to every polygon color after it is taken from the source.',
+            description:
+                'Changes applied to every polygon color after it is taken from the source.',
             properties: {
                 hue: bounded('hue', 'Degrees added to the hue.'),
                 saturation: bounded('saturation', 'Factor on the saturation, 1 keeps it.'),
@@ -108,7 +109,7 @@ export function artworkTools(access: {
             name: 'set_artwork',
             description:
                 'Changes the artwork on the surface of Polify, a low poly art generator that ' +
-                'divides a source (a gallery image or a gradient) into polygons, each colored ' +
+                'divides a source (a sample image or a gradient) into polygons, each colored ' +
                 'like the source beneath it. Only the fields given change, also inside source ' +
                 'and adjustments. Numbers out of range are clamped; a value of the wrong kind or an ' +
                 'unknown name takes its default. The result is the artwork as applied. Take a screenshot to see it; ' +

@@ -7,10 +7,10 @@ import { type Artwork } from '../../types/Artwork';
 const linkOf = (value: unknown) => `c=${compressToEncodedURIComponent(JSON.stringify(value))}`;
 
 describe('urlState', () => {
-    it('round-trips an artwork made from a gallery image', () => {
+    it('round-trips an artwork made from a sample image', () => {
         const artwork: Artwork = {
-            ...defaultArtwork('image-7', 42),
-            source: { kind: 'image', name: 'image-7', rotation: 3 },
+            ...defaultArtwork('gauguin-mahana-no-atua', 42),
+            source: { kind: 'image', name: 'gauguin-mahana-no-atua', rotation: 3 },
             shape: 'cell',
             adjustments: { ...defaultAdjustments, hue: 90, invert: true }
         };
@@ -20,7 +20,7 @@ describe('urlState', () => {
 
     it('round-trips an artwork made from a gradient', () => {
         const artwork: Artwork = {
-            ...defaultArtwork('image-0', 1),
+            ...defaultArtwork('hokusai-great-wave', 1),
             source: { ...defaultGradient, type: 'radial', angle: 45, aspectRatio: '9:16' }
         };
 
@@ -29,13 +29,26 @@ describe('urlState', () => {
 
     it('keeps that the artwork came from an upload, but not the upload', () => {
         const artwork: Artwork = {
-            ...defaultArtwork('image-0', 1),
+            ...defaultArtwork('hokusai-great-wave', 1),
             source: { kind: 'upload', rotation: 1 }
         };
 
         expect(parseArtwork(serializeArtwork(artwork))!.source).toEqual({
             kind: 'upload',
             rotation: 1
+        });
+    });
+
+    it('opens a link to a retired sample image on the first sample image (ADR-0004)', () => {
+        const link = serializeArtwork({
+            ...defaultArtwork('hokusai-great-wave', 1),
+            source: { kind: 'image', name: 'image-4', rotation: 2 }
+        });
+
+        expect(parseArtwork(link)!.source).toEqual({
+            kind: 'image',
+            name: 'hokusai-great-wave',
+            rotation: 2
         });
     });
 
@@ -57,7 +70,7 @@ describe('urlState', () => {
             })
         )!;
 
-        expect(artwork.source).toEqual({ kind: 'image', name: 'image-0', rotation: 3 });
+        expect(artwork.source).toEqual({ kind: 'image', name: 'hokusai-great-wave', rotation: 3 });
         expect(artwork.shape).toBe('triangle');
         expect(artwork.amount).toBe(3000);
         expect(artwork.vibration).toBe(62);
@@ -77,7 +90,7 @@ describe('urlState', () => {
         expect(artwork.source).toEqual(defaultGradient);
         expect(parseArtwork(linkOf(null))!.source).toEqual({
             kind: 'image',
-            name: 'image-0',
+            name: 'hokusai-great-wave',
             rotation: 0
         });
     });

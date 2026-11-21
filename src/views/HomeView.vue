@@ -7,14 +7,14 @@ import ShapeControl from '../components/ShapeControl.vue';
 import SourceControl from '../components/SourceControl.vue';
 import TheAgentGuide from '../components/TheAgentGuide.vue';
 import TheExportDialog from '../components/TheExportDialog.vue';
-import TheGallery from '../components/TheGallery.vue';
+import TheSamples from '../components/TheSamples.vue';
 import TheNavbar from '../components/TheNavbar.vue';
 import UndoRedoButtons from '../components/UndoRedoButtons.vue';
 import { useSource } from '../composables/useSource';
 import { useUrlSync } from '../composables/useUrlSync';
 import { useWebMcp } from '../composables/useWebMcp';
 import { defaultAdjustments, defaultArtwork, defaultGradient } from '../config/defaults';
-import { gallery } from '../config/gallery';
+import { samples } from '../config/samples';
 import { historyShortcut } from '../lib/historyShortcut';
 import { computePolygons } from '../lib/polygons';
 import { renderArtwork } from '../lib/renderArtwork';
@@ -24,7 +24,7 @@ const newSeed = () => Math.floor(Math.random() * 2 ** 31);
 
 // a page opened without a link starts from the default gradient
 const artwork = ref<Artwork>({
-    ...defaultArtwork(gallery[0]!, newSeed()),
+    ...defaultArtwork(samples[0]!, newSeed()),
     source: { ...defaultGradient }
 });
 
@@ -98,7 +98,7 @@ function randomize() {
 
 // reset keeps the source and the shape, as polify always did
 function reset() {
-    const { amount, vibration } = defaultArtwork(gallery[0]!, 0);
+    const { amount, vibration } = defaultArtwork(samples[0]!, 0);
 
     Object.assign(artwork.value, { amount, vibration, adjustments: { ...defaultAdjustments } });
 }
@@ -113,7 +113,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     else redo();
 });
 
-const showGallery = ref(false);
+const showSamples = ref(false);
 const showExport = ref(false);
 const showAgentGuide = ref(false);
 </script>
@@ -210,7 +210,7 @@ const showAgentGuide = ref(false);
                             <SourceControl
                                 v-if="section === 'Source'"
                                 v-model="artwork.source"
-                                @gallery="showGallery = true"
+                                @samples="showSamples = true"
                                 @upload="openFileDialog()"
                             />
                             <ShapeControl v-else-if="section === 'Shape'" v-model="artwork" />
@@ -221,7 +221,7 @@ const showAgentGuide = ref(false);
             </div>
         </div>
 
-        <TheGallery v-model="showGallery" @choose="chooseImage" />
+        <TheSamples v-model="showSamples" @choose="chooseImage" />
         <TheExportDialog
             v-if="surface"
             v-model="showExport"

@@ -3,7 +3,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import HomeView from '../../views/HomeView.vue';
 import TheAgentGuide from '../TheAgentGuide.vue';
 import TheExportDialog from '../TheExportDialog.vue';
-import TheGallery from '../TheGallery.vue';
+import TheSamples from '../TheSamples.vue';
 import { defaultArtwork, defaultGradient } from '../../config/defaults';
 import { parseArtwork, serializeArtwork } from '../../lib/urlState';
 import { type Artwork } from '../../types/Artwork';
@@ -13,7 +13,7 @@ HTMLDialogElement.prototype.showModal ||= () => {};
 
 // a gradient needs no image to load, so the page renders at once in jsdom
 const gradientArtwork: Artwork = {
-    ...defaultArtwork('image-0', 1),
+    ...defaultArtwork('hokusai-great-wave', 1),
     source: { ...defaultGradient, aspectRatio: '1:1' }
 };
 
@@ -96,12 +96,19 @@ describe('HomeView', () => {
         await button(wrapper, 'Rotate').trigger('click');
         expect(vm.artwork.source).toMatchObject({ rotation: 1 });
 
-        await button(wrapper, 'Gallery').trigger('click');
+        await button(wrapper, 'Sample images').trigger('click');
+        expect(wrapper.findComponent(TheSamples).text()).toContain(
+            'The polygons take their colors from the image you pick.'
+        );
         await wrapper
-            .findComponent(TheGallery)
+            .findComponent(TheSamples)
             .find('button[aria-label="Use image 5"]')
             .trigger('click');
-        expect(vm.artwork.source).toEqual({ kind: 'image', name: 'image-4', rotation: 0 });
+        expect(vm.artwork.source).toEqual({
+            kind: 'image',
+            name: 'cezanne-basket-of-apples',
+            rotation: 0
+        });
 
         await wrapper.find('input[type=radio][value=gradient]').setValue();
         expect(vm.artwork.source).toEqual(gradientArtwork.source);

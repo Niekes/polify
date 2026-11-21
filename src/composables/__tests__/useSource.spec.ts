@@ -57,25 +57,25 @@ describe('useSource', () => {
         await flushPromises();
     }
 
-    it('reads a gallery image at surface size', async () => {
-        const artwork = ref<Artwork>(defaultArtwork('image-5', 1));
+    it('reads a sample image at surface size', async () => {
+        const artwork = ref<Artwork>(defaultArtwork('church-heart-of-the-andes', 1));
         const { surface, failed } = useSource(artwork, ref(null));
 
         expect(surface.value).toBeNull();
         await settle();
 
-        expect(loaded).toEqual(['/gallery/image-5.avif']);
+        expect(loaded).toEqual(['/samples/church-heart-of-the-andes.avif']);
         expect(surface.value).toMatchObject({ width: 1600, height: 900 });
         expect(surface.value!.sample(10, 10)).toEqual([255, 0, 0, 255]);
         expect(failed.value).toBe(false);
     });
 
     it('turns the image without loading it again', async () => {
-        const artwork = ref<Artwork>(defaultArtwork('image-5', 1));
+        const artwork = ref<Artwork>(defaultArtwork('church-heart-of-the-andes', 1));
         const { surface } = useSource(artwork, ref(null));
 
         await settle();
-        artwork.value.source = { kind: 'image', name: 'image-5', rotation: 1 };
+        artwork.value.source = { kind: 'image', name: 'church-heart-of-the-andes', rotation: 1 };
         await settle();
 
         expect(loaded).toHaveLength(1);
@@ -85,9 +85,9 @@ describe('useSource', () => {
         expect(surface.value!.sample(10, 1500)).toEqual([0, 0, 255, 255]);
     });
 
-    it('reads the upload, or the first gallery image while there is none', async () => {
+    it('reads the upload, or the first sample image while there is none', async () => {
         const artwork = ref<Artwork>({
-            ...defaultArtwork('image-5', 1),
+            ...defaultArtwork('church-heart-of-the-andes', 1),
             source: { kind: 'upload', rotation: 0 }
         });
         const uploadUrl = ref<string | null>(null);
@@ -97,12 +97,12 @@ describe('useSource', () => {
         uploadUrl.value = 'blob:upload';
         await settle();
 
-        expect(loaded).toEqual(['/gallery/image-0.avif', 'blob:upload']);
+        expect(loaded).toEqual(['/samples/hokusai-great-wave.avif', 'blob:upload']);
     });
 
     it('samples a gradient without an image', async () => {
         const artwork = ref<Artwork>({
-            ...defaultArtwork('image-5', 1),
+            ...defaultArtwork('church-heart-of-the-andes', 1),
             source: { ...defaultGradient, aspectRatio: '1:1' }
         });
         const { surface, failed } = useSource(artwork, ref(null));
@@ -115,7 +115,7 @@ describe('useSource', () => {
 
     it('reports an image that fails to load', async () => {
         const artwork = ref<Artwork>({
-            ...defaultArtwork('image-5', 1),
+            ...defaultArtwork('church-heart-of-the-andes', 1),
             source: { kind: 'upload', rotation: 0 }
         });
         const { surface, failed } = useSource(artwork, ref('broken'));
@@ -128,7 +128,10 @@ describe('useSource', () => {
 
     it('gives no surface where the browser has no 2d canvas', async () => {
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
-        const { surface } = useSource(ref(defaultArtwork('image-5', 1)), ref(null));
+        const { surface } = useSource(
+            ref(defaultArtwork('church-heart-of-the-andes', 1)),
+            ref(null)
+        );
 
         await settle();
 
