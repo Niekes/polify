@@ -7,15 +7,15 @@ import BaseToggle from './BaseToggle.vue';
 import RampPicker from './RampPicker.vue';
 import RotateClockwiseIcon from './RotateClockwiseIcon.vue';
 import { aspectRatios, defaultGradient, gradientTypes } from '../config/defaults';
-import { gallery } from '../config/gallery';
+import { samples } from '../config/samples';
 import { ranges } from '../config/ranges';
 import { type GradientSource, type Source } from '../types/Artwork';
 
 const source = defineModel<Source>({ required: true });
-const emit = defineEmits<{ gallery: []; upload: [] }>();
+const emit = defineEmits<{ samples: []; upload: [] }>();
 
 // switching between image and gradient comes back to what each was before
-let lastImage: Source = { kind: 'image', name: gallery[0]!, rotation: 0 };
+let lastImage: Source = { kind: 'image', name: samples[0]!, rotation: 0 };
 let lastGradient: GradientSource = { ...defaultGradient };
 
 const kind = computed({
@@ -42,7 +42,7 @@ function rotate() {
 }
 
 const imageActions = [
-    { label: 'Gallery', icon: PhotoIcon, run: () => emit('gallery') },
+    { label: 'Sample images', icon: PhotoIcon, run: () => emit('samples') },
     { label: 'Upload', icon: ArrowUpTrayIcon, run: () => emit('upload') },
     { label: 'Rotate', icon: RotateClockwiseIcon, run: rotate }
 ];

@@ -8,7 +8,7 @@ import {
     gradientTypes,
     shapes
 } from '../config/defaults';
-import { gallery } from '../config/gallery';
+import { samples } from '../config/samples';
 import { ranges } from '../config/ranges';
 import { quarterTurns } from './source';
 import { type Adjustments, type Artwork, type GradientSource, type Source } from '../types/Artwork';
@@ -33,7 +33,7 @@ function numberIn(value: unknown, range: { min: number; max: number }, fallback:
 const integer = (value: unknown) =>
     typeof value === 'number' && Number.isInteger(value) ? value : 0;
 
-const fallback = defaultArtwork(gallery[0]!, 0);
+const fallback = defaultArtwork(samples[0]!, 0);
 
 function parseSource(raw: Raw): Source {
     if (raw.kind === 'gradient') {
@@ -62,7 +62,7 @@ function parseSource(raw: Raw): Source {
 
     return {
         kind: 'image',
-        name: oneOf(raw.name, gallery, gallery[0]!),
+        name: oneOf(raw.name, samples, samples[0]!),
         rotation: quarterTurns(raw.rotation)
     };
 }

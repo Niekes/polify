@@ -4,8 +4,8 @@ import { defaultAdjustments, defaultArtwork, defaultGradient } from '../../confi
 import { type Artwork } from '../../types/Artwork';
 
 const current: Artwork = {
-    ...defaultArtwork('image-3', 7),
-    source: { kind: 'image', name: 'image-3', rotation: 1 },
+    ...defaultArtwork('cassatt-the-childs-bath', 7),
+    source: { kind: 'image', name: 'cassatt-the-childs-bath', rotation: 1 },
     adjustments: { ...defaultAdjustments, hue: 40 }
 };
 
@@ -44,7 +44,7 @@ describe('set_artwork', () => {
         const expected: Artwork = {
             ...current,
             shape: 'hexagon',
-            source: { kind: 'image', name: 'image-3', rotation: 2 },
+            source: { kind: 'image', name: 'cassatt-the-childs-bath', rotation: 2 },
             adjustments: { ...current.adjustments, grayscale: true }
         };
 
@@ -97,6 +97,6 @@ describe('set_artwork', () => {
         };
 
         expect(schema.properties.amount).toMatchObject({ minimum: 10, maximum: 3000 });
-        expect(schema.properties.shape!.enum).toEqual(['triangle', 'cell', 'hexagon']);
+        expect(schema.properties.shape!.enum).toEqual(['triangle', 'cell', 'hexagon', 'square', 'diamond']);
     });
 });

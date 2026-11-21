@@ -1,6 +1,6 @@
 import { computed, type Ref } from 'vue';
 import { useImage } from '@vueuse/core';
-import { gallery, galleryImageUrl } from '../config/gallery';
+import { samples, sampleImageUrl } from '../config/samples';
 import {
     aspectOf,
     gradientSampler,
@@ -34,7 +34,7 @@ function readPixels(image: HTMLImageElement): Pixels | null {
 /**
  * The surface of the artwork and how to read the source's color on it. An image is loaded
  * and read once; turning it or adjusting colors never reloads it. A link that came from an
- * upload opens on the first gallery image while there is no upload (ADR-0002).
+ * upload opens on the first sample image while there is no upload (ADR-0002).
  */
 export function useSource(artwork: Ref<Artwork>, uploadUrl: Ref<string | null>) {
     const imageUrl = computed(() => {
@@ -43,7 +43,7 @@ export function useSource(artwork: Ref<Artwork>, uploadUrl: Ref<string | null>) 
         if (source.kind === 'gradient') return '';
         if (source.kind === 'upload' && uploadUrl.value) return uploadUrl.value;
 
-        return galleryImageUrl(source.kind === 'image' ? source.name : gallery[0]!);
+        return sampleImageUrl(source.kind === 'image' ? source.name : samples[0]!);
     });
 
     // useImage clears the image while the next one loads, so a surface never mixes two sources;

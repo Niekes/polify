@@ -1,6 +1,6 @@
 import { type RampName } from './Ramp';
 
-export type Shape = 'triangle' | 'cell' | 'hexagon';
+export type Shape = 'triangle' | 'cell' | 'hexagon' | 'square' | 'diamond';
 
 export type GradientType = 'linear' | 'radial' | 'conic';
 
@@ -9,7 +9,7 @@ export type AspectRatio = '16:9' | '4:3' | '1:1' | '9:16';
 
 export type ImageSource = {
     kind: 'image';
-    // a gallery image, by name
+    // a sample image, by name
     name: string;
     // quarter turns, 0 to 3
     rotation: number;

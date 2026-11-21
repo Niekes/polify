@@ -11,7 +11,7 @@ What the polygons take their colors from: either an image or a gradient. An artw
 _Avoid_: Reference image, Input, Background
 
 **Image**:
-A source made from a picture, either chosen from the gallery or uploaded.
+A source made from a picture, either a sample image or an upload.
 _Avoid_: Photo, Picture, Reference image
 
 **Gradient**:
@@ -30,9 +30,9 @@ _Avoid_: Gradient mode, Direction
 A gradient whose ramp runs from its last color to its first.
 _Avoid_: Inverted, Flipped
 
-**Gallery**:
-The collection of images that ship with Polify and can be chosen as a source.
-_Avoid_: Defaults, Presets, Library
+**Sample image**:
+One of the images that ship with Polify, offered as a starting point for an artwork. All are free of copyright.
+_Avoid_: Gallery (suggests finished artworks), Defaults, Presets, Library
 
 **Upload**:
 An image the user brings from their own device. It never leaves the browser and is not carried by the link.
@@ -53,7 +53,7 @@ The source divided into polygons and colored, with all adjustments applied. It i
 _Avoid_: Picture, Result, Output, Wallpaper
 
 **Shape**:
-The kind of polygon an artwork is made of: triangle, cell or hexagon.
+The kind of polygon an artwork is made of: triangle, cell, hexagon, square or diamond. Every shape fills the surface without gaps.
 _Avoid_: Mode, Pattern, Style
 
 **Polygon**:
@@ -65,7 +65,7 @@ How many polygons the artwork is divided into, whatever its shape.
 _Avoid_: Size, Density, Count, Resolution
 
 **Vibration**:
-How far the corners of triangles and cells stray from an even grid. Hexagons have none.
+How far the corners of triangles, cells, squares and diamonds stray from an even grid. For squares and diamonds it is measured against their size: at full vibration a corner strays almost to its neighbour, never past it. Hexagons have none.
 _Avoid_: Jitter, Noise, Randomness
 
 **Seed**:
