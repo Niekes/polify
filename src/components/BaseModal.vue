@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 
 const isOpen = defineModel<boolean>({ default: false });
+const { boxClass = 'w-11/12 max-w-5xl max-h-[85dvh]' } = defineProps<{ boxClass?: string }>();
 const dialog = ref<HTMLDialogElement | null>(null);
 
 watch(isOpen, (newVal) => {
@@ -21,7 +22,7 @@ const close = () => {
 <template>
     <!-- not-open:opacity-0 fades the blur out on close; daisyUI only fades the dim and the box -->
     <dialog ref="dialog" class="modal backdrop-blur-sm not-open:opacity-0" @close="close">
-        <div class="modal-box flex max-h-[85dvh] w-11/12 max-w-5xl flex-col">
+        <div class="modal-box flex flex-col" :class="boxClass">
             <h3 class="text-lg font-bold">
                 <slot name="title" />
             </h3>

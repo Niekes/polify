@@ -135,6 +135,7 @@ describe('HomeView', () => {
     it('caps a 4× PNG at the largest canvas every browser draws', async () => {
         const dialog = wrapper.findComponent(TheExportDialog);
 
+        await dialog.find('input[value=png]').setValue();
         expect(dialog.text()).toContain('3200 × 3200 px');
 
         await dialog.find('input[type=radio][value="4"]').setValue();
@@ -146,6 +147,7 @@ describe('HomeView', () => {
         // jsdom decodes no images, as a browser refuses an oversized canvas
         vi.stubGlobal('URL', { createObjectURL: () => 'blob:polify', revokeObjectURL: vi.fn() });
 
+        await wrapper.findComponent(TheExportDialog).find('input[value=png]').setValue();
         await button(wrapper.findComponent(TheExportDialog), 'Export PNG').trigger('click');
         await flushPromises();
 
