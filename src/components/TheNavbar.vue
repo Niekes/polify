@@ -21,7 +21,7 @@ const repoUrl = 'https://github.com/Niekes/polify';
     <div class="navbar bg-base-300 shadow-sm fixed top-0 z-50">
         <div class="navbar-start ml-2 gap-3">
             <!-- the wordmark is the name, so it carries the name for screen readers -->
-            <img :src="logoUrl" :alt="appName" width="128" height="24" class="h-6 w-auto" />
+            <img :src="logoUrl" :alt="appName" width="103" height="24" class="h-6 w-auto" />
             <span class="text-xs text-base-content/70 max-md:hidden" v-text="appDescription" />
         </div>
         <div class="navbar-end gap-2">
