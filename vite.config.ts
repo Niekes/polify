@@ -6,8 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    // GitHub Pages serves the project site under its name
-    base: '/polify/',
+    // served from the root of polify.niekes.com (custom domain)
+    base: '/',
     plugins: [tailwindcss(), vue()],
     server: {
         host: true
